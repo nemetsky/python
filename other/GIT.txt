@@ -1,4 +1,4 @@
-Git - аспределенный подход к созданию/управлению проектом
+﻿Git - аспределенный подход к созданию/управлению проектом
 
 https://git-scm.com/book/ru/v2/ - ДОКУМЕНТАЦИЯ
 
@@ -171,4 +171,34 @@ git checkout some-feature1			! создаст локальную ветку из
 git remote show	origin					! посмотреть удаленные ветки и локальные и их состояния
 git push --delete origin some-feature1	! удалить ветку в удаленном репозитории origin
 git branch -D some-feature1				! -D позволит удалить локальную ветку если даже мы ее не слили в master
+
+====================================
+# Подключение удаленного репозитория:
+
+git clone https://github.com/nemetsky/python.git
+# или
+git init
+git remote add origin https://github.com/nemetsky/python.git
+git branch -M main
+
+git remote 0v
+
+# Ошибка
+
+c:\git\git_1 (main)
+git pull origin main
+fatal: unable to access 'https://github.com/nemetsky/python.git/': schannel: next InitializeSecurityContext failed: CRYPT_E_NO_REVOCATION_CHECK (0x80092012) - ╘єэъЎш  юЄч√тр эх ёьюуыр яЁюшчтхёЄш яЁютхЁъє юЄч√тр фы  ёхЁЄшЇшърЄр.
+ 
+# Исправление помогло
+
+# https://stackoverflow.com/questions/45556189/git-the-revocation-function-was-unable-to-check-revocation-for-the-certificate
+
+git config --global http.sslBackend openssl
+# git config --global http.sslBackend schannel
+git config --global http.schannelCheckRevoke false
+# git config --global http.schannelCheckRevoke true
+
+git config --list
+
+
 
