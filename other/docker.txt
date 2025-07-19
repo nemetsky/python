@@ -1,0 +1,234 @@
+echo $PS1
+\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\h:\w\$
+PS1="\e[032m\u@\h:\w\$\e[0m "
+
+https://www.youtube.com/watch?v=O8N1lvkIjig
+
+00:00:00 | Intro
+00:01:35 | Основы Docker.
+00:19:30 | Установка Docker в Linux и Windows.
+00:25:40 | Основные команды.
+00:54:55 | Управление портами: Port Mapping.
+01:08:55 | Переменные в Docker: Environment Variables.
+01:20:20 | Постоянные данные: Docker Volumes.
+01:48:41 | Сети в Docker. Network.
+02:30:11 | Создание своих контейнеров. Dockerfile.
+03:40:59 | Docker Compose. Применение.
+04:32:28 | Portainer – Web UI для управления Docker.
+
+--- установка Docker ---
+
+sudo apt install docker.io
+sudo usermod -aG docker $USER    	!включить пользователя в группу, дать права работать с контейнерами без sudo
+
+sudo service docker status
+
+docker --version
+
+docker ps							! посмотреть запущенные контейнеры
+docker ps -a						! посмотреть все контейнеры
+
+docker run hello-world				! создать и запустить контейне hello-world, если его нет то скачается hub.docker.com
+docker rm <ID or NAMES>				! удалить контейнер, можно несколько указать через пробел
+docker images						! посмотреть образы и из каких репозиториев они (если ничего не указано, то с докер-хаб)
+docker rmi <9c7a54a9a43c>			! удалить образ
+docker pull ubuntu					! скачать образ ubuntu
+
+docker run ubuntu sleep 10			! создать и запустить контейнер и выполнить в нем команду sleep 10
+docker run -d ubuntu sleep 10		! -d запустить контейнер в фоне, -it -интеректив
+docker run --name MyContain ubuntu	! задать имя контейнеру, по умолчанию имя произвольное задается
+
+docker start faadf6182033			! просто запустить ранее запущенный контейнер, <ID> смотрим командой docker ps -a, можно сокращать
+docker stop faadf6182033			! остановить контейнер
+docker kill faadf6182033			! можно просто убить, быстрее чем остановить
+
+docker run ubuntu:20.04				! указать не последнюю latest версию, а указать TAG версии какую хотим скачать или запустить
+
+docker pause 4b						! поставить на паузу контейнер
+docker unpause 4b					! снять с паузы
+
+docker run --rm -d ubuntu			! запустить и при остановке сразу автоматически удалить контейнер
+
+docker inspect ID					! посмотреть информацию о контейнере
+docker stats ID						! посмотреть ресурсы занимаемые контейнером
+
+docker run -d --rm MyNginx nginx echo "Hello My Docker"			! можно передавать команды и аргументы, как пример echo, ls и т.д 
+
+docker logs MyNginx					! посмотреть логи с контейнера nginx
+docker logs -f MyNginx				! посмотреть логи в реальном времени
+
+docker exec -it MyNginx /bin/bash	!!! подключиться к контейнеру, Ctrl + D выйти из контейнера
+
+docker system prune -a --volumes	! Удалить все остановленные контейнеры и образы
+
+
+---- Порт mapping ---
+
+docker run -p 80:80 nginx 		
+docker run -d --name WEB -p 8080:80 nginx	! пробросить внешний порт 8080 на порт 80 в docker контейнере
+
+netstat -tulpen
+
+!ПРОВЕРКА
+docker exec -it WEB /bin/bash			! подключаемся к контейнеру и вносим изменения
+cd /usr/share/nginx/html/
+echo "Test Web Server" > test.html
+http://192.168.0.18:8080/test.html		! проверяем доступ к контейнеру и отображение страницы 
+
+!ПРИМЕРЫ
+
+docker run -d --name GRAFANA -p 3000:3000 grafana/grafana
+
+Можно пробрасывать много портов (В видео на 01:07 показано как)
+
+
+---- Переменные окружения ---
+
+docker run --name MYSQL -e MYSQL_ROOT_PASSWORD=pw1234 -d mysql   ! -e указать переменную и передать ее в переменные окружение в контейнер
+
+!ПРОВЕРКА
+docker exec -it MYSQL /bin/bash    
+env
+
+docker exec -it MYSQL mysql -u root -p 	 ! перейти в контейнер MYSQL сразу в mysql под пользователем root
+
+---- Постоянные данные. Внесение изменений в контейнер ---
+
+команда docker rm APP 		- после удаления контейнера все наши данные пропадут (если делаем stop/start то не пропопадут)
+
+docker volume ls			! посмотреть какие есть постоянные volume для монтирования в контейнеры
+
+3 способа создания Volume:
+
+docker run --name WEB3 -p 8083:80 -v /opt/nginx/data:/usr/share/nginx/html -d nginx      
+! смонтировали локальную директорию /opt/nginx/data в контейнер в директорию /usr/share/nginx/html. 
+! Теперь если удалим WEB3 и заново создадим и запустим, то у нас наши данные не пропадут а подмонтируются
+! Можно указывать много volume (через пробел -v <.....>)
+
+docker run --name WEB3 -p 8083:80 -v /usr/share/nginx/html -d nginx
+! Если не указывать локальную директорию, то улаленная директорию монтируетсяв локальную по умолчанию /var/lib/docker/volumes/<HASH>
+! Если удаляем докер этот, то этот volume удалиться
+
+docker run --name WEB3 -p 8083:80 -v web_data:/usr/share/nginx/html -d nginx
+! В таком случае в директории /var/lib/docker/volumes/ создается директория web_data.
+! Этот volume не удаляется после удаления контейнера
+
+docker volume create WEB_DATA_2
+!еще один способ создать volume
+
+docker volume rm WEB_DATA_2			! удалить volume
+
+--- Сетевые настройки ---
+
+ТИПЫ СЕТЕЙ:
+
+1. bridge    				! используется в 95 % случаях  
+
+Параметр --network=bridge (по умолчанию)
+Перенаправление портов параметром -p 8080:80
+Создается интерфейс docker0: 172.17.0.0/16
+
+2. host
+
+Параметр --network=host
+IP-адрес у контейнера такой де как и у хоста
+
+3. none
+
+Параметр --network=none
+Мы не сможем подключиться контейнеру извне
+
+4. macvlan
+5. ipvlan
+6. overlay
+
+BRIDGE
+
+!В сети по умолчанию контейнеры получают рандомные адреса, могут общаться между собой в этой сети только по IP-адресам,
+!Если мы создаем свою сеть, то контейнеры могут общаться в ней и по IP-адресам и по DNS-имени (имена которые указываем в параметре --name), 
+!но с контейнерами в другой подсети не могут общаться.
+
+docker network create --drive bridge MYNET1    		! создать свою сеть, --drive bridge по умолчанию, можно не указывать
+docker run --network MYNET1 nginx					! запустить контейнер в сети MYNET1
+
+HOST
+
+docker network create --drive host MYNET1			! больше одной сети создать не даст
+
+NONE
+
+docker network create --drive none MYNET1			! больше одной сети создать не даст
+
+MACVLAN 
+
+Контейнеры получают свои сетевые карты, IP-адреса из той же подсети что и хост и свои MAC-адреса
+Можем подключиться к контейнерам без указания портов
+
+IPVLAN
+
+Контейнеры получают свои сетевые карты, IP-адреса из той же подсети что и хост, но MAC-адреса такие же что и хоста
+Можем подключиться к контейнерам без указания портов
+
+! ПРАКТИКА
+
+docker network ls					! посмотреть наши сети в докер
+docker network create myNet01		! создать
+docker network inspect myNet01		! посмотреть настройки и свойства сети (IP-адресация сети)
+
+docker network create --subnet 192.168.10.0/24 --gateway 192.168.10.1 myNet192
+docker network rm myNet01 myNet192		! удалить сети
+
+docker run --rm -it --name container1 nicolaka/netshoot /bin/bash		! запустить контейнер в сеть по умолчанию и подключиться
+docker inspect container1												! посмотреть настройки контейнера, в том числе сетевые
+
+docker run --rm -it --name container1 --net myNet01 nicolaka/netshoot /bin/bash		! запустить контейнер в сеть myNet01 и подключиться
+
+docker network connect myNet01 container2					! подключить запущенный контейнер container2 в сеть myNet01 (в конейнере появиться и новая сеть и старая останется)
+docker inspect container2									! смотрим какие сети есть у контейнера, параметр NetworkID копируем
+docker network disconnect c5f577a8258895f72148452a9d24ce8795171d3d9b1a595495cd54f370090ab6 container2		! отключить контейнер container2 от сети (тут указываем NetworkID сети от которой отключаем)
+! То есть контейнер можно подключать ко многим сетям
+
+docker network create -d macvlan --subnet 192.168.0.0/24 --gateway 192.168.0.1 --ip-range 192.168.0.51/32 -o parent=eth0 myMacvlan01
+! создали сеть типа macvlan
+! 192.168.0.0/24  - это наша реальная сеть на хосте
+! --ip-range 192.168.0.51/32 - выделять по внутреннему DHCP адрес из диапазона или конкретный адрес из этой сети /32 (/32 типа статический будет, но другие уже не выделит)
+! -o parent=eth0  -  связывает сетевую карту сети с интерфейсом хоста.
+docker run --rm -it --name container1 --net myMacvlan01 nicolaka/netshoot /bin/bash
+! Таким образом созданные контейнеры в сети macvlan смогут между собой пинговаться, но с хостом нет!? (хотя на Видео 02:28 все должно работать)
+! Вообщем надо почитать про это в Интернете, почему у контейнера с хостом нет связи
+
+docker run --rm -it --name container1 --ip 192.168.0.53 --net myMacvlan01 nicolaka/netshoot /bin/bash		! Запустить контейнер с КОНКРЕТНЫМ IP-адресом
+
+
+---- СОЗДАНИЕ СВОЕГО КОНТЕЙНЕРА ----
+
+Надо создать свой DockerFile:
+- базовый образ (обязательно)
+- описание (LABEL, необязательно)
+- команды [CMD или ENTRYPOINT]
+- рабочие директории
+- файлы
+- работас с файлами
+- указание переменных
+- порты
+- описание команд при запуске контейнера
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
