@@ -190,7 +190,7 @@ git init
 git remote add origin https://github.com/nemetsky/python.git
 git branch -M main
 
-git remote 0v
+git -v remote 
 
 # Ошибка
 
@@ -206,8 +206,11 @@ git config --global http.sslBackend openssl
 # git config --global http.sslBackend schannel
 git config --global http.schannelCheckRevoke false
 # git config --global http.schannelCheckRevoke true
-
 git config --list
 
+====================================
+Настройка прокси-сервера
 
+git config --global http.proxy http://172.31.0.209:8090
+git config --global --unset http.proxy
 
