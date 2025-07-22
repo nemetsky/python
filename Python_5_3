@@ -1,4 +1,4 @@
-### НЕОБХОДИМО ПОСТАВИТЬ МОДУЛИ ###
+﻿### НЕОБХОДИМО ПОСТАВИТЬ МОДУЛИ ###
 pip install pytest pytest-clarity==0.3.0a0 pyyaml tabulate jinja1 textfsm netmiko
 
 # Типы данных:
@@ -12,6 +12,7 @@ pip install pytest pytest-clarity==0.3.0a0 pyyaml tabulate jinja1 textfsm netmik
  - строки (Strings)
  - кортежи (Tuples)
  
+
  Упорядоченные:
  - списки
  - кортежи
