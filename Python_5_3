@@ -12,7 +12,6 @@ pip install pytest pytest-clarity==0.3.0a0 pyyaml tabulate jinja1 textfsm netmik
  - строки (Strings)
  - кортежи (Tuples)
  
-
  Упорядоченные:
  - списки
  - кортежи
