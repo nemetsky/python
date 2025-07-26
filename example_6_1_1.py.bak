@@ -26,7 +26,7 @@ password = input("Введите пароль: ")
 
 # С циклом while еще один вариант более красивый
 
-password_correct = False        # заводим спец. переменную
+password_correct = False
 
 while not password_correct:
     if len(password) < 8:

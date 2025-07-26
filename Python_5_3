@@ -750,6 +750,129 @@ if cfg in cfg_dict:
 else
     print("такой конфигураии нет")
 
+# можно писать в одну строку но это плохой тон, только если одно условие if используется
+# или редкий пример (трехнарное выражение)
+result = True if len(s) > 5 else False
+
+-----------------------------------------------------
+
+=== Цикл for ===
+
+https://pythontutor.com/            # Деббагер
+
+# перебор строк, словаря, списка, функция range(), любой итерируемый объект
+# for работает в списке со значениями а не с индексами, в словаре перебирает ключи
+for letter in 'Test string':
+    print (letter)                  # перебрать буквы и вывести на печать
+                                    # letter произвольное название переменной
+vlans_list = [1,2,3,4]
+vlans_str = []
+for each_vlan in vlans_list:
+    print(each_vlan * 100)          # перебрать список vlan и что-то сделать с каждым vlan
+    vlan_str.append(str(each_vlan)) # превращаем vlan из числа в строку и добавляем в другой список
+print(vlan_str)   
+
+# Пример: из строки с IP сделать список чисел из октетов IP
+ip = "192.168.100.1"
+octets = ip.split(".")  
+octets_int = []
+for octet in octets:
+    octets_int.append(int(octet))           # [192, 168, 100, 1]
+
+# Функция range - особый тип данных, создается по мере необходимости
+
+range(1,5)                    # диапазон чисел от 1 до 5 не включая 5
+list(range(1, 5))             # будет список [1, 2, 3, 4]
+
+for number in range(11):                # диапазон от 0 до 10
+    print(f"interface Gi0/{number}")    # выведет список интерфейсов
+    print(f" description vlan_{number}")
+
+# for со словарем
+r1 = {
+    'IOS': '15.4',
+    'IP': '10.255.0.1',
+    'hostname': 'london_r1',
+}
+for key in r1:
+    print(key, r1[key])            # перебор словаря и вывод ключей, а также и значений ключей
+    
+for key in r1:
+    print(f"{key:20}{r1[key]}")    # вывести красиво с выравниваем первого столбца
+
+# Можно также вывести ключ-значение из словаря с помощью распаковки переменных:
+
+for item in r1.items():            # r1.items() - отдельный тип, список кортежей
+    print(item)                    # выведем кортежи ключ-значение, 
+    key, value = item              # распаковка item
+    print(key, value)              # печатаем ключ-значение
+
+# Или проще
+for key, value in r1.items():
+    print(key,value)               # вывод такой же как и без распоковки, 
+                                   # но удобно тем, что есть 2 переменных (ключ и значение) теперь и можно с ними что-то делать
+                                   
+# Вложенные циклы for
+
+commands = [
+    'switchport mode access',
+    'switchport access vlan',
+    'spanning-tree portfast',
+    'spanning-tree bpduguard enable']
+fast_int = ['0/1','0/3','0/4','0/7','0/9','0/10','0/11']
+
+for intf in fast_int:              # создаем для каждого интерфейса конфигурацию
+    print(f"interface {intf}")
+    for cmd in commands:           # вместо вложенного цикла можно было также сделать join переменной commands по переводу строки, но с цмклом проще
+        с           
+
+# с условием цикл, подставляем из словаря интерфейс и назначаем соответсвующий vlan, а также другие команды
+
+commands = [
+    'switchport mode access',
+    'switchport access vlan',
+    'spanning-tree portfast',
+    'spanning-tree bpduguard enable']
+access = {'0/12': 10, '0/14': 11, '0/16': 17, '0/17': 150}
+
+for intf in access:
+    print(f"interface {intf}")
+    vlan = access[intf]
+    for ...
+# или с распоковкой
+for intf, vlan in access.items():
+    print(f"interface {intf}")
+    for cmd in commands:
+        if cmd.endswith("vlan"):
+            print(f" {cmd} {vlan}")
+        else: 
+            print(f" {cmd}")
+
+
+# Цикл while 
+# если есть условие, но в отличие от if после выполнения условия возвращаемся в начало цикла
+#
+a = 5
+while a > 0:
+    print(a)
+    a = a - 1       # a -= 1
+#
+vlans = [1, 2, 3, 4]
+i = 0
+while i < len(vlans):
+    print(vlans[1])
+    i += 1
+# или с for удобнее
+for vl in vlans:
+    print(vl)
+
+
+
+
+
+
+
+
 
 
 
