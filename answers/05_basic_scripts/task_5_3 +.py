@@ -73,3 +73,35 @@ vlans = input("Введите номер влан(ов): ")
 
 print(f"interface {interface}")
 print("\n".join(template[mode]).format(vlans))
+
+============================================================================
+
+### МОЕ РЕШЕНИЕ ###
+
+mode = input("Введите режим работы интерфейса (access/trunk): ")
+intf = input("Введите тип и номер интерфейса: ")
+vlan = input("Введите номер влан(ов): ")
+
+access_template = [
+    "switchport mode access",
+    "switchport access vlan {}",
+    "switchport nonegotiate",
+    "spanning-tree portfast",
+    "spanning-tree bpduguard enable",
+]
+
+trunk_template = [
+    "switchport trunk encapsulation dot1q",
+    "switchport mode trunk",
+    "switchport trunk allowed vlan {}",
+]
+
+dict1 = {
+    "access": access_template,
+    "trunk": trunk_template
+}
+
+result = "\n".join(dict1[mode])
+
+print("interface " + intf)          # print(f"interface {intf}")
+print(result.format(vlan))

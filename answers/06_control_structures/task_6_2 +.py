@@ -26,3 +26,25 @@ elif 224 <= oct1 <= 239:
     print("multicast")
 else:
     print("unused")
+
+
+====================================================
+
+### Мое решение ###
+
+ip = input("Введите IP-адрес в формате X.X.X.X: ")
+
+list1 = ip.split(".")
+
+oct1, oct2, oct3, oct4 = int(list1[0]), int(list1[1]), int(list1[2]), int(list1[3])
+
+if oct1 in range(1,224):
+    print("unicast")
+elif oct1 in range(224,240):
+    print("multicast")
+elif ip == "255.255.255.255":
+    print("local broadcast")
+elif ip == "0.0.0.0":
+    print("unassigned")
+else:
+    print("unused")

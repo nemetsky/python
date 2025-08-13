@@ -35,7 +35,7 @@ bin_oct_1 = bin(dec_oct_1)
 bin_oct_2 = bin(dec_oct_2)
 bin_oct_3 = bin(dec_oct_3)
 
-print(bin_oct_1[2:]+bin_oct_2[2:]+bin_oct_3[2:])
+print(bin_oct_1[2:] + bin_oct_2[2:] + bin_oct_3[2:])            # обрезаем 0b
 
 101010101010101010111011101110111100110011001100
 

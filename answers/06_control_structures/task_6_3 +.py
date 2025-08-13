@@ -101,3 +101,61 @@ for intf, allowed in trunk.items():
             print(f" {command}{action} {vlans}")
         else:
             print(f" {command}")
+
+
+
+==============================================================================================
+
+### Мое решение ### (я не использовал срез, а использовал pop). У автора решения со словарем и с заменой интересные
+
+access_template = [
+    "switchport mode access",
+    "switchport access vlan",
+    "spanning-tree portfast",
+    "spanning-tree bpduguard enable",
+]
+
+trunk_template = [
+    "switchport trunk encapsulation dot1q",
+    "switchport mode trunk",
+    "switchport trunk allowed vlan",
+]
+
+access = {"0/12": "10", "0/14": "11", "0/16": "17", "0/17": "150"}
+trunk = {
+    "0/1": ["add", "10", "20"],
+    "0/2": ["only", "11", "30"],
+    "0/4": ["del", "17"],
+    "0/5": ["add", "10", "21"],
+    "0/7": ["only", "30"],
+}
+
+# Скрипт для access порта
+#
+# for intf, vlan in access.items():
+#     print("interface FastEthernet" + intf)
+#     for command in access_template:
+#         if command.endswith("access vlan"):
+#             print(f" {command} {vlan}")
+#         else:
+#             print(f" {command}")
+
+for intf, vlan in trunk.items():                        # распаковываем и перебираем словарь
+    print("interface FastEthernet" + intf)              # выводим интерфейс с номером
+    for command in trunk_template:                      # перебираем строки в шаблоне (списке)
+        if command.endswith("vlan"):                    # если строка заканчивается на vlan
+            if vlan[0] == "add":                        # проверяем в словаре первое значение для интерфейса
+                s1 = vlan.pop(0)                        # вместо среза использую pop, который удаляет первый элемент списка и присваевает отдельной переменной
+                s2 = ",".join(vlan)                     # оставшиесы элементы списка (вланы) присваеваем строке
+                print(f" {command} {s1} {s2}")          # выводим команду
+            elif vlan[0] == "del":
+                vlan.pop(0)
+                s2 = ",".join(vlan)
+                print(f" {command} remove {s2}")
+            else: 
+                vlan.pop(0)
+                s2 = ",".join(vlan)
+                print(f" {command} {s2}")
+        else:
+            print(f" {command}")
+      

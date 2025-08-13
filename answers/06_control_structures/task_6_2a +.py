@@ -73,3 +73,34 @@ if valid_ip:
         print("unused")
 else:
     print("Неправильный IP-адрес")
+
+
+=================================================================
+
+### МОЕ РЕШЕНИЕ (на мой взгляд намного проще) ###
+# некоторые конструкции у автора мне непонятны и очень сложные
+
+ip = input("Введите IP-адрес в формате X.X.X.X: ")
+
+list1 = ip.split(".")
+
+correct_ip = True                                            # вводим переменную флаг
+
+for octet in list1:                                          # перебираем октеты
+    if not octet.isdigit() or int(octet) not in range(256):
+        correct_ip = False                                   # если хотя бы один октет не содержит цифры и их диапазон не лежит от 0 до 256, то присваем переменной флагу False
+        break
+
+if not correct_ip or len(list1) != 4:                        # проверяем переменую флаг, количество октетов в IP
+    print("Неправильный IP-адрес")
+else:
+    if int(list1[0]) in range(1,224):
+        print("unicast")
+    elif int(list1[0]) in range(224,240):
+        print("multicast")
+    elif ip == "255.255.255.255":
+        print("local broadcast")
+    elif ip == "0.0.0.0":
+        print("unassigned")
+    else:
+        print("unused")
