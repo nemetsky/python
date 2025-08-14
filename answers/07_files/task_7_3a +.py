@@ -34,3 +34,29 @@ with open("CAM_table.txt", "r") as conf:
 
 for vlan, mac, intf in sorted(mac_table):
     print(f"{vlan:<9}{mac:20}{intf}")
+
+
+#===================================================
+
+### Мое решение ###
+
+# Решение такое же, только у автора есть распаковка переменных и сортировка списка прямо в конструкции FOR - интересное решение
+
+list2 = []
+
+with open("CAM_table.txt") as f:
+    for line in f:
+        list1 = line.split()
+        if list1 and list1[0].isdigit():
+            vlan, mac, tip, intf = list1                    # распаковка
+            list2.append([int(vlan), mac, intf])            # обязательно первый элемент переводим в число, чтобы потом была корректная сортировка
+                    
+list2.sort()                                                # сортировка
+for s in list2:
+    print(f"{s[0]:<10} {s[1]:20} {s[2]}")                   # в предыдущем примере другое форматирование с помощью шаблона использовал
+    
+
+
+
+
+

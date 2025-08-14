@@ -27,3 +27,30 @@ with open(src_file) as src, open(dst_file, 'w') as dst:
         words_intersect = set(words) & set(ignore)
         if not line.startswith("!") and not words_intersect:
             dst.write(line)
+
+
+# ==================================================
+
+### Мое решение ###
+
+# в части вывода результата в файл мое решение не отличается 
+
+from sys import argv
+
+file1 = argv[1]
+file2 = argv[2]
+
+ignore = ["duplex", "alias", "configuration"]
+
+with open(file1) as f1, open(file2, "w") as f2:
+    for line in f1:
+        flag = True
+        for each_ignore in ignore:
+            if each_ignore in line:
+                flag = False
+                break
+        if flag and not line.startswith("!"):
+            f2.write(line)
+
+# запуск скрипта 
+# test.py config_sw1.txt config_sw1_new.txt

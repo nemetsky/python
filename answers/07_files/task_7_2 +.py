@@ -47,3 +47,19 @@ with open(filename) as f:
     for line in f:
         if not line.startswith("!"):
             print(line.rstrip())
+
+
+#==============================================================
+
+### МОЕ РЕШЕНИЕ ###
+
+from sys import argv
+
+file1 = argv[1]
+
+#with open("config_sw1.txt", "r") as f:
+
+with open(file1) as f:
+    for line in f:
+        if not line.startswith("!"):
+            print(line.rstrip())              	# удаляем лишний перево строки, который добавляет print

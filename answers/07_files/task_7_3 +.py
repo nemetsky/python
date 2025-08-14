@@ -27,3 +27,19 @@ with open("CAM_table.txt") as conf:
         if words and words[0].isdigit():
             vlan, mac, _, interface = words
             print(f"{vlan:9}{mac:20}{interface}")
+
+
+#==================================================
+
+### Мое решение ###
+
+# решение маленько по другому, заранее шаблон сделал и распаковку переменных не делал
+
+template = "{:10}{:20}{:10}"
+
+with open("CAM_table.txt") as f:
+    for line in f:
+        list1 = line.split()
+        if list1:
+            if list1[0].isdigit():
+                print(template.format(list1[0], list1[1], list1[2]))
