@@ -1120,3 +1120,30 @@ with open(f"{path}/{f1}", "r") as f:
 # или
 f2 = "/home/repos/pyneng/example2/data2.txt"  # указать пути с файлом
 with open(f2, "r") as f:
+
+-----------------------------------------------------
+
+### ПРИМЕРЫ с файлами в файлах 
+# script_sh_ip_int_br.py
+# script_sh_ip_interface.py
+# parse_cfg_section.py
+
+# Разбивка файла с выводом на секции
+
+with open("config_r1.txt", "r") as f:
+    output = f.read()
+
+output.split("\n")      # разбить вывод построчно по переводу строки
+output.split("!")       # разбить вывод построчно по блокам (секциям). Если в конфиге есть "!"
+output.split("!\n")     # получше вывод, строка начинатся будет не с "\n"
+
+cfg_sections = output.split("!\n")
+
+for section in cfg_sections:              # вывод конфига по секциям
+    print(section)
+    print("="*50)
+    
+for section in cfg_sections:              # вывод только секций с настройками интерфейсов
+    if section.startswith("interface"):
+        print(section)
+        print("="*50)
