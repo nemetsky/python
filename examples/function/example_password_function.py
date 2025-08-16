@@ -1,0 +1,163 @@
+﻿#########################################################
+# Пояснения в записях (Раздел функции. Пример с проверкой пароля)
+
+# Наш базовый пример с функцией, далее его усложняем в Примере 1 и Примере 2
+'''
+username = input("Введите имя пользователя: ")
+password = input("Введите пароль: ")
+
+def check_passwd(name, pas):
+    if len(pas) < 8:
+        print("Пароль слишком короткий")
+    elif name.lower() in pas.lower():                      
+        print("Пароль содержит имя пользователя")
+    else:
+        print(f"Пароль для {name} прошел все проверки")
+        
+check_passwd(username, password)
+'''
+#########################################################
+
+# Пример 1 (с предупреждением)
+"""
+data = [                               
+    ["user1", "jsadhkjasd"],
+    ["user2", "20"],
+    ["user3", "user3jsadhkjasd"],
+    ["user4", 20],                         
+]
+
+correct_users = []                     
+wrong_users = []
+
+def check_passwd(name, pas):
+    if type(name) != str or type(pas) != str:
+        print("Надо передавать строки!")             # пользователь user4 попадет в список некорректных пользователей, так как
+        return                                       # у него пароль число, а должна быть строка, так как у нас дальше функция lower, которая работает со строками
+    if len(pas) < 8:                                 # поэтому надо вывести предупреждение, но все равно user4 попадет в список wrong_users
+        return False
+    elif name.lower() in pas.lower():                      
+        return False
+    else:
+        return True
+
+for user, passwd in data:              
+    check = check_passwd(user, passwd) 
+    if check:                          
+        correct_users.append(user)     
+    else:
+        wrong_users.append(user) 
+        
+print(correct_users)                   
+print(wrong_users)                     
+"""
+#########################################################
+
+# Пример 2 (с исключением, более правильно)
+"""
+def check_passwd(name, pas):
+    if type(name) != str or type(pas) != str:
+        raise ValueError("Надо передавать строки!")   # исключение, будет предупреждение        
+    if len(pas) < 8:
+        return False
+    elif name.lower() in pas.lower():  
+        return False
+    else:
+        return True
+        
+data = [                               
+    ["user1", "jsadhkjasd"],
+    ["user2", "dsks"],
+    ["user3", "user3jsadhkjasd"],
+    ["user4", 20],                         
+]
+
+correct_users = []                     
+wrong_users = []
+                       
+for user, passwd in data:             
+    try:                                   # обработка нашего исключения, user4 не попадет в список wrong_users
+        check = check_passwd(user, passwd)
+    except ValueError as error:
+        print(error)
+    else:
+        if check:                         
+            correct_users.append(user)    
+        else:
+            wrong_users.append(user)
+            
+print(correct_users)                   
+print(wrong_users)                     
+"""
+
+#########################################################
+
+# Оптимизация примера 1  (Разбили на 3 функции)
+"""
+def check_passwd(name, pas):                    # Функция проверяет логин и пароль
+    if type(name) != str or type(pas) != str:
+        print("Надо передавать строки!")     
+        return                               
+    if len(pas) < 8:                         
+        return False
+    elif name.lower() in pas.lower():        
+        return False
+    else:
+        return True
+
+
+def check_user_list(user_passwd_data):          # Функция проверяет набор данных (пользователей) и делает списки с правильными и неправильными паролями
+    correct_users = []                     
+    wrong_users = []
+    for user, passwd in user_passwd_data:              
+        check = check_passwd(user, passwd) 
+        if check:                          
+            correct_users.append(user)     
+        else:
+            wrong_users.append(user)
+    return correct_users, wrong_users           # возвращаем кортеж с двумя списками
+
+
+def main():                                     # Функция вызывает все
+    data = [                               
+        ["user1", "jsadhkjasd"],
+        ["user2", "20"],
+        ["user3", "user3jsadhkjasd"],
+        ["user4", 20],                         
+    ]
+    ok, no_ok = check_user_list(data)           # распаковка кортежа с двумя списками
+    print(ok)                   
+    print(no_ok)
+
+main()
+"""
+#########################################################
+
+# Пример 3  (Функция с необязательными параметрами)
+
+# добавили необязательные праметры min_len, check_numbers 
+# min_len - передаем мин.длину пароля (по умолчанию задали 8)
+# check_numbers - надо ли делать проверку на 3 уникальных числа в пароле (по умолчание False - не надо делать)
+
+def check_passwd(username, password, min_len=8, check_numbers=False):
+    if len(password) < min_len:
+        print("Пароль слишком короткий")
+        return False
+    elif username.lower() in password.lower():                      
+        print("Пароль содержит имя пользователя")
+        return False
+    elif check_numbers and len(set("0123456789") & set(password)) < 3:         # Если укажем в параметре True, то делаем проверку на уникальные числа 
+        print("В пароле должно быть хотя 3 уникальных числа")
+        return False
+    else:
+        print(f"Пароль для {username} прошел все проверки")
+        return True
+    print("#"*50)
+
+# user, passwd = "user1", "1222"
+# check_passwd(user, passw)
+
+check_passwd("user1", "1234", 4, True)                                         # Играем с параметрами
+
+check_passwd("user1", "1234", min_len=4, check_numbers=True)                   # вариант с ключевыми аргументами, чтобы было понятно, что за параметры передаем (ключи должны совпадать с именами параметров функции)
+check_passwd(username="user1", password="1234", min_len=4, check_numbers=True) # или так
