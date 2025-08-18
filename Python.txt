@@ -1362,5 +1362,158 @@ commands = ['int fa0/0', 'ip address ...']
 all_commands = ['conf t', *commands, 'end']     # распоковали внуть другого списка,  all_commands = ['conf t', 'int fa0/0', 'ip address ...', 'end'] 
 
 
+==============================================================================================
+
+### РАСПАКОВКА ПЕРЕМЕННЫХ ###
+
+interface = ["Fa0/1", "10.1.1.1", "up", "up"]
+intf, ip, status, protocol = interface           # intf = interface[0], ip = interface[1] ....
+
+data = ["Fa0/1", "10.1.1.1", "up", "up"]
+intf, ip, _, _ = data                            # из списка нужны только 2 первых элемента, "_" - означает что эти значения переменных не нужны (так принято)
+
+dhcp = ["XX:XX:XX:XX:XX:XX" , "10.1.10.2", "86250", "dhcp-snooping", "FastEthernet0/1"]
+mac, ip, *other = dhcp                           # other --> ["86250", "dhcp-snooping", "FastEthernet0/1"]  
+mac, ip, *_, intf = dhcp                         # _ --> ["86250", "dhcp-snooping"]     (удобно, если посередине много элементов и разное количество их)
+
+"""
+#  4 случая использовать звездочки "*"
+
+def f(*args)                     # собираем все позиционные аргументы в кортедж
+    pass
+
+octets = [10, 20, 30, 40]
+ip_template.format(*octetc)      # передать элементы списка как отдельные позиционные аргументы
+
+a, b, *c, d = [1, 2, 3, 4, 5, 6]            # распаковка переменных
+
+commands = ['int fa0/0', 'ip address ...']  # тоже распаковка переменных
+all_commands = ['conf t', *commands, 'end'] 
+"""
+
+==============================================================================================
+
+### ГЕНЕРАТОРЫ СПИСКОВ (СЛОВАРЕЙ, МНОЖЕСТВ) ###  (list comprehensions)
+
+# Это выражение вида:
+vlans = ['vlan {}'.format(num) for num in range(10,14)]
+print(vlans)                                            # ['vlan 10', 'vlan 11', 'vlan 12', 'vlan 13']
+
+# это аналогично следующей записи
+vlans = []
+for num in range(10,14):
+    vlans.append('vlan {}'.format(num))
+
+# Пример (перевести список чисел в список строк)
+vlans = [1, 2, 3, 4]
+vlans_str = []
+for vl in vlans:
+    vlans_str.append(str(vl))
+
+vlans_str = [str(vl) for vl in vlans]       # с помощью генератора, намного удобнее
+
+# Пример (отобрать элементы с числами и сделать из них список чисел)
+data = ["11", "2", "sdhb", "100", "b"]
+digits_only = []
+for item in data:
+    if item.isdigit():
+        digits_only.append(int(item))
+
+digits_only = [int(item) for item in data if item.isdigit()]        # с помощью генератора в одну строку сделали
+
+# Пример с вложенными списками (сделать один плоский список)
+vlans = [[10, 21, 35], [101, 115,150], [111, 40, 50]]
+data = []
+for vl_list in vlans:
+    for vl in vl_list:
+        data.append(vl)
+
+data = [vl for vl_list in vlans for vl in vl_list]      # сложнее воспринимать такой генератор
+
+# Генератор мнеожеств получается путем простой замены скобок на фигурные скобки
+data = {vl for vl_list in vlans for vl in vl_list}      # {10, 21, 35, 101, 115,150, 111, 40, 50}
+
+# Генератор словарей
+# Пример с преобразованием ключей в нижний регистр
+r1 = {
+    'HOSTMAME': 'london_r1',
+    'IP': '10.1.1.2',
+    'vendor': 'Cisco',
+    'model': '4451',
+}
+new_r1 = {}
+for key, value in r1.items():
+    new_r1[key.lower()] = value
+
+new_r1 = {key.lower(): value for key, value in r1.items()}      # с помощью генератора
+
+# создать новый словарь и отфильтровать в нем по ключам
+keys = "ip vendor model".split()    # keys ["ip", "vendor", "model"] 
+for key, value in new_r1.items():
+    if key in keys:
+        r1_filter[key] = valiue
+        
+r1_filter = {key: value for key, value in new_r1.items() if key in keys}    # с помощью генератора
+
+# если в генераторе случчайно вместо [] указать (), то это не сработает, но в определенных случаях например с join сработает ( "()" - другой генератор совсем, отдельно в книжке есть)
+vlans = [1, 2, 3, 4]
+",".join([str(vl) for vl in vlans])     # "1,2,3,4"
+",".join(str(vl) for vl in vlans)       # "1,2,3,4"
+
+==============================================================================================
+
+### Встроенные функции ###      (Built-in Functions)
+
+# эти функции не надо ни откуда импортировать
+
+# Функция print (преобразует вывод в строку и выводит по умолчанию на стандартный поток вывода)
+print(*items, sep=' ', end='\n', file=sys.stdout, flush=False) 
+
+print(1, 2, 3, sep="\n")    # сделать между элементами перевод строки к примеру или " | " (по умолчанию между элементами пробел)
+print(1, 2, 3, end=" ")     # end - то чем закончить вывод (по умолчанию перевод строки), end="\n\n" - или так к примеру
+print(1, 2, 3, sep=f"\n{'='*40}\n")     # элементы на разные строки а между ними '====='
+
+import time
+for i in range(10):                    
+    print(i, end=" ", flush=True)       # вывести числа в одну строку с задержкой,   Flush - говорит выводить тут же информацию не дожидаясь перевода строки
+    print(f"\r{i}", end="", flush=True) # вывести числа на одном месте (заменяя друг друга), можно делать спиннеры (spinner = "|/-\|/-\|/-\|/-\|", for i in spinner)
+    time.sleep(0.5)
+    # 
+-------------------------------
+
+# Функция range 
+range(stop)
+range(start, stop)       
+range(start, stop, step)      
+
+# чтобы увидеть результат работы функции надо ее применять где-то в цикле или использовать List
+list(range(5))          # [0, 1, 2, 3, 4]
+list(range(5, 10))      # [5, 6, 7, 8, 9]
+list(range(5, 10, 2))   # [5, 7, 9]         шаг 2
+list(range(6, 2, -1))   # [6, 5, 4, 3]      шаг -1
+
+vlan = 150
+vlan in range(1, 200)   # True   (самое полезное)
+
+r = range(1, 250)
+r[0]             # 1
+r[-2]            # 248
+r[10:]           # range(11, 250)
+len(r)           # 249
+min(r)           # 1
+max(r)           # 249
+r.index(100)     # 99
+
+
+
+
+
+
+
+
+
+
+
+
 
 
