@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Задание 7.2a
 
@@ -47,4 +47,17 @@ with open(file1) as f:
                 flag = False                        # флагу присваеваем другое значение False
                 break                               # необязательно
         if flag and not line.startswith("!"):       # если флаг не менялся, значит слов-исключений в строке не было, также проверяем чтобы строка не начиналась на "!"
+            print(line.rstrip())
+
+============================================================
+
+### Решение из будущих лекций ###
+
+ignore = ["duplex", "alias", "Current configuration"]
+
+with open("config_sw1.txt") as f:
+    for line in f:
+        if any([word in line for word in ignore]):	# any возращает True/False, проверяется в цикле слова в стоке, если хотя бы одно есть то ничего не делаем
+            pass
+        else:
             print(line.rstrip())
