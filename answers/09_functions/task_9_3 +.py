@@ -38,3 +38,24 @@ def get_int_vlan_map(config_filename):
             elif "trunk allowed" in line:
                 trunk_dict[intf] = [int(v) for v in line.split()[-1].split(",")]
         return access_dict, trunk_dict
+
+=========================================================================================
+
+### Мое решение ###    (почти такое же, применил фунцию map вместо генератора списков при переводе строки в число для vlan)
+
+def get_int_vlan_map(filename):
+    dict_intf_access = {}
+    dict_intf_trunk = {}
+    with open(filename) as f:
+        for line in f:
+            if line.startswith("interface"):
+                intf = line.split()[1]
+            elif "switchport access vlan" in line:
+                dict_intf_access[intf] = int(line.split()[-1])
+            elif "switchport trunk allowed vlan" in line:
+                line = line.split(" ")[-1].rstrip()
+                dict_intf_trunk[intf] = list(map(int, line.split(",")))
+        return dict_intf_access, dict_intf_trunk
+
+dict_intf_access, dict_intf_trunk = get_int_vlan_map("config_sw1.txt")
+print(dict_intf_access, dict_intf_trunk)

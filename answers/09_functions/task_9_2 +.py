@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Задание 9.2
 
@@ -73,3 +73,58 @@ def generate_trunk_config(intf_vlan_mapping, trunk_template):
             else:
                 trunk_conf.append(command)
     return trunk_conf
+
+=======================================================================
+
+### Мое решение ###    (такое же, только преобразование списка vlan из чисел в список vlan из строк и соединение строк сделал в два действия)
+
+from pprint import pprint
+
+trunk_mode_template = [
+    "switchport mode trunk",
+    "switchport trunk native vlan 999",
+    "switchport trunk allowed vlan",
+]
+
+trunk_config = {
+    "FastEthernet0/1": [10, 20, 30],
+    "FastEthernet0/2": [11, 30],
+    "FastEthernet0/4": [17],
+}
+
+trunk_config_2 = {
+    "FastEthernet0/11": [120, 131],
+    "FastEthernet0/15": [111, 130],
+    "FastEthernet0/14": [117],
+}
+
+def generate_trunk_config(intf_vlan_mapping, trunk_template):
+    """
+    intf_vlan_mapping - словарь с соответствием интерфейс-VLAN такого вида:
+        {'FastEthernet0/12':10,
+         'FastEthernet0/14':11,
+         'FastEthernet0/16':17}
+    trunk_template - список команд для порта в режиме trunk
+    Возвращает список всех портов в режиме trunk с конфигурацией на основе шаблона
+    """
+    result = []
+    for intf, vlan in intf_vlan_mapping.items():
+        result.append(f"interface {intf}")
+        vlans = [str(vl) for vl in vlan]                # преобразование списка vlan из чисел в список vlan из строк с помощью генератора списка
+        vlans = " ".join(vlans)                         # объединение списка vlan в одну строку
+        for command in trunk_template:
+            if command.endswith("allowed vlan"):
+                result.append(f" {command} {vlans}")
+            else:
+                result.append(f" {command}")
+    return result
+
+config = generate_trunk_config(trunk_config, trunk_mode_template)
+pprint(config)
+
+config = "\n".join(config)
+print(config)
+
+
+
+

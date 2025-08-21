@@ -57,3 +57,55 @@ def generate_access_config(intf_vlan_mapping, access_template, psecurity=None):
         if psecurity:
             access_config.extend(psecurity)
     return access_config
+
+
+==================================================================================
+
+### Мое решение ###   (такое же)
+
+from pprint import pprint
+
+access_mode_template = [
+    "switchport mode access",
+    "switchport access vlan",
+    "switchport nonegotiate",
+    "spanning-tree portfast",
+    "spanning-tree bpduguard enable",
+]
+
+access_config = {"FastEthernet0/12": 10, "FastEthernet0/14": 11, "FastEthernet0/16": 17}
+
+port_security_template = [
+    "switchport port-security maximum 2",
+    "switchport port-security violation restrict",
+    "switchport port-security",
+]
+
+def generate_access_config(intf_vlan_mapping, access_template, port_security_template=None):
+    """
+    intf_vlan_mapping - словарь с соответствием интерфейс-VLAN такого вида:
+        {'FastEthernet0/12':10,
+         'FastEthernet0/14':11,
+         'FastEthernet0/16':17}
+    access_template - список команд для порта в режиме access
+    port_security_template - список команд опциональный, можно не передавать
+    Возвращает список всех портов в режиме access с конфигурацией на основе шаблона
+    """
+    result = []
+    for intf, vlan in intf_vlan_mapping.items():
+        result.append(f"interface {intf}")
+        for command in access_template:
+            if command.endswith("access vlan"):
+                result.append(f" {command} {vlan}")
+            else:
+                result.append(f" {command}")
+        if port_security_template:
+            for command in port_security_template:
+                result.append(f" {command}")
+    return result
+
+config = generate_access_config(access_config, access_mode_template, port_security_template)
+pprint(config)
+
+config = "\n".join(config)
+print(config)
