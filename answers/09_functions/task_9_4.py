@@ -79,3 +79,44 @@ def convert_config_to_dict(config_filename):
                     config_dict[section].append(line.strip())
     return config_dict
 
+=======================================================================================
+
+### Мое решение ###   (идея у меня была такая же как у автора, но не получалось решить задачу, 3 строки подсмотрел у автора)
+
+from pprint import pprint
+
+ignore = ["duplex", "alias", "configuration"]
+
+def ignore_command(command, ignore):
+    """
+    Функция проверяет содержится ли в команде слово из списка ignore.
+    command - строка. Команда, которую надо проверить
+    ignore - список. Список слов
+    Возвращает:
+    * True, если в команде содержится слово из списка ignore
+    * False - если нет
+    """
+    ignore_status = False
+    for word in ignore:
+        if word in command:
+            ignore_status = True
+    return ignore_status
+
+def convert_config_to_dict(filename):
+    config_dict = {}
+    with open(filename) as f:
+        for line in f:
+            line = line.rstrip()
+            if not line or "!" in line or ignore_command(line, ignore):
+                continue
+            elif not line.startswith(" "):                      # у автора в этом месте используется функция isalnum(), которая проверяет символ, что он буквенно-цифровой 
+                section = line                                  # решение подсмотрел у автора
+                config_dict[section] = []                       # решение подсмотрел у автора
+            else:
+                config_dict[section].append(line.strip())       # решение подсмотрел у автора
+    return config_dict
+
+config_dict = convert_config_to_dict("config_sw1.txt")
+pprint(config_dict, sort_dicts=False)                           # почему-то включена по умолчанию сортировка, хотя не должна быть включена, принудительно выключил
+
+

@@ -49,12 +49,12 @@ def get_int_vlan_map(filename):
     with open(filename) as f:
         for line in f:
             if line.startswith("interface"):
-                intf = line.split()[1]
+                intf = line.split()[1]                                    # разделили строку и взяли номер наименование интерфейса
             elif "switchport access vlan" in line:
-                dict_intf_access[intf] = int(line.split()[-1])
+                dict_intf_access[intf] = int(line.split()[-1])            # если порт access то добавили в словарь ключ (интерфейс который выше взязи) и значение (номер Vlan выдернутый из строки)
             elif "switchport trunk allowed vlan" in line:
-                line = line.split(" ")[-1].rstrip()
-                dict_intf_trunk[intf] = list(map(int, line.split(",")))
+                line = line.split(" ")[-1].rstrip()                       # если порт trunk то сначала разделили строку и вязи список vlan, удалив в конце перевод строки (\n) 
+                dict_intf_trunk[intf] = list(map(int, line.split(",")))   # добавили в другой словарь ключ (интерфейс который выше взязи) и значение (список Vlan, которые получили путем разделения строки и применив фунцкцию map перевили в числа)
         return dict_intf_access, dict_intf_trunk
 
 dict_intf_access, dict_intf_trunk = get_int_vlan_map("config_sw1.txt")
