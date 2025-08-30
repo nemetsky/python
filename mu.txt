@@ -1,12 +1,33 @@
 from pprint import pprint
+#from my_functions import parse_cdp_neighbors
+import my_functions
 
-def parse_cdp_neighbors(string ):
-    cdp_dict = {}
-    string_list = string.split("\n")
-   # pprint(string_list[-2])
-    for s in string_list:
-        if s[-1:].isdigit():
-            pprint(s)
+def create_network_map(filenames):
+    cdp_dicts = {}
+    for file in filenames:
+        with open(file) as f:
+            output = my_functions.parse_cdp_neighbors(f.read())
+            cdp_dicts.update(output)
+    result = cdp_dicts.copy()
+    for key1, value1 in cdp_dicts.items():
+        for key, value in cdp_dicts.items():
+          #  print(value)
+            b = False
+            if key1 == value:
+                b = True
+            if b and key1 == value:
+                del result[key1]
+                b = False
+    #            print (key1, value)
+            #    result[key1] = value1
+    return result
 
-with open("sh_cdp_n_sw1.txt") as f:
-    parse_cdp_neighbors(f.read())
+infiles = [
+    "sh_cdp_n_sw1.txt",
+    "sh_cdp_n_r1.txt",
+    "sh_cdp_n_r2.txt",
+    "sh_cdp_n_r3.txt",
+]
+
+if __name__ == "__main__":
+    pprint(create_network_map(infiles))
