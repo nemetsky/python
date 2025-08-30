@@ -1,0 +1,12 @@
+from pprint import pprint
+
+def parse_cdp_neighbors(string ):
+    cdp_dict = {}
+    string_list = string.split("\n")
+   # pprint(string_list[-2])
+    for s in string_list:
+        if s[-1:].isdigit():
+            pprint(s)
+
+with open("sh_cdp_n_sw1.txt") as f:
+    parse_cdp_neighbors(f.read())
