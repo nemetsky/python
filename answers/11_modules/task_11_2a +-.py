@@ -97,4 +97,59 @@ def unique_network_map(topology_dict):
         key, value = sorted([key, value])
         network_map[key] = value
     return network_map
+    
+
+=========================================================================
+
+### Мое решение ### 
+
+"""
+Оставил в словаре только не дублированные записи, т.е. из записей вида:
+('R1', 'Eth0/0'): ('SW1', 'Eth0/1'),
+('SW1', 'Eth0/1'): ('R1', 'Eth0/0'),
+оставил только одну запись
+
+Долго мучался, но получилось. 
+У автора решение по функции unique_network_map намного проще :-), 
+Если хорошо подумать и разобраться, то можно понять первое решение автора (функция get берет ключ, но ключ называется как значение, и если оно равно ключу то не записывает в словарь),
+Второй вариант посложнения для понимания
+
+Нарисовать схему для словаря помощью функции draw_topology из файла draw_network_graph.py    НЕ ПОЛУЧИЛОСЬ из windows
+
+"""
+
+from pprint import pprint
+from my_functions import parse_cdp_neighbors
+
+def unique_network_map(dict_map):
+    list1 =[]
+    result = dict_map.copy()
+    for key, value in dict_map.items():
+        if not key in list1:
+            for key1, value1 in dict_map.items():
+                if key == value1:
+                    del result[key1]              # удаляем ключ, если есть такое же значение в словаре как этот ключ
+                    list1.append(key1)            # здесь добавляем ключ, значение которого совпало с ключом из верхнего цикла, в список и больше этот ключ проверяться не будет в вернем цикле (if not key in list1:)
+    return result
+
+def create_network_map(filenames):
+    cdp_map = {}
+    for file in filenames:
+        with open(file) as f:
+            output = parse_cdp_neighbors(f.read())
+            cdp_map.update(output)
+    return cdp_map
+
+infiles = [
+    "sh_cdp_n_sw1.txt",
+    "sh_cdp_n_r1.txt",
+    "sh_cdp_n_r2.txt",
+    "sh_cdp_n_r3.txt",
+]
+
+if __name__ == "__main__":
+    dict_map = create_network_map(infiles)
+    topology_dict = unique_network_map(dict_map)
+    pprint(topology_dict)
+
 
