@@ -1838,7 +1838,7 @@ def ping_ip(ip)
         cmd = ["ping", "-n", "1", ip]
     else:
         cmd = ["ping", "-c", "1", ip]
-    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8")             
+    result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')             
     if result.returncode == 0:
         return True
     else:
