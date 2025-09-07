@@ -72,10 +72,21 @@ def print_ip_table(success_list, fail_list):                                    
     table = {"Reachable": success_list, "Unreachable": fail_list}
     print(tabulate(table, headers="keys"))
 
-ip_range = ["172.16.50.177-172.16.50.181", "172.25.1.142"] #, "8.8.8.8-9", "10.15.17.254"]    
+ip_range = ["172.16.50.177-172.16.50.181", "172.25.1.142", "8.8.8.8-9", "10.15.17.254"]    
 
 if __name__ == "__main__":
     ip_list = convert_ranges_to_ip_list(ip_range)
     success_list, fail_list = ping_ip_addresses(ip_list)
     print_ip_table(success_list, fail_list)
-    
+
+"""
+=== Результат ===
+
+
+Reachable    Unreachable
+-----------  -------------
+8.8.8.8      172.16.50.177
+             172.16.50.178
+             172.25.1.142
+             8.8.8.9
+"""
