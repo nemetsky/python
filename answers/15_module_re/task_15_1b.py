@@ -43,8 +43,9 @@ def get_ip_from_cfg(filename):
                 if match.lastgroup == "intf":
                     intf = match.group(match.lastgroup)
                 elif match.lastgroup == "mask":
-                    result.setdefault(intf, [])
-                    result[intf].append(match.group("ip", "mask"))
+                    result.setdefault(intf, [])                     # setdefault добавляет ключ (в нашем случае интерфейс) в словарь со значением (в нашем случае пустой список), если ключ отсутсвует, 
+                                                                    # если такой ключ уже есть, то ничего не делает (значение не перезапишет)
+                    result[intf].append(match.group("ip", "mask"))  # добавление в словарь
     return result
 
 

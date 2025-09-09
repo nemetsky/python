@@ -31,3 +31,24 @@ def get_ip_from_cfg(config):
     with open(config) as f:
         result = [m.groups() for m in re.finditer(regex, f.read())]
     return result
+
+
+# =======================================================================================
+
+### Мое решение ###
+
+import re
+from pprint import pprint
+
+def get_ip_from_cfg(filename):
+    regex = r"ip address (\d+\.\d+\.\d+\.\d+) (\d+\.\d+\.\d+\.\d+)"
+    list_ip = []
+    with open(filename) as f:
+        for line in f:
+            match = re.search(regex, line)
+            if match:
+                list_ip.append(match.groups())
+    return list_ip
+
+list_ip = get_ip_from_cfg("config_r1.txt")
+pprint(list_ip)

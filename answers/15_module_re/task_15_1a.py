@@ -37,3 +37,70 @@ def get_ip_from_cfg(config):
 
     result = {m.group("intf"): m.group("ip", "mask") for m in match}
     return result
+
+
+# ========================================================================
+
+### Мое решение (вариант 1 через re.search) ###
+
+import re
+from pprint import pprint
+
+def get_ip_from_cfg(filename):
+    regex_1 = r"^interface (\S+)"
+    regex_2 = r"ip address (\d+\.\d+\.\d+\.\d+) (\d+\.\d+\.\d+\.\d+)"
+    dict_ip = {}
+    with open(filename) as f:
+        for line in f:
+            match_intf = re.search(regex_1, line)
+            match_ip = re.search(regex_2, line)
+            if match_intf:
+                interface = match_intf.group(1)
+            elif match_ip:
+                dict_ip[interface] = match_ip.groups()
+    return dict_ip
+
+dict_ip = get_ip_from_cfg("config_r1.txt")
+pprint(dict_ip)
+
+# ========================================================================
+
+### Мое решение (вариант 2 через re.finditer) ### (ркгулярку подсмотрел, не получалось)
+
+import re
+from pprint import pprint
+
+def get_ip_from_cfg(filename):
+    regex = (
+        r"interface (\S+)\n"
+        r"(?: .*\n)*"
+        r" ip address (\S+) (\S+)"
+    )
+    dict_ip = {}
+    with open(filename) as f:
+        config = f.read()
+        match = re.finditer(regex, config)
+        for m in match:
+            interface = m.group(1)
+            dict_ip[interface] = m.group(2, 3) 
+        # dict_ip = {m.group(1): m.group(2, 3) for m in match}      # с помощью генератора словаря
+    return dict_ip
+
+dict_ip = get_ip_from_cfg("config_r1.txt")
+pprint(dict_ip)
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
