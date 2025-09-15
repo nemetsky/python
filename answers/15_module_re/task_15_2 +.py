@@ -29,3 +29,30 @@ def parse_sh_ip_int_br(textfile):
     with open(textfile) as f:
         result = [m.groups() for m in re.finditer(regex, f.read())]
     return result
+
+
+# ========================================================================
+
+### Мое решение ###  (в принципе тоже самое, только у меня много лишних букв)
+
+import re
+from pprint import pprint
+
+def parse_sh_ip_int_br(filename):
+    regex = (
+        r"(?P<intf>\S+) +"                   
+        r"(?P<ip>[\d.]+|unassigned) +"
+        r".+?"
+        r"(?P<status>up|down|administratively down) +"
+        r"(?P<protocol>up|down)"     
+    )                                           
+    list_ip = []
+    with open(filename) as f:
+        config = f.read()
+        match = re.finditer(regex, config)                              
+        for m in match:                                                 
+            list_ip.append(m.groups())                                     
+    return list_ip
+
+list_ip = parse_sh_ip_int_br("sh_ip_int_br_2.txt")
+pprint(list_ip)

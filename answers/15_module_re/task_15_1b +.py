@@ -34,7 +34,7 @@ import re
 def get_ip_from_cfg(filename):
     result = {}
     regex = (r"^interface (?P<intf>\S+)"
-             r"|address (?P<ip>\S+) (?P<mask>\S+)")
+             r"|address (?P<ip>\S+) (?P<mask>\S+)")                 # применяется "или"
 
     with open(filename) as f:
         for line in f:
@@ -66,3 +66,30 @@ def get_ip_from_cfg(filename):
         for m in match:
             result[m.group(1)] = re.findall("ip address (\S+) (\S+)", m.group())
     return result
+
+# =====================================================================
+
+### Мое решение ###  (решение взял у автора, 2-ой вариант, просто разобрал его)
+
+import re
+from pprint import pprint
+
+def get_ip_from_cfg(filename):
+    regex = (
+        r"interface (\S+)\n"                    # такая же регулярка как и в прошлом задании
+        r"(?: .*\n)*"
+        r" ip address (\S+) (\S+)"
+        r"( ip address \S+ \S+ secondary)*"     # добавили что может быть еще адрес
+    )                                           
+    dict_ip = {}
+    with open(filename) as f:
+        config = f.read()
+        match = re.finditer(regex, config)                              # находим все совпадения 
+        for m in match:                                                 # перебираем куски с совпадениями
+            interface = m.group(1)                                      # берем интерфейс
+            ip_list = re.findall("ip address (\S+) (\S+)", m.group())   # теперь в каждом совпадении отбираем адреса с помощью findall, она же делает список
+            dict_ip[interface] = ip_list                                # записываем в словарь
+    return dict_ip
+
+dict_ip = get_ip_from_cfg("config_r2.txt")
+pprint(dict_ip)
