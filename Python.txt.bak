@@ -6,7 +6,8 @@ https://replit.com/languages/python3             # Тренажер
 https://docs.python.org/3.8/py-modindex.html     # Стандартная библитека модулей
 https://regex101.com/                            # Тренажер регулярных выражений (флаги описаны в теме регулярки (global, single line, multiline))
 https://habr.com/ru/articles/349860/             # Статья про регулярные выражения
-    
+
+бонусная лекция - модуль Rich
 ==============================================================================================
 
 ###  Типы данных: ###
@@ -2542,6 +2543,246 @@ result = subproccess.run("ls", stdout=subprocess.PIPE, encoding="UTF-8")
 # Если надо отправить куда-то байты, всегда делаем encode в последнюю очередь 
 
 
+============================================================================================
+
+### Сериализация данных ###
+
+# Это сохранеие данных в каком то формате. Чаще всего, это сохранение в каком-то структуированном формате.
+
+1) CSV-формат (табличные данные).
+    - любую таблицу можно экспортировать в формат CSV и обрабатывать её с помощью Python
+2) JSON-формат (комбинация списка, словарей и строк)
+    - можно описать конфигурацию через этот формат, управляющий софт может возвращать данные в JSON 
+    - используется для взаимодействия по API
+3) YAML-формат (текстовый формат для записи данных, более приятен/прост)
+    - удобно использовать для описания параметров (настройки различных объектов: IP-адреса, VLAN и др.)
+    - знание формата YAML пригодится при использовании Ansible сценариев
+
+- XML-формат (не рассматриваем)
+- Базы данных (самостоятельно посмотреть про sqllite, рано или поздно пригодится) 
+
+Для каждого из этих форматов в Python есть модуль, который существенно упрощает работу с ними.
+
+----------------------------------------------------------
+
+# CSV-формат
+
+# Пример Файла:
+hostname,vendor,model,location
+sw1,Cisco,3750,London
+sw3,Cisco,3650,"Liverpool, City"
+....
+# В простом случае можно делать split по запятой, но не всегда такие простые случае, иногда значение может быть в кавычках или еще что-нибудь
+# поэтому есть модуль для работы с CSV
+
+# использование csv.reader для чтения из файла
+import csv
+with open ("sw_data.csv") as f:
+    reader = csv.reader(f)         # reader - это итератор (лениво генерирует строки из файла), поэтому перебираем в цикле
+    for line in reader:
+        print(line)                # каждая строка, это список вида ['sw3', 'Cisco', '3650' ,'Liverpool, City']
+
+with open ("sw_data.csv") as f:
+    reader = list(csv.reader(f))   # если файл небольшой, то с помощью list можем все считать, получим спсиок списков
+
+headers = reader[0]                # заголовки  ['hostname', 'vendor', 'model', 'location']
+reader[1:]                         # все остальные значение (список списков)
+
+# Функция next (используется в основном для получения заголовков)  
+with open ("sw_data.csv") as f:    
+    reader = csv.reader(f)
+    headers = next(reader)                    # записать заголовки в переменную headers
+    for line in reader:                       # с остальным что-нибудь сделать, но уже в цикле строки с заголовками не будет
+        host, vendor, model, location = line  # распаковка переменных
+        print(model)                          # # 3750 3650 ...
+
+# использование csv.DictReader  (делает из каждой строки файла словарик)
+with open ("sw_data.csv") as f:    
+    reader = csv.DictReader(f)               
+    for line in reader:                     
+        print(line)              # {'hostname': 'sw1', 'vendor': 'Cisco', 'model': '3750', 'location': 'London'}
+        print(line["model"])     # 3750 3650 ...
+      # print(dict(line))        # Если python ниже 3.7, то там словарь неупорядоченный (OrderedDict), нужно применить dict, чтобы упорядочить
+
+
+# Запись в csv-файл
+
+data = [['hostname', 'vendor', 'model', 'location'],
+        ['sw1', 'Cisco', '3750', 'London, Best str'],
+        ['sw2', 'Cisco', '3850', 'Liverpool, Better str']]
+
+with open ("results.csv", "w") as f: 
+    wr = csv.writer(f)               # применяем csv.writer для записи
+    for line in data:         
+        wr.wtiterow(line)            # записываем в файл наши списки
+                                     # значения с запятыми будет записано в файл в кавычках "London, Best str"
+
+wr = csv.writer(f, quoting=csv.QUOTE_ALL)   # QUOTE_ALL - все значения записывать в кавычках
+                                            # QUOTE_MINIMAL - по умолчанию, кавычки будут там где есть запятые в значении
+                                            # QUOTE_NONE - вообще не ставить кавычки
+                                            # QUOTE_NONNUMERIC - все в кавычках кроме чисел
+
+# запись из словаря в файл csv
+
+data = [
+    {'hostname': 'sw1', 'location': 'London', 'model': '3750','vendor': 'Cisco'}
+    {'hostname': 'sw2', 'location': 'Liverpool', 'model': '3850', 'vendor': 'Cisco'}
+]
+
+with open ("results.csv", "w") as f:
+    wr = csv.DictWriter(f, fieldnames="hostname location model vendor".split())   # в fieldnames указываем ключи, можно менять местами, тогда и файле столбцы поменяются местами
+    wr.writeheaders()                                                             # записать сами заголовкм в файл
+    for line in data:             
+        wr.wtiterow(line)               
+
+# fieldnames=list(data[0].keys()) - можно так указать заголовки
+# Если в fieldnames какой-нибудь заголовок (ключ) не включить, то будет ошибка
+# Если в fieldnames добавить лишний заголовок (ключ), то этот столбец (поле) запишется, но будет пустым
+
+# Использование другого разделителя
+
+with open ("sw_data2.csv") as f:    
+    reader = csv.reader(f, delimiter=";")       # считать из файла, где ипользуется разделитель точка с запятой ";"
+    for line in reader:                     
+        print(line)  
+        
+with open ("results.csv", "w") as f:
+    wr = csv.DictWriter(f, fieldnames="hostname location model vendor".split(), delimiter=";")  # записать в файл с разделителем ";"
+    for line in data:             
+        wr.wtiterow(line) 
+
+
+----------------------------------------------------------
+
+# JSON-формат
+
+# формат используется для хранения данных, похож на Python, не понимает кортежи только
+# также используется для работы с API
+
+# Пример json файла
+
+{
+    "access": [
+        "switchport mode access",
+        "switchport access vlan",
+        "spanning-tree portfast",
+        "spanning-tree bpduguard enable"
+    ],
+    "trunk": [
+        "switchport trunk encapsulation dot1q",
+        "switchport mode trunk",
+        "switchport trunk native vlan 999",
+        "switchport trunk allowed vlan"
+    ]
+}
+
+import json
+
+# читать данные из файла (json.load)
+with open("sw_templates.json") as f:
+    data = json.load(f)                         # переменная будеь содержать словарь в нашем случае
+
+# записать данные в файл (dump.load)
+with open("sw_templates_new.json", "w") as f:   
+    json.dump(data, f)                          # запись в файл будет сплошная (без отступов), плохо читать визуально
+
+# запись с отступами, параметр indent указывает количество отступов 
+with open("sw_templates_new.json", "w") as f:   
+    json.dump(data, f, indent=2)                # запись в файл будет с отступами (визуально красиво), (indent=5, если хотим побольше отступов)
+
+# записать данные в файл
+with open("sw_templates_new.json", "w") as f:   
+    json.dump(data, f)
+
+# если мы получили строку json-формата, то надо применять json.loads, например:
+with open("sw_templates.json") as f:
+    data_str = f.read()               # допустим получили строку откуда-то, в которой json данные
+    json.loads(data_str)              # применяем loads и получим из строки словарь в нашем случае
+
+# также можно сделать строку в формате json с помощью dumps.load
+json.dums(data)         #  делаем строку в формате json из нашего словаря, потом допустим через API ее передадим куда-нибудь
+
+# Конвертация данных Python в JSON    (при конвертации структура данных маленько меняется)
+dict        <--->  object
+list, tuple <--->  array                # из списка в JSON будет конвертация в список в Pyton (не в кортеж)
+str         <--->  string
+int, float  <--->  number
+True        <--->  true
+False       <--->  false
+None        <--->  null  
+
+# В JSON ключи могут быть только строками, поэтому если в Python ключи числа, то при конвертации они станут строками. 
+# Если в Python ключи другого типа (например кортеж), то будет ошибка, но можно применить ключ skipkeys, чтобы игнорировать данные которые непонимает JSON
+with open("sw_templates_new.json", "w") as f:
+    json.dump(data, f, indent=4, skipkeys=True)     # строки из словаря с непонятными для JSON данными будут игнорированы и не запишутся в файл         
+
+# Много случаев, когда JSON-файл содержит кучу вложенности словарей, работа с такими словарями(списками)несложная но требует много практики, 
+# например, считали json-файл и начинаем анализироавть и перебирать в цикле необходимые ключи
+for i in data["configuration"]:
+    print(i)                                          # смотрим, какое значение, далее перебираем вложенные словари
+for i in data["configuration"]["interfaces"]:
+    print(i)                                          # смотрим, и так далее перебираем вложенности, пока не найдем нужные нам значения
+for i in data["configuration"]["interfaces"]:
+    print(i["address"])      
+
+# Или так перебирать вложенность
+for key, value in data.items():                 # перебираем словарь
+    #print(key)
+    #pprint(value)
+    if type(value) == dict:
+        for key_n, value_n in value.items():    # если есть вложенные словарь, то его перебираем и т.д. пока не найдем нужные значения из файла
+            print(value_n)
+    if type(value) == list:
+        for i in value:
+            print(i)
+
+-------------------------------------------------------------------
+
+# API - программный интерфейс (используется для программ и скриптов, а не для человека)
+# По сути API состоит из множества ссылок, по которым обратившись мы можем получить нужную информацию в формате JSON
+
+### Пример работы с GitHub через API ### 
+
+# для работы надо логин и токен (раньше всместо токена был пароль), через токен позволяет делать права на что-нибудь (например только на репозиторий)
+
+pip install requests            # простой модуль для работы с API
+
+import requests
+
+username = "nemetsky"
+token = "..."                   # token = os.environ.get("GITHUB_TOKEN") - в уроке так делали, т.к. все токен прописывали куда-то в окружение
+
+r = requests.get('https://api.github.com/user', auth=(username, token))         # запрос информации о пользователе
+
+# если r возвращает <Response [200]>, то все ОК
+
+r.text                    # строка котораю получили из API по нашему запросу
+json.loads(r.text)        # делаем словарь из строки которую получили  
+
+# или можно так словарь сразу получить
+data = r.json()                           
+
+# Если хотим записать данные в json-файл, то надо учитывать что не ASCII-символы (например кирилица) запишутся кодами (Ничего страшного, т.к. если считать потом, то Python разпознает коды)
+# Но можем применить параметр ensure_ascii, который скажет что если символы не знаешь, то запиши как есть (будет визуально теперь все понятно)
+with open("github_api", "w") as f:
+    json.dump(data, f, indent=4, ensure_ascii=False )
+
+
+# Запрос информации о репозиториях
+r = requests.get('https://api.github.com/user/repos', auth=(username, token))         
+
+repos = r.json()    # словарь с информацией по репозиториям
+                    # внутри могут быть еще ссылки в значениях некоторых ключей
+
+r = requests.get(repos[0]["owner"]["followers_url"], auth=(username, token))        # обратились по ссылки, которая записана у первого репозитория repos[0] во подсловаре followers_url
+
+# И так далее обращаясь по ссылкам и записывая информацию в словарь мы вынимаем получаем нужную информацию
+# В документации по API GitHub можно почитать как с ним работать (например вместо get можем применить delete, чтобы удалить репозиторий)
+
+# Обычно для работы с API с каким то оборудованием существуют специальные модули для Python для облегчения/автоматизации работы с этим оборудованием
+# (например, чтобы обращаться не по ссылкам, а по каким то объектам, использовать какие то методы и т.п.)
+# Модули эти пишет или сам вендор пишет или сторонние разработчики. Например для работы с API GitHub есть модуль PyGithub.
+# (Искать в поисковике например Cisco API Python)
 
 
 
