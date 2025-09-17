@@ -2542,7 +2542,7 @@ result = subproccess.run("ls", stdout=subprocess.PIPE, encoding="UTF-8")
 # При работе всегда надо работать со строками, конвертацию из байт (decode) всегда делаем в первую очередь
 # Если надо отправить куда-то байты, всегда делаем encode в последнюю очередь 
 
-
+============================================================================================
 ============================================================================================
 
 ### Сериализация данных ###
@@ -2651,7 +2651,10 @@ with open ("results.csv", "w") as f:
     for line in data:             
         wr.wtiterow(line) 
 
-
+# В Windows есть особенность, надо всегда указывать newline="" при открытии файла
+with open ("results.csv", "w", newline="") as f:
+    writer = csv.writer(dect)
+    
 ----------------------------------------------------------
 
 # JSON-формат
@@ -2784,11 +2787,74 @@ r = requests.get(repos[0]["owner"]["followers_url"], auth=(username, token))    
 # Модули эти пишет или сам вендор пишет или сторонние разработчики. Например для работы с API GitHub есть модуль PyGithub.
 # (Искать в поисковике например Cisco API Python)
 
+----------------------------------------------------------
 
+# YAML-формат
 
+# текстовый формат для записи данных, более восприятен человеком, чем JSON, испольщуют для написания сценариев (например, Ansible)
+# также как в python в YAML используются отступы (пробелы)
 
+# Список имеет 2 вида записей:
+1) [switchport mode access, switchport access vlan, switchport nonegotiate]     # в скобках без кавычек
+2) - switchport mode access                                                     # каждая строка должна начинаться с '- ' (минуса и пробела)
+   - switchport access vlan
+   - switchport nonegotiate
 
+# Словарь имеет 2 вида записей:
+1) { vlan: 100, name: IT }
+2) vlan: 100
+   name: IT
 
+# Строку можно писать в кавычках, но можно и без кавычек, если нет спец. символов в строке
+command: "sh interface | include Queueing strategy:"
 
+# Комбинация элементов
+access:                                 # словарь в котором 2 ключа, значения у которых списки
+- switchport mode access
+- switchport access vlan
+- spanning-tree bpduguard enable
+trunk:
+- switchport trunk encapsulation dot1q
+- switchport mode trunk
+- switchport trunk native vlan 999
 
+- BS: 1550                              # список словарей
+  IT: 791
+  name: Liverpool
+- BS: 1510
+  IT: 793
+  name: Bristol
+
+# установка модуля для работы с yaml
+pip install pyyaml
+
+# запись в файл
+import yaml
+data = [
+    {'BS': 1550, 'IT': 791, 'name': 'Liverpool'},
+    {'BS': 1510, 'IT': 793, 'name': 'Bristol'}
+]
+with open("test_data.yaml", "w") as f:
+    yaml.dump(data, f)
+
+# чтение из файла
+with open('info.yaml') as f:
+    templates = yaml.load(f)            # load - в основном использовали раньше, но просто load может загружать любые структуры данных, что-то лишнее (небезопасно)
+    templates = yaml.safe_load(f)       # safe_load  -  загружает только базовые структуры данных (лучше его использовать)
+    templates = yaml.full_load(f)       # full_load  -  загружает все объекты
+
+# YAML понимает все объекты Python d отличие от JSON, но некоторые выглядят странно 
+# например кортеж (100,200) в значении словаря будет выглядеть типа:
+: !!pytnon/tuple
+- 100
+- 200
+
+# Можно из JSON файла читать (конвертировать) в YAML, и наоборот
+# Если запутался в синтаксис YAML, то можно создать в Python данные и записать в YAML
+
+    
+    
+    
+    
+    
 
