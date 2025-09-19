@@ -24,6 +24,7 @@ interface Loopback0
 """
 import re
 
+# первый способ
 
 def get_ints_without_description(config):
     regex = re.compile(r"!\ninterface (?P<intf>\S+)\n"
@@ -33,6 +34,7 @@ def get_ints_without_description(config):
         result = [m.group('intf') for m in match if m.lastgroup == 'intf']
         return result
 
+# второй способ
 
 def get_ints_without_description(filename):
     result_list = []
@@ -47,3 +49,28 @@ def get_ints_without_description(filename):
                 else:
                     result_list.remove(intf)
     return result_list
+    
+    
+# ===============================================================
+
+### Мое решение ###   (мое решение совсем другое, и на мой взгляд намного проще)
+
+import re
+
+def get_ints_without_description(filename):
+    regex = r"^interface (\S+)\n (\S+)"
+    result = []   
+    with open(filename) as f:
+        match = re.finditer(regex, f.read(), re.MULTILINE)          # re.MULTILINE - чтобы в ркгулярке работал ^ к каждой строке
+        for m in match:
+            if m.group(2) != "description":
+                result.append(m.group(1))
+    return result    
+            
+if __name__ == "__main__":
+    print(get_ints_without_description("config_r1.txt"))
+    
+    
+# Результат: ['Loopback0', 'Tunnel0', 'Ethernet0/1', 'Ethernet0/3.100', 'Ethernet1/0']  
+    
+
