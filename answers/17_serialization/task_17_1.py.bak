@@ -54,37 +54,3 @@ if __name__ == "__main__":
     sh_dhcp_snoop_files = glob.glob("*_dhcp_snooping.txt")
     print(sh_dhcp_snoop_files)
     write_dhcp_snooping_to_csv(sh_dhcp_snoop_files, "example_csv.csv")
-
-
-# =================================================================================
-
-### Мое решение ###    (В оличии от автора я сначала формирую искомый списоск списков, а потом его записываю в csv-файл, автор сразу добавляет записи в файл когда находит их)
-                       # (Ну а так все правильно я сделал сам)
-import re
-import csv
-from glob import glob
-from pprint import pprint
-
-def gwrite_dhcp_snooping_to_csv(filenames, output):
-    regex = re.compile(r"^([A-F0-9:]+) +([\d.]+).+ (\d+) +(\S+)", re.MULTILINE)    # отлавливаем из файлов - 'sw1', '00:09:BB:3D:D6:58', '10.1.10.2', '10', 'FastEthernet0/1'
-    regex_name = re.compile(r"^(\S+?)_", re.MULTILINE)
-    result = ["switch mac ip vlan interface".split()]
-    for file in filenames:
-        device = regex_name.search(file)
-        with open(file) as f:
-            match = regex.finditer(f.read())
-            for m in match:
-                list1 = []
-                list1.append(device.group(1))
-                list1.extend(list(m.groups()))
-                result.append(list1)
-    with open(output, "w", newline="") as f:
-        wr = csv.writer(f)
-        for line in result:
-            wr.writerow(line)
-    return result
-
-# file_list = ["sw1_dhcp_snooping.txt", "sw2_dhcp_snooping.txt", "sw3_dhcp_snooping.txt"]
-file_list = glob("*_dhcp_snooping.txt")
-pprint(gwrite_dhcp_snooping_to_csv(file_list, "resutls_17_1.csv"))
- 

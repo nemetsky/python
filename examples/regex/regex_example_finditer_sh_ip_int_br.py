@@ -1,9 +1,9 @@
 """
-Задача 1. 
+Р—Р°РґР°С‡Р° 1. 
 
-Регулярками вывести все совпадения в файле sh_ip_int_br
+Р РµРіСѓР»В¤СЂРєР°РјРё РІС‹РІРµСЃС‚Рё РІСЃРµ СЃРѕРІРїР°РґРµРЅРёСЏ РІ С„Р°Р№Р»Рµ sh_ip_int_br
 
-=== Результат ===
+=== Р РµР·СѓР»СЊС‚Р°С‚ ===
 
 [('FastEthernet0/0', '15.0.15.1', 'up', 'up')
 ('FastEthernet0/1', '10.0.12.1', 'up', 'up')
@@ -16,8 +16,8 @@ from pprint import pprint
 
 def parse_sh_ip_int_br(output):
     regex = r"(\S+) +(\S+) +\w+ +\w+ +(up|down) +(up|down)" 
-    all_match = re.finditer(regex, output)                    # применяем finditer ко всему файлу
-    results = [match.groups() for match in all_match]         # так как это итератор, то перебираем в цикле (в данном случае с помощью генератора)
+    all_match = re.finditer(regex, output)                    # РїСЂРёРјРµРЅВ¤РµРј finditer РєРѕ РІСЃРµРјСѓ С„Р°Р№Р»Сѓ
+    results = [match.groups() for match in all_match]         # С‚Р°Рє РєР°Рє СЌС‚Рѕ РёС‚РµСЂР°С‚РѕСЂ, С‚Рѕ РїРµСЂРµР±РёСЂР°РµРј РІ С†РёРєР»Рµ (РІ РґР°РЅРЅРѕРј СЃР»СѓС‡Р°Рµ СЃ РїРѕРјРѕС‰СЊСЋ РіРµРЅРµСЂР°С‚РѕСЂР°)
     return results
     
 if __name__ == "__main__": 
