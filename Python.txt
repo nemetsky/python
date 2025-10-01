@@ -3002,26 +3002,95 @@ match = r1.expect([b">", b"#"])
 
 # Пример в файле example_telnetlib.py и у автора (обязательно посмотреть пример)
 
+----------------------------------------------------------
+
+### Модуль paramiko ###
+
+# подключение только по SSH (version 2), поддерживает и Client и Server
+
+pip install paramiko
+
+client = paramiko.SSHClient()                                 # этот класс представляет соединение в SSH-серверу. Выполняет аутентификацию клиента
+client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # set_missing_host_key_policy не является обязательной, она указывает какую политику использовать, когда выполнятся подключение к серверу, ключ которого неизвестен
+                                                              # paramiko.AutoAddPolicy() автоматически добавляет новое имя хоста и ключ в локальный объект HostKeys.
+
+client.connect(hostname="192.168.100.1", username="cisco", password="cisco", look_for_keys=False, allow_agent=False)    # подключение к оборудованию
+
+# look_for_keys - по умолчанию paramiko выполняет аутентификацию по ключам, надо отключать если ключи не используем
+# allow_agent - paramiko может подключаться к локальному SSH агенту ОС (если по ключам подключаемся)
+
+ssh = client.invoke_shell()              # Метод invoke_shell позволяет установить интерактивную сессию SSH с сервером.
+    
+ssh.send("enable\n")                     # Метод send - отправляет указанную строку в сессию и возвращает количество отправленных байт или ноль если сессия закрыта и не удалось отправить команду
+ssh.send(enable_pass + "\n")    
+time.sleep(1)                            # между send и recv ставим паузу обязательно
+ssh.send("terminal length 0\n")     
+time.sleep(1)   
+ssh.send("sh ip int br\n")               # ssh.send(command + "\n") 
+time.sleep(2) 
+ssh.settimeout(5)                        # установить таймаут на считывание информации из сессии         
+result = ssh.recv(10000).decode("utf-8") # Метод recv получает данные из сессии. В скобках указывается максимальное значение в байтах, которое нужно получить. Этот метод возвращает считанную строку
+ssh.close()                              # закрыть сессию
 
 
+# Примеры в файлах example_paramiko_1_basic.py и example_paramiko_2_read_until.py
+# Примеры с вводом команд (config) у автора посмотреть
 
+----------------------------------------------------------
 
+### Модуль netmiko ###
 
+# netmiko - это обертка paramiko, понимает сетевое оборудование, различает вендоров, упрощает "жизнь" 
+#           умеет также telnet
 
+pip install netmiko
 
+import netmiko
 
+# Пример использования
+command = sys.argv[1]
+user = input("Username: ")
+password = getpass.getpass()
+enable_pass = getpass.getpass(prompt="Enter enable password: ")
+devices_ip = ["192.168.100.1"]
+for ip in devices_ip:
+    print(f"Подключение к {ip}")                     # параметры подключения указываются в словаре (параметров очень много, смотреть в документации)
+    device_params = {"device_type": "cisco_ios",     # device_type - предопределенные значения, которые понимает netmiko ("eltex", "eltex_esr")
+                     "host": ip,
+                     "username": user,
+                     "password": password,
+                     "secret": enable_pass}          
+    ssh = netmiko.ConnectHandler(**device_params)    # соединение с устройством с нашими параметрами, **device_params - распаковать словарь в ключевые аргументы
+    # ssh = netmiko.Netmiko(**device_params)         # можно так подключаться
+    ssh.enable()                                     # вход в режим enable с ключом secret (необязательно)
+    result = ssh.send_command(command)               # ssh.send_command - отправка команд show чтобы получить результат, terminal length отправляется по умолчанию
+    print(result)
 
+# Посмотреть поддерживаемые "device_type" https://github.com/ktbyers/netmiko/blob/develop/PLATFORMS.md
 
+# Методы netmiko
+send_command            - отправить одну команду (только для команд типа show)
+send_config_set         - отправить несколько команд (отправки команд конфигурации)
+send_config_from_file   - отправить команды из файла (внутри используется метод send_config_from_file)
+send_command_timing     - отправить одну команду и подождать вывод на основании таймера
 
+# Пример send_config_set
+ssh.send_config_set("logging 10.1.1.1")            # автоматически зайдет в режим конфигурирования и потом выйдет из него
+ssh.send_config_set(["lo0", "description TEST"])   # отпрвить список команд 
 
+ssh.config_mode()                                                 # зайти в конфиг-режим (чтобы потом например отправлять по одной команде и например считывать информацию и проверять)
+ssh.send_config_set("logging 10.1.1.1", exit_config_mode=False)   # отправить команду и не выходить из режима
+ssh.exit_config_mode()                                            # выйти из режима конфиг
 
+ssh.find_prompt()         # посмотреть строку приглашения, в каком мы сейчас режиме работаем ( R1# , R1(config)# , и т.д.)
+                          # штука полезная, в том плане что ее можно добавлять в вывод в начало, чтобы видно было на каком оборудование сделан вывод
+                          
+ssh.send_command("sh int descr", strip_command=False, strip_prompt=False)  # не обрезать в выводе саму команду и не обрезать в конце prompt  
 
+!!! ssh.close, ssh.disconnect()  - ???
 
-
-
-
-
-
+# использование telnet
+"device_type": "cisco_ios_telnet"       # указать в параметрах _telnet, дальше все как с SSH    
 
 
 
