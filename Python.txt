@@ -3040,8 +3040,13 @@ ssh.close()                              # закрыть сессию
 
 ### Модуль netmiko ###
 
-# netmiko - это обертка paramiko, понимает сетевое оборудование, различает вендоров, упрощает "жизнь" 
-#           умеет также telnet
+# netmiko - это обертка paramiko, понимает сетевое оборудование, различает вендоров, упрощает "жизнь", на него похож также модуль scrapli (+/- одно и тоже) 
+#           умеет также telnet, scp
+
+# netmiko не проверяет есть ли команда уже в конфигурации, он только отправляет команды и получает вывод (также как и модуль scrapli) 
+# можно написать отдельную функцию для проверки есть ли такие команды уже (В примерах файл 4_netmiko_check_cfg.py).
+                                                          
+!!! Более продвинутые модули/инструменты (на уровень выше), которые понимают логику оборудования - это napalm, nornir, ansible (их изучение сложнее и надо проверять поддерживают ли они вашего вендора)
 
 pip install netmiko
 
@@ -3061,22 +3066,24 @@ for ip in devices_ip:
                      "password": password,
                      "secret": enable_pass}          
     ssh = netmiko.ConnectHandler(**device_params)    # соединение с устройством с нашими параметрами, **device_params - распаковать словарь в ключевые аргументы
-    # ssh = netmiko.Netmiko(**device_params)         # можно так подключаться
+    # ssh = netmiko.Netmiko(**device_params)         # можно так подключаться (более новый способ)
     ssh.enable()                                     # вход в режим enable с ключом secret (необязательно)
     result = ssh.send_command(command)               # ssh.send_command - отправка команд show чтобы получить результат, terminal length отправляется по умолчанию
     print(result)
 
-# Посмотреть поддерживаемые "device_type" https://github.com/ktbyers/netmiko/blob/develop/PLATFORMS.md
+# !!! Посмотреть поддерживаемые "device_type" https://github.com/ktbyers/netmiko/blob/develop/PLATFORMS.md
+
+# !!! Посмотреть примеры с netmiko, т.к. много чего не рассматриваем https://github.com/ktbyers/netmiko/blob/develop/EXAMPLES.md
 
 # Методы netmiko
-send_command            - отправить одну команду (только для команд типа show)
-send_config_set         - отправить несколько команд (отправки команд конфигурации)
-send_config_from_file   - отправить команды из файла (внутри используется метод send_config_from_file)
+send_command            - отправить одну команду (только для команд типа show/display)
+send_config_set         - отправить одну или несколько команд конфигурации
+send_config_from_file   - отправить команды из файла (внутри используется метод send_config_set)
 send_command_timing     - отправить одну команду и подождать вывод на основании таймера
 
 # Пример send_config_set
-ssh.send_config_set("logging 10.1.1.1")            # автоматически зайдет в режим конфигурирования и потом выйдет из него
-ssh.send_config_set(["lo0", "description TEST"])   # отпрвить список команд 
+ssh.send_config_set("logging 10.1.1.1")            # автоматически зайдет в режим конфигурирования если нужно и потом выйдет из него
+ssh.send_config_set(["lo0", "description TEST"])   # отправить список команд 
 
 ssh.config_mode()                                                 # зайти в конфиг-режим (чтобы потом например отправлять по одной команде и например считывать информацию и проверять)
 ssh.send_config_set("logging 10.1.1.1", exit_config_mode=False)   # отправить команду и не выходить из режима
@@ -3087,14 +3094,24 @@ ssh.find_prompt()         # посмотреть строку приглашен
                           
 ssh.send_command("sh int descr", strip_command=False, strip_prompt=False)  # не обрезать в выводе саму команду и не обрезать в конце prompt  
 
+# новая фича полезная !!!
+ssh.send_config_set("blablabla", error_pattern="%")   # если при отправке команды возникла ошибка, то происходит исключение и останавливается отправка следующих команд (но если предыдущие прошли без ошибки то они не отменяться)
+
+# netmiko умеет парсить вывод
+ssh.send_command("sh ip int br", use_textfsm=True)    # в результате получим список словарей (в этом случае с интерфейсами)
+
 !!! ssh.close, ssh.disconnect()  - ???
 
 # использование telnet
-"device_type": "cisco_ios_telnet"       # указать в параметрах _telnet, дальше все как с SSH    
+"device_type": "cisco_ios_telnet"       # указать в параметрах подключение по telnet, дальше все как с SSH    
 
-
-
-
+"""
+Если мы хотим не отключать paging, то как это сделать можно посмотреть в примере 4_netmiko_more.py
+в том примере используются нискоуровневые методы для этих целей: 
+- read_until_pattern (читает вывод до чего-то)
+- write_channel (ничего не ждет, а просто отправляет команду/символы)
+"""
+Методы read_until_pattern, write_channel могут пригодится где-нибудь
     
 
 

@@ -1,0 +1,8 @@
+- device_type: cisco_ios
+  host: 10.11.10.107
+  username: nemetskiy-sv
+  timeout: 5
+- device_type: cisco_ios
+  host: 192.168.11.11
+  username: nemetskiy-sv
+  timeout: 5
