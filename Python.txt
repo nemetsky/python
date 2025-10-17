@@ -3071,6 +3071,9 @@ for ip in devices_ip:
     result = ssh.send_command(command)               # ssh.send_command - отправка команд show чтобы получить результат, terminal length отправляется по умолчанию
     print(result)
 
+
+!!! ssh.close, ssh.disconnect()  - ???  # Если не используем контекст with netmiko.ConnectHandler(**device_params) as ssh:   - то походу надо закрывать сессии вручную 
+
 # !!! Посмотреть поддерживаемые "device_type" https://github.com/ktbyers/netmiko/blob/develop/PLATFORMS.md
 
 # !!! Посмотреть примеры с netmiko, т.к. много чего не рассматриваем https://github.com/ktbyers/netmiko/blob/develop/EXAMPLES.md
@@ -3100,7 +3103,7 @@ ssh.send_config_set("blablabla", error_pattern="%")   # если при отпр
 # netmiko умеет парсить вывод
 ssh.send_command("sh ip int br", use_textfsm=True)    # в результате получим список словарей (в этом случае с интерфейсами)
 
-!!! ssh.close, ssh.disconnect()  - ???
+
 
 # использование telnet
 "device_type": "cisco_ios_telnet"       # указать в параметрах подключение по telnet, дальше все как с SSH    
