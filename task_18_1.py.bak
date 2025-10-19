@@ -62,7 +62,7 @@ if __name__ == "__main__":
         elif dev["device_type"] == "eltex":
             commands = ["logging file informational", "logging cli-commands"]
             # commands = ["line ssh", "history size 100"]
-        pprint(send_config_commands(dev, password, commands, log=True))
+        pprint(send_config_commands(dev, password, commands, log=False))
         
         
         

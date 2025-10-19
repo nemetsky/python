@@ -1,8 +1,10 @@
 - device_type: cisco_ios
-  host: 10.11.10.107
-  username: nemetskiy-sv
+  host: 172.16.0.1
+  username: cisco
+  secret: cisco
   timeout: 5
-- device_type: eltex
-  host: 10.20.11.45
-  username: nemetskiy-sv
+- device_type: cisco_ios
+  host: 172.16.0.2
+  username: cisco
+  secret: cisco
   timeout: 5
