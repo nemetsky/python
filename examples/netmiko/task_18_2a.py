@@ -1,12 +1,9 @@
 import netmiko
 import yaml
 import getpass
-import re
-from pprint import pprint
 
-
-def send_show_command(device, password, command):
-    ip = device["host"]
+def send_show_command(device, password, command):                 # отправка команд show
+    ip = device["host"]                                             
     print(f"Подключаюсь к {ip}")
     try:
         with netmiko.ConnectHandler(password=password, **device) as ssh:
@@ -20,29 +17,16 @@ def send_show_command(device, password, command):
         print(error)
 
 
-def send_config_commands(device, password, config_commands, log=True):
+def send_config_commands(device, password, config_commands, log=True):          # отправка команд конфигурации
     ip = device["host"]
-    commands_good = {}
-    commands_bad = {}
-    template_error = 'Комманда "{}" выполнилась с ошибкой "{}" на устройстве {}'
-    regex = r"% (\D+)[.:(?:at)]"
     if log:
         print(f"Подключаюсь к {ip}...")
     with netmiko.ConnectHandler(password=password, **device) as ssh:
-        ssh.enable()
-        for command in config_commands:
-            result = ssh.send_config_set(command, exit_config_mode=False)
-            match = re.search(regex, result)
-            if match:
-                print(template_error.format(command, match.group(1), ip))
-                commands_bad[command] = result
-            else: 
-                commands_good[command] = result
-        ssh.exit_config_mode()
-    return commands_good, commands_bad
+        result = ssh.send_config_set(config_commands)
+    return result
 
 """   
-if __name__ == "__main__":
+if __name__ == "__main__":                                        # отправка команд show
     command = "sh clock"
     password = getpass.getpass()
     with open("devices.yaml") as f:
@@ -51,19 +35,18 @@ if __name__ == "__main__":
         print(send_show_command(dev, password, command))
 """
 
-if __name__ == "__main__":
+if __name__ == "__main__":                                        # отправка команд конфигурации
     password = getpass.getpass()
     with open("devices.yaml") as f:
         devices = yaml.safe_load(f)
     for dev in devices:
         if dev["device_type"] == "cisco_ios":
-            commands = ["logginga console error", "login on-failure log every 2"]
-            # commands = ["archive", "log config", "logging size 200"]
+            # commands = ["logging console error", "login on-failure log every 2"]
+            commands = ["archive", "log config", "logging size 200"]
         elif dev["device_type"] == "eltex":
-            commands = ["logging file informational", "logging cli-commands"]
-            # commands = ["line ssh", "history size 100"]
-        pprint(send_config_commands(dev, password, commands, log=True))
-        
+            # commands = ["logging file informational", "logging cli-commands"]
+            commands = ["line ssh", "history size 100"]
+        print(send_config_commands(dev, password, commands))
         
         
         
