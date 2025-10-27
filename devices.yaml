@@ -1,0 +1,8 @@
+- device_type: cisco_ios
+  host: 10.11.10.107
+  username: nemetskiy-sv
+  timeout: 5
+- device_type: eltex
+  host: 10.20.11.45
+  username: nemetskiy-sv
+  timeout: 5
