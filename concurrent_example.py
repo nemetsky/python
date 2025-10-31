@@ -15,7 +15,7 @@ def send_show_command(device, password, command):
     start_msg = "===> {} Connection: {}"
     received_msg = "<=== {} Received: {}"
     ip = device["host"]                                             
-    logging.info(start_msg.format(datetime.now().time(), ip))
+    logging.info(start_msg.format(datetime.now().time(), ip))                   # datetime.now().time() - текущее время
     try:
         with netmiko.ConnectHandler(password=password, **device) as ssh:
             output = ssh.send_command(command)
@@ -36,10 +36,10 @@ if __name__ == "__main__":
     executor = ThreadPoolExecutor(max_workers=2)                                                      # сколько потоков использовать для подключения
 #    q = executor.map(send_show_command, devices, repeat(password), ["sh clock", "sh inventory"])
 #    q = executor.map(send_show_command, devices, repeat(password), ["sh clock"]*len(devices))        # ["sh clock"]*len(devices)  --- >  ["sh clock", "sh clock"]  # если в словаре 2 устройства
-    q = executor.map(send_show_command, devices, repeat(password), repeat("sh clock"))
-    
+    q = executor.map(send_show_command, devices, repeat(password), repeat(command))#                  # если забыть повторить (repeat) команду, то будет по одному символу из команды на каждое устройство отправляться 
+                                                                                                      # с repeat это самый красивый вариант
     for result in q:        
-        print(result)           # в result будет вывод в том же порядке как мы на устройства отправляли команды / перебирали devices
+        print(result)           # !!! в result будет вывод в том же порядке как мы на устройства отправляли команды / перебирали devices
 
 
 

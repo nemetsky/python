@@ -1,0 +1,485 @@
+spanning-tree mode rapid-pvst
+spanning-tree loopguard default
+spanning-tree loopback-guard
+!
+vlan database
+ vlan 99,199-200,2011,2032,2042,2105
+exit
+!
+dot1x system-auth-control
+!
+lldp med network-policy 1 voice vlan 2032 vlan-type tagged
+lldp med network-policy 2 voice-signaling vlan 2032 vlan-type tagged
+lldp med network-policy 3 video-conferencing vlan 2032 vlan-type tagged
+lldp med network-policy 4 voice vlan 2040 vlan-type tagged
+lldp med network-policy 5 voice-signaling vlan 2040 vlan-type tagged
+lldp med network-policy 6 video-conferencing vlan 2040 vlan-type tagged
+!
+errdisable recovery interval 30
+errdisable recovery cause loopback-detection
+errdisable recovery cause port-security
+errdisable recovery cause acl-deny
+errdisable recovery cause stp-bpdu-guard
+errdisable recovery cause stp-loopback-guard
+errdisable recovery cause unidirectional-link
+errdisable recovery cause storm-control
+!
+no boot host auto-config
+no boot host auto-update
+!
+qos advanced ports-trusted
+qos advanced-mode trust dscp
+qos map enable dscp-cos
+qos map dscp-cos 24 to 3
+qos map dscp-cos 34 to 4
+qos map dscp-cos 46 to 5
+qos map dscp-queue 9 to 1
+qos map dscp-queue 10 to 2
+qos map dscp-queue 11 to 1
+qos map dscp-queue 12 to 1
+qos map dscp-queue 13 to 1
+qos map dscp-queue 14 to 1
+qos map dscp-queue 15 to 1
+qos map dscp-queue 17 to 1
+qos map dscp-queue 18 to 3
+qos map dscp-queue 19 to 1
+qos map dscp-queue 20 to 1
+qos map dscp-queue 21 to 1
+qos map dscp-queue 22 to 1
+qos map dscp-queue 23 to 1
+qos map dscp-queue 24 to 5
+qos map dscp-queue 25 to 1
+qos map dscp-queue 26 to 4
+qos map dscp-queue 27 to 1
+qos map dscp-queue 28 to 1
+qos map dscp-queue 29 to 1
+qos map dscp-queue 30 to 1
+qos map dscp-queue 31 to 1
+qos map dscp-queue 32 to 1
+qos map dscp-queue 33 to 1
+qos map dscp-queue 35 to 1
+qos map dscp-queue 36 to 1
+qos map dscp-queue 37 to 1
+qos map dscp-queue 38 to 1
+qos map dscp-queue 39 to 1
+qos map dscp-queue 40 to 1
+qos map dscp-queue 41 to 1
+qos map dscp-queue 42 to 1
+qos map dscp-queue 43 to 1
+qos map dscp-queue 44 to 1
+qos map dscp-queue 45 to 1
+qos map dscp-queue 46 to 7
+qos map dscp-queue 47 to 1
+qos map dscp-queue 48 to 5
+qos map dscp-queue 49 to 1
+qos map dscp-queue 50 to 1
+qos map dscp-queue 51 to 1
+qos map dscp-queue 52 to 1
+qos map dscp-queue 53 to 1
+qos map dscp-queue 54 to 1
+qos map dscp-queue 55 to 1
+qos map dscp-queue 56 to 1
+qos map dscp-queue 57 to 1
+qos map dscp-queue 58 to 1
+qos map dscp-queue 59 to 1
+qos map dscp-queue 60 to 1
+qos map dscp-queue 61 to 1
+qos map dscp-queue 62 to 1
+qos map dscp-queue 63 to 1
+!
+ip access-list extended MEDIA
+ permit ip any any 10.3.1.0 0.0.0.255 any ace-priority 20
+ permit ip any any 10.3.2.0 0.0.1.255 any ace-priority 40
+ permit ip any any 10.3.4.0 0.0.3.255 any ace-priority 60
+ permit ip any any 10.20.32.0 0.0.7.255 any ace-priority 80
+ permit ip any any 172.27.1.0 0.0.0.255 any ace-priority 100
+ permit ip any any 10.3.40.0 0.0.1.255 any ace-priority 110
+ permit ip any any 10.20.40.0 0.0.1.255 any ace-priority 120
+ permit ip any any 10.20.42.0 0.0.0.255 any ace-priority 130
+ permit ip any any 10.20.46.0 0.0.1.255 any ace-priority 140
+exit
+!
+ip access-list extended MANAGEMENT
+ permit tcp any any any 22 ace-priority 20
+ permit tcp any 22 any any ace-priority 40
+exit
+!
+ip access-list extended CLASS-DEFAULT
+ permit ip any any any any ace-priority 20
+exit
+!
+priority-queue out num-of-queues 3
+!
+class-map CLASS-MEDIA
+ match access-group MEDIA
+exit
+!
+class-map CLASS-MANAGEMENT
+ match access-group MANAGEMENT
+exit
+!
+class-map CLASS-DEFAULT
+ match access-group CLASS-DEFAULT
+exit
+!
+policy-map LVS-ACCESS-IN
+ class CLASS-MEDIA
+trust
+ exit
+ class CLASS-MANAGEMENT
+  set dscp 16
+  set cos 2
+ exit
+ class CLASS-DEFAULT
+  set dscp 0
+  set cos 0
+ exit
+exit
+!
+wrr-queue bandwidth 15 30 30 10 15
+qos statistics interface
+!
+hostname ia-mdc-lan-accs-csw-kpp-2-1
+!
+encrypted radius-server host 172.16.21.201 timeout 5 retransmit 3 deadtime 30 key bTjpzZRnkZbyJjmu1ry93w+Fqdwxm0CSqH6I1xpsqw8= priority 100
+encrypted radius-server host 172.16.21.202 timeout 5 retransmit 3 deadtime 30 key bTjpzZRnkZbyJjmu1ry93w+Fqdwxm0CSqH6I1xpsqw8= priority 200
+!
+management access-list ACL-MGMT-IN
+ deny service http
+ deny service https
+ deny service telnet
+ permit ip-source 10.15.17.67
+ permit ip-source 10.20.117.67
+ permit ip-source 10.15.17.24
+ permit ip-source 10.20.117.24
+ permit ip-source 10.15.17.50
+ permit ip-source 10.20.117.50
+ permit ip-source 10.15.17.56
+ permit ip-source 10.15.17.22
+ permit ip-source 10.20.117.22
+ permit ip-source 10.15.17.20
+ permit ip-source 10.20.117.20
+ permit ip-source 10.15.17.57
+ permit ip-source 10.20.117.39
+ permit ip-source 172.16.50.177
+ permit ip-source 10.15.83.9 service ssh
+ permit ip-source 10.15.83.36 service ssh
+ permit ip-source 172.16.21.133
+ permit ip-source 172.16.21.221 service snmp
+ permit ip-source 172.16.21.222 service snmp
+ permit ip-source 172.16.21.230 service snmp
+ permit ip-source 10.17.12.51 service snmp
+ permit ip-source 172.16.72.234 service snmp
+ permit ip-source 172.16.72.235 service snmp
+ permit ip-source 172.16.20.101
+ permit ip-source 172.16.20.102
+ permit ip-source 172.16.21.201
+ permit ip-source 172.16.21.202
+exit
+!
+management access-class ACL-MGMT-IN
+!
+logging host 172.16.50.177
+logging cli-commands
+logging console errors
+logging file informational
+logging source-interface vlan 2011
+!
+aaa authentication dot1x default radius none
+aaa authentication login authorization LOCAL-GROUP local
+aaa authentication enable LOCAL-GROUP enable
+aaa authentication login authorization TACACS-GROUP tacacs local
+aaa authentication enable TACACS-GROUP tacacs enable
+aaa accounting login start-stop group tacacs+
+aaa accounting commands stop-only group tacacs+
+!
+line ssh
+ history size 50
+ exec-timeout 3
+exit
+!
+line ssh
+ login authentication TACACS-GROUP
+ enable authentication TACACS-GROUP
+ password b04f7e069d2f57d494a742b56b3600c93511f80d encrypted
+exit
+line console
+ login authentication LOCAL-GROUP
+ enable authentication LOCAL-GROUP
+ password b04f7e069d2f57d494a742b56b3600c93511f80d encrypted
+exit
+!
+enable password level 15 encrypted b04f7e069d2f57d494a742b56b3600c93511f80d
+!
+username nemetskiy password encrypted cf9a370b73f9e6fe94f655d8bd0f42ae8880f2fd privilege 15
+username golovanov-ie password encrypted 99be9488aa56126995c79835a0ee7c824fa6d172 privilege 15
+username vinogradov-as password encrypted 976e04b2c71207e16ee30c9ed47750d4b8bcb91b privilege 15
+!
+ip ssh server
+ip ssh-client source-interface vlan 2011
+!
+snmp-server server
+encrypted snmp-server community J/fZwRTZ/eZ+DpLFi7fbncNZdBWFXfIiuun5PwR6TxE= ro 10.17.12.51 view Default
+encrypted snmp-server community J/fZwRTZ/eZ+DpLFi7fbncNZdBWFXfIiuun5PwR6TxE= ro 172.16.21.221 view Default
+encrypted snmp-server community J/fZwRTZ/eZ+DpLFi7fbncNZdBWFXfIiuun5PwR6TxE= ro 172.16.21.222 view Default
+encrypted snmp-server community J/fZwRTZ/eZ+DpLFi7fbncNZdBWFXfIiuun5PwR6TxE= ro 172.16.21.230 view Default
+encrypted snmp-server community J/fZwRTZ/eZ+DpLFi7fbncNZdBWFXfIiuun5PwR6TxE= ro 172.16.50.177 view Default
+encrypted snmp-server host 10.17.12.51 traps version 2c J/fZwRTZ/eZ+DpLFi7fbncNZdBWFXfIiuun5PwR6TxE=
+encrypted snmp-server host 172.16.21.221 traps version 2c J/fZwRTZ/eZ+DpLFi7fbncNZdBWFXfIiuun5PwR6TxE=
+encrypted snmp-server host 172.16.21.222 traps version 2c J/fZwRTZ/eZ+DpLFi7fbncNZdBWFXfIiuun5PwR6TxE=
+snmp-server source-interface traps vlan 2011
+snmp-server source-interface informs vlan 2011
+no snmp-server enable traps erps
+snmp-server enable traps storage notification
+snmp-server enable traps storage recovery-notification
+snmp-server enable traps cpu notification
+snmp-server enable traps cpu recovery-notification
+snmp-server enable traps memory notification
+snmp-server enable traps memory recovery-notification
+!
+snmp-server enable traps sensor notification
+snmp-server enable traps sensor recovery-notification
+!
+no ip http server
+no ip http secure-server
+!
+encrypted tacacs-server host 172.16.50.134 timeout 3 key 9b1MrfCyx25rNF6a45E2ogX5ksgnUx/U8LF1xu3mJsc= priority 10
+encrypted tacacs-server host 172.16.50.135 timeout 3 key 9b1MrfCyx25rNF6a45E2ogX5ksgnUx/U8LF1xu3mJsc= priority 20
+tacacs-server host source-interface vlan 2011
+!
+clock timezone MSK +3
+clock source sntp
+!
+sntp client poll timer 86400
+sntp unicast client enable
+sntp server 172.16.20.101 poll
+sntp server 172.16.20.102 poll
+sntp source-interface vlan 2011
+!
+no ip domain lookup
+ip domain name cdu.so
+ip name-server  172.16.20.11 172.16.20.12 172.16.20.13
+!
+no ip telnet server
+!
+backup server tftp://172.16.50.177
+backup path configs/tmp/ia-mdc-lan-accs-csw-kpp-2-1
+backup time-period 1440
+backup write-memory
+backup auto
+!
+interface gigabitethernet1/0/1
+ description ===|_Users_|===
+ storm-control broadcast kbps 200 trap shutdown
+ storm-control multicast kbps 200 trap shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ service-policy input LVS-ACCESS-IN default-action permit-any
+ switchport mode general
+ switchport general allowed vlan add 2032 tagged
+ switchport general allowed vlan add 2105 untagged
+ switchport general pvid 2105
+ lldp optional-tlv sys-cap
+ lldp optional-tlv 802.1 pvid enable
+ lldp optional-tlv 802.1 vlan-name add 2032
+ lldp med enable network-policy poe-pse
+ lldp med network-policy add 1
+ lldp med network-policy add 2
+ lldp med network-policy add 3
+ load-average 30
+exit
+!
+interface gigabitethernet1/0/2
+ description ===|_Users_|===
+ storm-control broadcast kbps 200 trap shutdown
+ storm-control multicast kbps 200 trap shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ service-policy input LVS-ACCESS-IN default-action permit-any
+ switchport mode general
+ switchport general allowed vlan add 2032 tagged
+ switchport general allowed vlan add 2105 untagged
+ switchport general pvid 2105
+ lldp optional-tlv sys-cap
+ lldp optional-tlv 802.1 pvid enable
+ lldp optional-tlv 802.1 vlan-name add 2032
+ lldp med enable network-policy poe-pse
+ lldp med network-policy add 1
+ lldp med network-policy add 2
+ lldp med network-policy add 3
+ load-average 30
+exit
+!
+interface gigabitethernet1/0/3
+ description ===|_Users_|===
+ storm-control broadcast kbps 200 trap shutdown
+ storm-control multicast kbps 200 trap shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ service-policy input LVS-ACCESS-IN default-action permit-any
+ switchport mode general
+ switchport general allowed vlan add 2032 tagged
+ switchport general allowed vlan add 2105 untagged
+ switchport general pvid 2105
+ lldp optional-tlv sys-cap
+ lldp optional-tlv 802.1 pvid enable
+ lldp optional-tlv 802.1 vlan-name add 2032
+ lldp med enable network-policy poe-pse
+ lldp med network-policy add 1
+ lldp med network-policy add 2
+ lldp med network-policy add 3
+ load-average 30
+exit
+!
+interface gigabitethernet1/0/4
+ description ===|_Users_|===
+ storm-control broadcast kbps 200 trap shutdown
+ storm-control multicast kbps 200 trap shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ service-policy input LVS-ACCESS-IN default-action permit-any
+ switchport mode general
+ switchport general allowed vlan add 2032 tagged
+ switchport general allowed vlan add 2105 untagged
+ switchport general pvid 2105
+ lldp optional-tlv sys-cap
+ lldp optional-tlv 802.1 pvid enable
+ lldp optional-tlv 802.1 vlan-name add 2032
+ lldp med enable network-policy poe-pse
+ lldp med network-policy add 1
+ lldp med network-policy add 2
+ lldp med network-policy add 3
+ load-average 30
+exit
+!
+interface gigabitethernet1/0/5
+ description ===|_Users_|===
+ storm-control broadcast kbps 200 trap shutdown
+ storm-control multicast kbps 200 trap shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ service-policy input LVS-ACCESS-IN default-action permit-any
+ switchport mode general
+ switchport general allowed vlan add 2032 tagged
+ switchport general allowed vlan add 2105 untagged
+ switchport general pvid 2105
+ lldp optional-tlv sys-cap
+ lldp optional-tlv 802.1 pvid enable
+ lldp optional-tlv 802.1 vlan-name add 2032
+ lldp med enable network-policy poe-pse
+ lldp med network-policy add 1
+ lldp med network-policy add 2
+ lldp med network-policy add 3
+ load-average 30
+exit
+!
+interface gigabitethernet1/0/6
+ description ===|_Users_|===
+ storm-control broadcast kbps 200 trap shutdown
+ storm-control multicast kbps 200 trap shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ service-policy input LVS-ACCESS-IN default-action permit-any
+ switchport mode general
+ switchport general allowed vlan add 2032 tagged
+ switchport general allowed vlan add 2105 untagged
+ switchport general pvid 2105
+ lldp optional-tlv sys-cap
+ lldp optional-tlv 802.1 pvid enable
+ lldp optional-tlv 802.1 vlan-name add 2032
+ lldp med enable network-policy poe-pse
+ lldp med network-policy add 1
+ lldp med network-policy add 2
+ lldp med network-policy add 3
+ load-average 30
+exit
+!
+interface gigabitethernet1/0/7
+ description ===|_Users_|===
+ storm-control broadcast kbps 200 trap shutdown
+ storm-control multicast kbps 200 trap shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ service-policy input LVS-ACCESS-IN default-action permit-any
+ switchport mode general
+ switchport general allowed vlan add 2032 tagged
+ switchport general allowed vlan add 2105 untagged
+ switchport general pvid 2105
+ lldp optional-tlv sys-cap
+ lldp optional-tlv 802.1 pvid enable
+ lldp optional-tlv 802.1 vlan-name add 2032
+ lldp med enable network-policy poe-pse
+ lldp med network-policy add 1
+ lldp med network-policy add 2
+ lldp med network-policy add 3
+ load-average 30
+exit
+!
+interface gigabitethernet1/0/8
+ description ===|_Users_|===
+ storm-control broadcast kbps 200 trap shutdown
+ storm-control multicast kbps 200 trap shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ service-policy input LVS-ACCESS-IN default-action permit-any
+ switchport mode general
+ switchport general allowed vlan add 2032 tagged
+ switchport general allowed vlan add 2105 untagged
+ switchport general pvid 2105
+ lldp optional-tlv sys-cap
+ lldp optional-tlv 802.1 pvid enable
+ lldp optional-tlv 802.1 vlan-name add 2032
+ lldp med enable network-policy poe-pse
+ lldp med network-policy add 1
+ lldp med network-policy add 2
+ lldp med network-policy add 3
+ load-average 30
+exit
+!
+interface gigabitethernet1/0/11
+ description ===|_to_ia-mdc-lan-core-rsw-2_[Te1/1/18]_|===
+ storm-control broadcast level 5
+ storm-control multicast level 5
+ channel-group 44 mode auto
+ lldp optional-tlv port-desc sys-name sys-desc sys-cap
+exit
+!
+interface gigabitethernet1/0/12
+ description ===|_to_ia-mdc-lan-core-rsw-2_[Te1/1/18]_|===
+ storm-control broadcast level 5
+ storm-control multicast level 5
+ channel-group 44 mode auto
+ lldp optional-tlv port-desc sys-name sys-desc sys-cap
+exit
+!
+interface Port-channel44
+ description ===|_to_ia-mdc-lan-core-rsw-2_[Po44]_|===
+ switchport mode general
+ switchport general allowed vlan add 200,2011,2032,2042,2105 tagged
+ switchport general allowed vlan add 99 untagged
+ switchport general pvid 99
+ load-average 30
+exit
+!
+interface vlan 1
+ shutdown
+exit
+!
+interface vlan 2011
+ name RUM-LanMng
+ ip address 10.20.11.43 255.255.255.0
+ no ip proxy-arp
+exit
+!
+interface vlan 2042
+ name RUM-IP-PHONE-B
+exit
+!
+interface vlan 2105
+ name RUM-DOB
+exit
+!
+!
+ip default-gateway 10.20.11.254
+!
+end

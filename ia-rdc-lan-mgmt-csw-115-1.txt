@@ -1,0 +1,977 @@
+Building configuration...
+
+Current configuration : 28491 bytes
+!
+! Last configuration change at 21:25:58 MSK Mon Oct 20 2025 by nemetskiy-sv
+! NVRAM config last updated at 23:55:01 MSK Thu Oct 30 2025
+!
+version 12.2
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone year
+service password-encryption
+service sequence-numbers
+!
+hostname ia-rdc-lan-mgmt-csw-115-1
+!
+boot-start-marker
+boot-end-marker
+!
+logging buffered 512000 informational
+logging console warnings
+enable secret 5 $1$3WTG$4l7yQ65gbt3.x1n69FrOe/
+!
+username vmartynov privilege 15 secret 5 $1$wDLi$2ACTC.JzhSphyumnGIAgp0
+username medved-ai privilege 15 secret 5 $1$1qJj$MGlCGUbKDAMZmp0.AJzX70
+username golovanov-ie privilege 15 secret 5 $1$m6Ql$BbRR2lU3GEtLkT7jVt7CK0
+username bdorofeev privilege 15 secret 5 $1$4W5B$jfk0/TFKZH8Uw7UJiuyPQ1
+username nemetskiy privilege 15 secret 5 $1$XkiD$syx5NVkzHAHOsjOZSMdAA0
+username vinogradov-as privilege 15 secret 5 $1$vLEZ$SrcMGzD98EjcTtMYUfnPz/
+!
+!
+aaa new-model
+!
+!
+aaa group server tacacs+ TACACS-GROUP
+ server-private 172.16.50.134 timeout 3 key 7 000D124B085A05
+ server-private 172.16.50.135 timeout 3 key 7 04520A4B032042
+ ip tacacs source-interface Vlan6
+!
+aaa authentication login default group TACACS-GROUP local
+aaa authentication enable default group TACACS-GROUP enable
+aaa authorization console
+aaa authorization exec default group TACACS-GROUP local if-authenticated 
+aaa authorization commands 15 default group TACACS-GROUP local if-authenticated 
+aaa accounting exec default stop-only group TACACS-GROUP
+aaa accounting commands 15 default stop-only group TACACS-GROUP
+!
+!
+!
+aaa session-id common
+clock timezone MSK 3
+system mtu routing 1500
+vtp domain ia-lan
+vtp mode transparent
+udld enable
+
+no ip subnet-zero
+no ip source-route
+no ip gratuitous-arps
+ip icmp rate-limit unreachable 1000
+!
+!
+no ip domain-lookup
+ip domain-name cdu.so
+ip name-server 172.16.20.11
+ip name-server 172.16.20.12
+login block-for 60 attempts 3 within 30
+login quiet-mode access-class 55
+login on-failure log every 2
+login on-success log
+!
+!
+!
+!
+!
+!
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig (STP)
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause sfp-config-mismatch
+errdisable recovery cause gbic-invalid
+errdisable recovery cause psecure-violation
+errdisable recovery cause port-mode-failure
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause vmps
+errdisable recovery cause storm-control
+errdisable recovery cause inline-power
+errdisable recovery cause arp-inspection
+errdisable recovery cause loopback
+errdisable recovery cause small-frame
+errdisable recovery interval 30
+archive
+ log config
+  logging enable
+  logging size 200
+  notify syslog contenttype plaintext
+  hidekeys
+ path tftp://172.16.50.177/configs/tmp/$h-$t
+ write-memory
+!
+spanning-tree mode rapid-pvst
+spanning-tree loopguard default
+spanning-tree portfast default
+spanning-tree portfast bpduguard default
+spanning-tree extend system-id
+!
+vlan internal allocation policy ascending
+!
+vlan 3
+ name RSA-MGMT
+!
+vlan 4
+ name UPS-MGMT
+!
+vlan 6
+ name LAN-MGMT
+!
+vlan 99
+ name NATIVE
+!
+vlan 217
+ name KG-ST
+!
+vlan 297
+ name UPS-MGMT2
+!
+ip tcp synwait-time 10
+ip tftp source-interface Vlan6
+ip ssh logging events
+ip ssh version 2
+!
+!
+interface Port-channel1
+ description -- ia-rdc-lan-core-rsw-1 [Po49] --
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 3-6,99,217,297
+ switchport mode trunk
+ switchport nonegotiate
+ logging event spanning-tree
+!
+interface GigabitEthernet0/1
+ description -- UPS --
+ switchport access vlan 297
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/2
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/3
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/4
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/5
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/6
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/7
+ description -- std-odu1-szp-ext-fw-1.1 | Temp for UserGate Cluster Configuration --
+ switchport access vlan 6
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/8
+ description -- std-odu1-szp-ext-fw-1.2 | Temp for UserGate Cluster Configuration --
+ switchport access vlan 6
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/9
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/10
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/11
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/12
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/13
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/14
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/15
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/16
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/17
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/18
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/19
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/20
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/21
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/22
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/23
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/24
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/25
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/26
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/27
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/28
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/29
+ description -- FREE --
+ switchport access vlan 3
+ switchport trunk allowed vlan 106
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/30
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/31
+ description -- FREE --
+ switchport access vlan 3
+ switchport trunk allowed vlan 106
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/32
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/33
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/34
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/35
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/36
+ description -- FREE --
+ switchport access vlan 3
+ switchport trunk allowed vlan 106
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/37
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/38
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/39
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/40
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/41
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/42
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/43
+ description -- FREE --
+ switchport access vlan 3
+ switchport mode access
+ switchport nonegotiate
+ switchport port-security maximum 3
+ switchport port-security
+ switchport port-security aging time 2
+ switchport port-security violation restrict
+ switchport port-security aging type inactivity
+ shutdown
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action shutdown
+ storm-control action trap
+!
+interface GigabitEthernet0/44
+ description -- TEST STAND FOR NETAMS --
+ switchport trunk allowed vlan 6
+ switchport mode trunk
+ switchport nonegotiate
+ shutdown
+ storm-control broadcast level 5.00
+ storm-control multicast level 5.00
+ storm-control action shutdown
+ storm-control action trap
+ spanning-tree guard root
+!
+interface GigabitEthernet0/45
+ description -- ia-rdc-lan-core-rsw-1 [Gi1/2/24] --
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 3-6,99,217,297
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface GigabitEthernet0/46
+ description -- ia-rdc-lan-core-rsw-1 [Gi2/2/24] --
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 3-6,99,217,297
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode active
+!
+interface GigabitEthernet0/47
+ shutdown
+!
+interface GigabitEthernet0/48
+ shutdown
+!
+interface Vlan1
+ no ip address
+ no ip route-cache
+ shutdown
+!
+interface Vlan6
+ description -- Management Interface --
+ ip address 10.11.10.107 255.255.255.0
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+ip default-gateway 10.11.10.254
+no ip http server
+no ip http secure-server
+!
+ip access-list extended ACL_SSH_IN
+ remark -Nechaykin-
+ permit ip host 10.15.17.67 any
+ permit ip host 10.20.117.67 any
+ remark -Golovanov-
+ permit ip host 10.15.17.24 any
+ permit ip host 10.20.117.24 any
+ remark -Medved-
+ permit ip host 10.15.17.50 any
+ permit ip host 10.20.117.50 any
+ remark -Nemetskiy-
+ permit ip host 10.15.17.56 any
+ permit ip host 10.20.117.56 any
+ remark -Dorofeev-
+ permit ip host 10.15.17.22 any
+ permit ip host 10.20.117.22 any
+ remark -Martynov-
+ permit ip host 10.15.17.20 any
+ permit ip host 10.20.117.20 any
+ remark -Vinogradov-
+ permit ip host 10.15.17.57 any
+ permit ip host 10.20.117.39 any
+ remark -SYSLOG-
+ permit ip host 172.16.50.177 any
+ remark -Onischenko-
+ permit ip host 10.15.83.9 any
+ remark -Kozyrev-
+ permit ip host 10.15.83.36 any
+ remark -ia-szp-netctrl1 -
+ permit ip host 172.16.21.133 any
+ remark -Melnikova-
+ permit ip host 10.12.0.25 any
+ remark -Melnikova (logger)-
+ permit ip host 10.0.0.10 any
+kron occurrence BACK_UP_CONFIG at 23:55 recurring
+ policy-list BACK_UP_CONFIG
+!
+kron policy-list BACK_UP_CONFIG
+ cli copy running-config startup-config
+!
+logging facility local4
+logging source-interface Vlan6
+logging 172.16.50.177
+access-list 55 permit 10.12.4.24
+access-list 55 permit 10.12.4.50
+access-list 55 permit 10.12.4.56
+access-list 61 permit 10.17.12.51
+access-list 61 permit 172.16.21.230
+access-list 61 permit 172.16.21.221
+access-list 61 permit 172.16.21.222
+access-list 61 permit 172.16.24.4
+snmp-server community SOCDUro RO 61
+snmp-server trap-source Vlan6
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps transceiver all
+snmp-server enable traps entity
+snmp-server enable traps cpu threshold
+snmp-server enable traps vtp
+snmp-server enable traps flash insertion removal
+snmp-server enable traps port-security
+snmp-server enable traps envmon fan shutdown supply temperature status
+snmp-server enable traps storm-control trap-rate 3
+snmp-server enable traps config-copy
+snmp-server enable traps config
+snmp-server enable traps bridge newroot topologychange
+snmp-server enable traps stpx inconsistency root-inconsistency loop-inconsistency
+snmp-server enable traps mac-notification change move threshold
+snmp-server enable traps vlan-membership
+snmp-server enable traps errdisable
+snmp-server host 10.17.12.51 version 2c SOCDUro 
+snmp-server host 172.16.21.221 version 2c SOCDUro 
+snmp-server host 172.16.21.222 version 2c SOCDUro 
+snmp ifmib ifindex persist
+no vstack
+!
+line con 0
+ logging synchronous
+line vty 0 4
+ session-timeout 10 
+ access-class ACL_SSH_IN in
+ logging synchronous
+ transport input ssh
+line vty 5 15
+ session-timeout 10 
+ access-class ACL_SSH_IN in
+ logging synchronous
+ transport input ssh
+!
+ntp clock-period 36029158
+ntp server 172.16.20.101 prefer
+ntp server 172.16.20.102 prefer
+end
