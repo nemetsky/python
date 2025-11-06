@@ -10,7 +10,7 @@ def send_commands(device, password, *, show=None, config=None):
     elif show:
         return send_show_command(device, password, show)                            # если передана команда show то вызываем функцию send_show_command
     elif config:
-        return send_config_commands(device, password, config)                       # если передана команда show то вызываем функцию config_show_command
+        return send_config_commands(device, password, config)                       # если передана команда config то вызываем функцию config_show_command
 
 if __name__ == "__main__":
     password = getpass.getpass()

@@ -22,22 +22,18 @@ R2#sh arp
 Protocol  Address          Age (min)  Hardware Addr   Type   Interface
 Internet  192.168.100.1          87   aabb.cc00.6500  ARPA   Ethernet0/0
 Internet  192.168.100.2           -   aabb.cc00.6600  ARPA   Ethernet0/0
-
 R1#sh ip int br
 Interface                  IP-Address      OK? Method Status                Protocol
 Ethernet0/0                192.168.100.1   YES NVRAM  up                    up
 Ethernet0/1                192.168.200.1   YES NVRAM  up                    up
-
 R1#sh arp
 Protocol  Address          Age (min)  Hardware Addr   Type   Interface
 Internet  10.30.0.1               -   aabb.cc00.6530  ARPA   Ethernet0/3.300
 Internet  10.100.0.1              -   aabb.cc00.6530  ARPA   Ethernet0/3.100
-
 R3#sh ip int br
 Interface                  IP-Address      OK? Method Status                Protocol
 Ethernet0/0                192.168.100.3   YES NVRAM  up                    up
 Ethernet0/1                unassigned      YES NVRAM  administratively down down
-
 R3#sh ip route | ex -
 
 Gateway of last resort is not set
@@ -72,7 +68,7 @@ def send_show_command(device, commands):
     output = ""
     with ConnectHandler(**device) as ssh:
         ssh.enable()
-        for command in commands:                            # автор тут отправляет список команд на устройство в цикле, один раз подключившись к нему и суммирует вывод
+        for command in commands:
             result = ssh.send_command(command)
             prompt = ssh.find_prompt()
             output += f"{prompt}{command}\n{result}\n"
@@ -98,10 +94,8 @@ if __name__ == "__main__":
     send_command_to_devices(devices, commands, "result.txt")
 
 
-# ========================================================================================================================
-# Мое решение #      (Сделал по другому, вернее неправильно, ни как у автора, хотя результат такой же)
-#                     в моем скрипте, чтобы отправить несколько команд на устройство (список команд), надо столько же раз к ней подключиться
-#                     автор один раз подключается на устройство, и оправляет в цикле команды                      
+# ======================================================================
+# Мое решение #      (Сделал по другому, )
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import logging
@@ -118,7 +112,7 @@ def send_show_command(device, password, command):
     ip = device["host"]                                             
     logging.info(f"===> Connection: {ip}")
     try:
-        with netmiko.ConnectHandler(password=password, **device) as ssh:             # !!! надо было в этой функции перебирать команды, которые отправляем на устройство
+        with netmiko.ConnectHandler(password=password, **device) as ssh:
             promt = ssh.find_prompt()
             output = promt + ssh.send_command(command, strip_command=False)
             logging.info(f"<=== Received:   {ip}")
@@ -134,8 +128,8 @@ def send_command_to_devices(devices, commands_dict, filename, limit=3):
     future_list = []
     with ThreadPoolExecutor(max_workers=limit) as executor:
         for dev in devices:
-            for command in commands_dict[dev["host"]]:                               # !!! А я перебираю команды из списка здесь, (а автор в другой функции сделал этот цикл)
-                future = executor.submit(send_show_command, dev, password, command)  # тем самым для отправки каждой команды мне надо вызвать executor, т.е. подключаться к оборудованию каждый раз
+            for command in commands_dict[dev["host"]]:
+                future = executor.submit(send_show_command, dev, password, command)
                 future_list.append(future)
         
         with open(filename, "w") as f:
