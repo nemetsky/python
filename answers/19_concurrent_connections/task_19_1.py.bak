@@ -29,7 +29,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 def ping_ip(ip):
     result = subprocess.run(["ping", "-c", "3", "-n", ip], stdout=subprocess.DEVNULL)
-    ip_is_reachable = result.returncode == 0                                            # Интересное решение, ip_is_reachable будет равно True/False
+    ip_is_reachable = result.returncode == 0
     return ip_is_reachable
 
 
@@ -52,10 +52,11 @@ if __name__ == "__main__":
 
 
 # ================================================================================
-# Мое решение #       (такое же, только у автора есть интересно решение в части ip_is_reachable = result.returncode == 0)
+# Мое решение # (такое же)
 
 from concurrent.futures import ThreadPoolExecutor
 import subprocess
+
 
 def ping_ip(ip):
     result = subprocess.run(["ping", "-n", "2", ip], stdout=subprocess.DEVNULL)
