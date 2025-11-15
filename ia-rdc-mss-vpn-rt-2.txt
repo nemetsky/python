@@ -1,0 +1,129 @@
+ia-rdc-mss-vpn-rt-2#show version
+Cisco IOS XE Software, Version 16.03.06
+Cisco IOS Software [Denali], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9_NPE-M), Version 16.3.6, RELEASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2018 by Cisco Systems, Inc.
+Compiled Wed 28-Feb-18 16:03 by mcpre
+
+
+Cisco IOS-XE software, Copyright (c) 2005-2018 by cisco Systems, Inc.
+All rights reserved.  Certain components of Cisco IOS-XE software are
+licensed under the GNU General Public License ("GPL") Version 2.0.  The
+software code licensed under GPL Version 2.0 is free software that comes
+with ABSOLUTELY NO WARRANTY.  You can redistribute and/or modify such
+GPL code under the terms of GPL Version 2.0.  For more details, see the
+documentation or "License Notice" file accompanying the IOS-XE software,
+or the applicable URL provided on the flyer accompanying the IOS-XE
+software.
+
+
+ROM: IOS-XE ROMMON
+
+ia-rdc-mss-vpn-rt-2 uptime is 26 weeks, 1 day, 9 hours, 48 minutes
+Uptime for this control processor is 26 weeks, 1 day, 9 hours, 49 minutes
+System returned to ROM by reload at 10:35:44 MSK Thu May 15 2025
+System restarted at 10:37:30 MSK Thu May 15 2025
+System image file is "bootflash:asr1001x-universalk9_npe.16.03.06.SPA.bin"
+Last reload reason: Reload Command
+
+
+
+This product contains cryptographic features and is subject to United
+States and local country laws governing import, export, transfer and
+use. Delivery of Cisco cryptographic products does not imply
+third-party authority to import, export, distribute or use encryption.
+Importers, exporters, distributors and users are responsible for
+compliance with U.S. and local country laws. By using this product you
+agree to comply with applicable laws and regulations. If you are unable
+to comply with U.S. and local laws, return this product immediately.
+
+A summary of U.S. laws governing Cisco cryptographic products may be found at:
+http://www.cisco.com/wwl/export/crypto/tool/stqrg.html
+
+If you require further assistance please contact us by sending email to
+export@cisco.com.
+
+License Type: RightToUse
+License Level: advipservices
+Next reload license Level: advipservices
+
+cisco ASR1001-X (1NG) processor (revision 1NG) with 3730027K/6147K bytes of memory.
+Processor board ID FXS2526Q22T
+11 Gigabit Ethernet interfaces
+2 Ten Gigabit Ethernet interfaces
+32768K bytes of non-volatile configuration memory.
+8388608K bytes of physical memory.
+6553599K bytes of eUSB flash at bootflash:.
+0K bytes of  at harddisk:.
+0K bytes of  at webui:.
+
+Configuration register is 0x2102
+
+ia-rdc-mss-vpn-rt-2# 
+ia-rdc-mss-vpn-rt-2#
+ia-rdc-mss-vpn-rt-2#
+ia-rdc-mss-vpn-rt-2#
+ia-rdc-mss-vpn-rt-2#
+ia-rdc-mss-vpn-rt-2#show inventory
+NAME: "Chassis", DESCR: "Cisco ASR1001-X Chassis"
+PID: ASR1001-X         , VID: V06  , SN: FXS2526Q22T
+
+NAME: "Power Supply Module 0", DESCR: "Cisco ASR1001-X AC Power Supply"
+PID: ASR1001-X-PWR-AC  , VID: V02  , SN: LIT2529C4PY
+
+NAME: "Power Supply Module 1", DESCR: "Cisco ASR1001-X AC Power Supply"
+PID: ASR1001-X-PWR-AC  , VID: V02  , SN: LIT2529C4AH
+
+NAME: "Fan Tray", DESCR: "Cisco ASR1001-X Fan Tray"
+PID: ASR1001-X-FANTRAY , VID:      , SN:            
+
+NAME: "module 0", DESCR: "Cisco ASR1001-X SPA Interface Processor"
+PID: ASR1001-X         , VID:      , SN:            
+
+NAME: "SPA subslot 0/1", DESCR: "5-port Gigabit Ethernet Shared Port Adapter"
+PID: SPA-5X1GE-V2      , VID: V04  , SN: JAE25320KYJ
+
+NAME: "subslot 0/1 transceiver 0", DESCR: "GE SX"
+PID: FTRJ-8519-7D-CSC  , VID:      , SN: H11F724         
+
+NAME: "subslot 0/1 transceiver 1", DESCR: "GE T"
+PID: GLC-TE              , VID: 1.0  , SN: ACW25300PWG     
+
+NAME: "subslot 0/1 transceiver 2", DESCR: "GE T"
+PID: GLC-TE              , VID: 1.0  , SN: ACW25300PWP     
+
+NAME: "subslot 0/1 transceiver 3", DESCR: "GE T"
+PID: GLC-TE              , VID: 1.0  , SN: ACW25300PWL     
+
+NAME: "subslot 0/1 transceiver 4", DESCR: "GE T"
+PID: GLC-TE              , VID: 1.0  , SN: ACW25301KCR     
+
+NAME: "SPA subslot 0/0", DESCR: "Built-in GE SPA with 2 port 10G and 6 port 1G Interfaces"
+PID: BUILT-IN-2T+6X1GE , VID:      , SN:            
+
+NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
+PID: GLC-TE              , VID: 1.0  , SN: ACW25301KCW     
+          
+NAME: "subslot 0/0 transceiver 3", DESCR: "GE T"
+PID: GLC-TE              , VID: 1.0  , SN: ACW25301KCH     
+
+NAME: "subslot 0/0 transceiver 4", DESCR: "GE T"
+PID: GLC-TE              , VID: 1.0  , SN: ACW25301KD9     
+
+NAME: "subslot 0/0 transceiver 5", DESCR: "GE T"
+PID: GLC-TE              , VID: 1.0  , SN: ACW25301KD2     
+
+NAME: "subslot 0/0 transceiver 6", DESCR: "GE T"
+PID: GLC-TE              , VID: 1.0  , SN: ACW25301KDA     
+
+NAME: "subslot 0/0 transceiver 7", DESCR: "GE LX"
+PID: GLC-LH-SMD          , VID: 1.0  , SN: ACW223206VW     
+
+NAME: "module R0", DESCR: "Cisco ASR1001-X Route Processor"
+PID: ASR1001-X         , VID: V06  , SN: JAE253602Z6
+
+NAME: "module F0", DESCR: "Cisco ASR1001-X Embedded Services Processor"
+PID: ASR1001-X         , VID:      , SN:            
+
+
+ia-rdc-mss-vpn-rt-2#

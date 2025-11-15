@@ -1,0 +1,48 @@
+import sys
+import netmiko
+import ipaddress
+import getpass
+
+def check_ip(ip):
+    try:
+        ipaddress.ip_address(ip)
+        return True
+    except ValueError:
+        return False
+
+def parse_sh_ver(output):
+    try:
+        ipaddress.ip_address(ip)
+        return True
+    except ValueError:
+        return False
+
+#model = input("Введите производителя оборудования (Cisco или Eltex): ")
+#if model.lower() == "cisco":
+#    device_type = "cisco_ios"
+#elif model.lower() == "eltex":
+#    device_type = "eltex"
+#else:
+#    print("Введен неподдерживаемый производитель")
+#    sys.exit(0)
+#ip = input("Введите IP-адрес или имя устройства: ")
+#ip_verify = check_ip(ip)
+#if not ip_verify:
+#   print("Введ некорректный IP-адрес")
+#   sys.exit(0)
+#print(f"Подключение к {ip}...")
+#user = input("Введите пользователя: ")
+#password = getpass.getpass(prompt="Введите пароль: ")
+try:
+    #with netmiko.ConnectHandler(device_type=device_type, timeout=5, host=ip, username=user, password=password) as ssh:
+    with netmiko.ConnectHandler(device_type="cisco_ios", timeout=5, host="172.16.0.1", username="cisco", password="cisco") as ssh:
+        output = ssh.send_command("show version")
+        if "rt" in ssh.find_prompt():
+            print("Маршрутизатор")
+
+except netmiko.exceptions.NetmikoAuthenticationException:
+    print("Ошибка аутентификации")
+except netmiko.exceptions.NetmikoTimeoutException:
+    print(f"IP-адрес {ip} недоступен")
+
+

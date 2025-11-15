@@ -1,0 +1,8 @@
+hostname r1
+!
+interface vlan 10
+ description users
+ ip address 10.255.10.1 255.255.255.0
+!
+
+# Конец #

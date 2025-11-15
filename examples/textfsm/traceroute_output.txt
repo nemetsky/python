@@ -1,0 +1,9 @@
+c3845-inet-1#traceroute 192.168.0.17
+
+Type escape sequence to abort.
+Tracing the route to 192.168.0.17
+
+  1 172.16.0.2 16 msec 12 msec 12 msec
+  2 10.10.10.10 16 msec 12 msec 20 msec
+  3 192.168.0.17 20 msec 24 msec 20 msec
+c3845-inet-1#

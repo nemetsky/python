@@ -1,0 +1,8 @@
+hostname {{hostname}}
+!
+interface vlan {{id}}
+ description {{name}}
+ ip address 10.255.{{id}}.1 255.255.255.0
+!
+
+# Конец #

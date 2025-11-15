@@ -1,0 +1,6 @@
+- hostname: r1
+  id: 10
+  name: users
+- hostname: r2
+  id: 20
+  name: admins
