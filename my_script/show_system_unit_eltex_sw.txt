@@ -1,0 +1,18 @@
+System Description:                       MES3348 52-port 1G/10G Managed Switch
+System Up Time (days,hour:min:sec):       702,04:42:33
+Reset-Button:                             enable
+
+
+Unit Main Power Supply Redundant Power Supply 
+---- ----------------- ---------------------- 
+ 1          OK                   OK           
+ 2          OK                   OK           
+
+Unit                Fans Status             
+----   -------------------------------------
+ 2                FANs OK                
+
+Unit Temperature (Celsius)  Status  
+---- --------------------- -------- 
+ 2            36              OK    
+

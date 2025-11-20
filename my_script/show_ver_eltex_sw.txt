@@ -1,0 +1,16 @@
+Active-image: flash://system/images/mes3300-4021-5R1.ros
+  Version: 4.0.21.5
+  Commit: cd6eb98c
+  Build: 1 (master)
+  MD5 Digest: c813698e9fe736691857540f240de8d3
+  Date: 02-Oct-2023
+  Time: 16:54:57
+  Inactive after reboot
+Inactive-image: flash://system/images/mes3300-4025-R2.ros
+  Version: 4.0.25
+  Commit: f3f42245
+  Build: 2 (master)
+  MD5 Digest: 6116434b19a748ba42bc3550f02644a3
+  Date: 09-Jun-2025
+  Time: 18:46:30
+  Active after reboot

@@ -1,0 +1,7 @@
+
+Topology is Chain
+
+Unit Id     MAC Address       Role   
+------- ------------------- -------- 
+   1     e4:5a:d4:3c:93:40   master  
+   2     e4:5a:d4:08:f5:c0   backup  

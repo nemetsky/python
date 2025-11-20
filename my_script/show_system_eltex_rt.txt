@@ -1,0 +1,35 @@
+System type:              Eltex ESR-1500 Service Router
+System name:              ia-rdc-mss-inet-rt-2
+Software version:         1.28.1 build 7[0860e92ead] (2025-03-25 10:31:45)
+Hardware version:         1v2
+System uptime (d,h:m:s):  28,04:40:24
+System MAC address:       E4:5A:D4:01:F1:80
+System serial number:     NP0E000486
+
+Main power supply installed:     Present
+Main power supply status:        Ok
+Reserve power supply installed:  Present
+Reserve power supply status:     Ok
+
+Fan Level:                        40%
+
+
+   Fan Table
+   ---------
+         Fan 1   Fan 2   Fan 3   Fan 4   
+------   -----   -----   -----   -----   
+Status   Ok      Ok      Ok      Ok      
+
+   Temperature Table
+   -----------------
+                 CPU                Board              Switch             SFP                
+--------------   ----------------   ----------------   ----------------   ----------------   
+Temperature, C   33                 29                 29                 24                 
+
+   Memory Table
+   ------------
+        Total, MB          Used, MB           Free, MB           
+-----   ----------------   ----------------   ----------------   
+RAM     3377.56            2661.38 (79%)      716.19 (21%)       
+FLASH   20.00              1.12 (6%)          18.88 (94%)        
+DATA    500.00             11.00 (3%)         489.00 (97%)    
