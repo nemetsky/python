@@ -32,6 +32,7 @@ if __name__ == "__main__":
     with open("devices.yaml") as f:
         devices = yaml.safe_load(f)
         
+#   Пример без контекста
 #   здесь раньше был цикл с перебором устройств, теперь он не нужен
     executor = ThreadPoolExecutor(max_workers=2)                                                      # сколько потоков использовать для подключения
 #    q = executor.map(send_show_command, devices, repeat(password), ["sh clock", "sh inventory"])
@@ -41,7 +42,3 @@ if __name__ == "__main__":
     for result in q:        
         print(result)           # !!! в result будет вывод в том же порядке как мы на устройства отправляли команды / перебирали devices
 
-
-
-# with ThreadPoolExecutor(max_workers=2) as executor:
-#     result = executor.map

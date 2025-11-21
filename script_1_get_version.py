@@ -3,6 +3,7 @@ import netmiko
 import ipaddress
 import getpass
 import re
+
 from tabulate import tabulate
 
 
@@ -26,8 +27,8 @@ def parse_cisco_rt_show_ver(output):
     result.append(match.groupdict())
     result_sort = []
     for obj in result:
-        result_sort.append({'Hostname': obj['hostname'], 'OS': obj['os'], 'Version': obj['version'], 'Model': obj['model'], 'Serial': obj['serial'], 'Uptime (d,h:m:s)': obj['uptime']})
-    print(tabulate(result_sort, headers="keys", tablefmt="orgtbl"))
+        result_sort.append({'Hostname': obj['hostname'], 'OS': obj['os'], 'Version': obj['version'], 'Model': obj['model'], 'Serial': obj['serial'], 'Uptime': obj['uptime']})
+    return result_sort
 
 
 def parse_eltex_rt_show_sys(output):
@@ -44,7 +45,7 @@ def parse_eltex_rt_show_sys(output):
     result_sort = []
     for obj in result:
         result_sort.append({'Hostname': obj['hostname'], 'OS': obj['os'], 'Version': obj['version'], 'Model': obj['model'], 'Serial': obj['serial'], 'Uptime (d,h:m:s)': obj['uptime']})
-    print(tabulate(result_sort, headers="keys", tablefmt="orgtbl"))
+    return result_sort
 
 
 def parse_cisco_sw_show_ver(output):
@@ -56,10 +57,10 @@ def parse_cisco_sw_show_ver(output):
         r".+ (?P<model>\S+) \(\S+\) processor.*Processor board ID (?P<serial>\S+)"
         )
     regex_member = (
-        r"Switch (?P<stack>\d+)\n.+?"
-        r"Uptime +: (?P<uptime>.+?) \n.+?"
-        r"Model number +: (?P<model>\S+?)\n.+?"
-        r"System serial number +: (?P<serial>\S+)"
+        r"Switch \d(?P<stack>\d)\n.+?"
+        r"ptime +: (?P<uptime>.+?) \n.+?"
+        r"Model [Nn]umber +: (?P<model>\S+?)\n.*?"
+        r"System [Ss]erial [Nn]umber +: (?P<serial>\S+)"
         )
     result = []
     result_sort = []
@@ -73,7 +74,7 @@ def parse_cisco_sw_show_ver(output):
     elif len(match_count_sw) > 1:
         for master, number in match_count_sw:
             if master == "*":
-                dict_all["stack"] = "0" + number + " (master)"
+                dict_all["stack"] = number + " (master)"
                 result.append(dict_all)
         match_member = re.finditer(regex_member, output, re.DOTALL)
         for m in match_member:
@@ -84,7 +85,7 @@ def parse_cisco_sw_show_ver(output):
             result.append(dict_member)
         for obj in result:
             result_sort.append({'Hostname': obj['hostname'], 'OS': obj['os'], 'Version': obj['version'], 'Stack': obj['stack'], 'Model': obj['model'], 'Serial': obj['serial'], 'Uptime': obj['uptime']})
-    print(tabulate(result_sort, headers="keys", tablefmt="orgtbl"))
+    return result_sort
  
  
 def parse_eltex_sw_show_stack(output):
@@ -93,10 +94,12 @@ def parse_eltex_sw_show_stack(output):
     results = [match.groups() for match in match_member]
     return results
 
+
 def parse_eltex_sw_show_ver(output):
     regex_ver = r"Active-image.*\n +Version: (?P<version>\S+)"
     results = re.search(regex_ver, output).group(1)
     return results
+
 
 def parse_eltex_sw_show_system_id(output):
     regex_serial = r" +(?P<unit>\d) +\S+ +\S+ +(?P<serial>\S+)"
@@ -104,16 +107,19 @@ def parse_eltex_sw_show_system_id(output):
     results = [match.groups() for match in match_serial]
     return results
 
+
 def parse_eltex_sw_show_system(output):
     regex_sys_master = r"Description: +(?P<model>\S+) .*sec\): +(?P<uptime>\S+).*Name: +(?P<hostname>\S+)"
     results = re.search(regex_sys_master, output, re.DOTALL).groups(1)
     return results
 
+
 def parse_eltex_sw_show_system_unit(output):
     regex_sys_backup = r"Description: +(?P<model>\S+) .*sec\): +(?P<uptime>\S+)" 
     results = re.search(regex_sys_backup, output, re.DOTALL).groups(1)
     return results
-    
+  
+  
 def main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_stack_sw):
     result = []
     dict_sw = {}
@@ -128,7 +134,7 @@ def main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_st
         result.append(dict_sw)
     elif eltex_count_sw > 1:
         for number, state in eltex_stack_sw:
-            dict_serial = dict(eltex_sw_serial)             # из кортежа делаем словарь
+            dict_serial = dict(eltex_sw_serial) # из кортежа делаем словарь
             if state == 'master':
                 dict_sw = {}
                 dict_sw["Hostname"] = eltex_sw_system[2]
@@ -151,13 +157,14 @@ def main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_st
                 dict_sw["Uptime (d,h:m:s)"] = eltex_sw_system_unit[1]
                 result.append(dict_sw)
     return result
-    
+
+   
 ip = input("Введите IP-адрес или имя устройства: ")
 if ip[0].isdigit():
     ip_verify = check_ip(ip)
-if not ip_verify:
-    print("Введен некорректный IP-адрес")
-    sys.exit(0)
+    if not ip_verify:
+        print("Введен некорректный IP-адрес")
+        sys.exit(0)
 user = input("Введите имя пользователя: ")
 password = getpass.getpass(prompt="Введите пароль: ")
 try:
@@ -165,10 +172,10 @@ try:
     with netmiko.ConnectHandler(device_type="eltex", timeout=5, host=ip, username=user, password=password) as ssh:
         output = ssh.send_command("show system")
         match = re.search(r"% (.+)", output)
-        if "inet" in ssh.find_prompt() and match:
+        if "rt" in ssh.find_prompt() and match:
             output = ssh.send_command("show version")
             result = parse_cisco_rt_show_ver(output)
-        elif "inet" in ssh.find_prompt():
+        elif "rt" in ssh.find_prompt():
             result = parse_eltex_rt_show_sys(output)
         elif match:
             output = ssh.send_command("show version")
@@ -176,11 +183,14 @@ try:
         else:
             eltex_sw_ver = parse_eltex_sw_show_ver(ssh.send_command("show version"))
             eltex_sw_serial = parse_eltex_sw_show_system_id(ssh.send_command("show system id"))
-            eltex_sw_system = output
+            eltex_sw_system =  parse_eltex_sw_show_system(output)
             eltex_stack_sw = parse_eltex_sw_show_stack(ssh.send_command("show stack"))    
             result = main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_stack_sw)    
+    print(tabulate(result, headers="keys", tablefmt="orgtbl"))
+    print('\n')
 except netmiko.exceptions.NetmikoAuthenticationException:
     print("Ошибка аутентификации")
 except netmiko.exceptions.NetmikoTimeoutException:
-    print(f"IP-адрес {ip} недоступен")
-print(tabulate(result, headers="keys", tablefmt="orgtbl"))    
+    print(f"Устройство {ip} недоступно")
+except AttributeError:
+    print(f"Устройство не поддерживается или имя устройства не соответствует требованиям")    
