@@ -2616,7 +2616,7 @@ data = [['hostname', 'vendor', 'model', 'location'],
 with open ("results.csv", "w") as f: 
     wr = csv.writer(f)               # применяем csv.writer для записи
     for line in data:         
-        wr.wtiterow(line)            # записываем в файл наши списки
+        wr.writerow(line)            # записываем в файл наши списки
                                      # значения с запятыми будет записано в файл в кавычках "London, Best str"
 
 wr = csv.writer(f, quoting=csv.QUOTE_ALL)   # QUOTE_ALL - все значения записывать в кавычках
@@ -2633,9 +2633,9 @@ data = [
 
 with open ("results.csv", "w") as f:
     wr = csv.DictWriter(f, fieldnames="hostname location model vendor".split())   # в fieldnames указываем ключи, можно менять местами, тогда и файле столбцы поменяются местами
-    wr.writeheaders()                                                             # записать сами заголовкм в файл
+    wr.writeheader()                                                              # записать сами заголовкм в файл
     for line in data:             
-        wr.wtiterow(line)               
+        wr.writerow(line)               
 
 # fieldnames=list(data[0].keys()) - можно так указать заголовки
 # Если в fieldnames какой-нибудь заголовок (ключ) не включить, то будет ошибка
@@ -2651,7 +2651,7 @@ with open ("sw_data2.csv") as f:
 with open ("results.csv", "w") as f:
     wr = csv.DictWriter(f, fieldnames="hostname location model vendor".split(), delimiter=";")  # записать в файл с разделителем ";"
     for line in data:             
-        wr.wtiterow(line) 
+        wr.writerow(line) 
 
 # В Windows есть особенность, надо всегда указывать newline="" при открытии файла
 with open ("results.csv", "w", newline="") as f:

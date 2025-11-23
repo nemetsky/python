@@ -46,7 +46,7 @@ def collect_configs(devices, command, output_file, max_threads=4):
             with open(output_file.format(date, dev["host"]), "w") as f:
                 f.write(output)                                     
     except TypeError:
-        print("Не удалось собрать все конфигурации")
+        print("")
         
 if __name__ == "__main__":
     command = "show run"
