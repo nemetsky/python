@@ -1,17 +1,11 @@
 - device_type: cisco_ios
-  host: ia-mdc-lan-accs-csw-a329-1
-  username: nemetskiy-sv
-  timeout: 5
-- device_type: cisco_ios
-  host: ia-rdc-lan-accs-csw-115-1
+#  host: 10.11.10.107
+  host: ia-rdc-lan-mgmt-csw-115-1
   username: nemetskiy-sv
   timeout: 5
 - device_type: eltex
-  host: ia-rdc-aux-uc-csw-1
-  username: nemetskiy-sv
-  timeout: 5
-- device_type: eltex
-  host: ia-rdc-lan-accs-csw-115-2
+#  host: 10.20.11.45
+  host: ia-mdc-lan-accs-csw-a135-1
   username: nemetskiy-sv
   timeout: 5
 - device_type: cisco_ios

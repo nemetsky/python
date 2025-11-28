@@ -1,13 +1,12 @@
 from concurrent.futures import ThreadPoolExecutor
 from itertools import repeat
 from datetime import datetime
+
 import logging
 import netmiko
 import yaml
 import getpass
-#import subprocess
 import os
-
 
 logging.getLogger("netmiko").setLevel(logging.WARNING)
 logging.getLogger("paramiko").setLevel(logging.WARNING)
@@ -30,8 +29,7 @@ def send_show_command(device, password, command):
 
 
 def collect_configs(devices, command, output_file, max_threads=4):             
-    date = datetime.now().strftime("%Y-%m-%d")
-    #subprocess.run(f"mkdir conf_{date}".split())
+    date = datetime.now().strftime("%Y-%m-%d_%H-%M")
     try:
         os.mkdir(f"conf_{date}")
     except FileExistsError:
@@ -41,16 +39,17 @@ def collect_configs(devices, command, output_file, max_threads=4):
         results = executor.map(
             send_show_command, devices, repeat(password), repeat(command)
         )
-    try:
-        for dev, output in zip(devices, results): 
+    for dev, output in zip(devices, results): 
+        try:
             with open(output_file.format(date, dev["host"]), "w") as f:
                 f.write(output)                                     
-    except TypeError:
-        print("Не удалось собрать все конфигурации")
+        except TypeError:
+            print(f"Не удалось собрать конфигурацию с {dev['host']}")
+
         
 if __name__ == "__main__":
     command = "show run"
-    with open("devices_home.yaml") as f:
+    with open("devices_work.yaml") as f:
         devices = yaml.safe_load(f)
     collect_configs(devices, command, "conf_{}/{}_config.txt")
  

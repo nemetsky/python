@@ -1,0 +1,9 @@
+Hostname,OS,Version,Stack,Model,Serial,Uptime
+ia-mdc-lan-accs-csw-a329-1,Cisco IOS,15.2(7)E4,1 (master),WS-C2960XR-24PD-I,FDO2321B0EK,"4 years, 18 weeks, 23 hours, 1 minute"
+,,,2,WS-C2960XR-24PD-I,FDO2325B0RT,"4 years, 18 weeks, 23 hours, 46 minutes"
+ia-rdc-lan-accs-csw-115-1,Cisco IOS,15.2(7)E4,,WS-C2960XR-48FPS-I,FDO1830B0AG,"4 years, 17 weeks, 2 days, 21 hours, 26 minutes"
+ia-rdc-aux-uc-csw-1,Eltex,4.0.25,1 (master),MES3348,ESF1000657,"100,04:44:06"
+,,,2 (backup),MES3348,ESF1000482,"100,04:44:44"
+ia-rdc-lan-accs-csw-115-2,Eltex,4.0.25,,MES2348P,ES51007528,"120,06:55:03"
+ia-rdc-mss-ext-rt-1,Cisco IOS XE,16.9.8,,ISR4451-X/K9,FCZ2439M0P2,"1 year, 18 weeks, 6 days, 2 hours, 51 minutes"
+ia-rdc-mss-inet-rt-2,Eltex,1.28.1 build 7,,ESR-1500,NP0E000486,"40,02:56:57"

@@ -1,18 +1,17 @@
-import sys
-import netmiko
-import ipaddress
+﻿import netmiko
 import getpass
 import re
 import yaml
-from pprint import pprint
-from concurrent.futures import ThreadPoolExecutor
 import logging
 import csv
+
+from concurrent.futures import ThreadPoolExecutor
 
 logging.getLogger("netmiko").setLevel(logging.WARNING)
 logging.getLogger("paramiko").setLevel(logging.WARNING)
 
 logging.basicConfig(format="%(asctime)s %(threadName)s %(levelname)s: %(message)s", level=logging.DEBUG)
+
 
 def parse_cisco_rt_show_ver(output):
     regex = (
@@ -43,7 +42,7 @@ def parse_eltex_rt_show_sys(output):
     result.append(match.groupdict())
     result_sort = []
     for obj in result:
-        result_sort.append({'Hostname': obj['hostname'], 'OS': obj['os'], 'Version': obj['version'], 'Model': obj['model'], 'Serial': obj['serial'], 'Uptime (d,h:m:s)': obj['uptime']})
+        result_sort.append({'Hostname': obj['hostname'], 'OS': obj['os'], 'Version': obj['version'], 'Model': obj['model'], 'Serial': obj['serial'], 'Uptime': obj['uptime']})
     return result_sort
 
 
@@ -119,7 +118,7 @@ def parse_eltex_sw_show_system_unit(output):
     return results
   
   
-def main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_stack_sw):
+def main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_stack_sw, ssh):
     result = []
     dict_sw = {}
     eltex_count_sw = len(eltex_stack_sw)
@@ -129,7 +128,7 @@ def main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_st
         dict_sw["Version"] = eltex_sw_ver
         dict_sw["Model"] = eltex_sw_system[0]
         dict_sw["Serial"] = eltex_sw_serial[0][1]
-        dict_sw["Uptime (d,h:m:s)"] = eltex_sw_system[1]
+        dict_sw["Uptime"] = eltex_sw_system[1]
         result.append(dict_sw)
     elif eltex_count_sw > 1:
         for number, state in eltex_stack_sw:
@@ -142,10 +141,10 @@ def main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_st
                 dict_sw["Stack"] = f"{number} ({state})"
                 dict_sw["Model"] = eltex_sw_system[0]
                 dict_sw["Serial"] = dict_serial[number]
-                dict_sw["Uptime (d,h:m:s)"] = eltex_sw_system[1]
+                dict_sw["Uptime"] = eltex_sw_system[1]
                 result.append(dict_sw)
             elif state == 'backup':
-                eltex_sw_system_unit = parse_eltex_sw_show_system_unit(ssh.send_command(f"show system unit {number}"))
+                eltex_sw_system_unit = parse_eltex_sw_show_system_unit(ssh.send_command(f"show system unit {number}", read_timeout=60))
                 dict_sw = {}
                 dict_sw["Hostname"] = ""
                 dict_sw["OS"] = ""
@@ -153,7 +152,7 @@ def main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_st
                 dict_sw["Stack"] = f"{number} ({state})"
                 dict_sw["Model"] = eltex_sw_system_unit[0]
                 dict_sw["Serial"] = dict_serial[number]
-                dict_sw["Uptime (d,h:m:s)"] = eltex_sw_system_unit[1]
+                dict_sw["Uptime"] = eltex_sw_system_unit[1]
                 result.append(dict_sw)
     return result
     
@@ -170,13 +169,13 @@ def send_show_command(device, password, command, flag):
                 result = parse_eltex_rt_show_sys(output)    
             elif flag == "sw_cisco":
                 output = ssh.send_command(command)
-                result = parse_cisco_sw_show_ver(output)  
+                result = parse_cisco_sw_show_ver(output)
             elif flag == "sw_eltex":
                 eltex_sw_ver = parse_eltex_sw_show_ver(ssh.send_command(command[0], read_timeout=60))
                 eltex_sw_serial = parse_eltex_sw_show_system_id(ssh.send_command(command[1], read_timeout=60))
                 eltex_sw_system =  parse_eltex_sw_show_system(ssh.send_command(command[2], read_timeout=60))
                 eltex_stack_sw = parse_eltex_sw_show_stack(ssh.send_command(command[3], read_timeout=60))   
-                result = main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_stack_sw)                
+                result = main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_stack_sw, ssh)  # передаем также контекст ssh, т.к. без его передачи не заработало почему-то               
             logging.info(f"<=== Received:   {ip}")
             return result
     except netmiko.exceptions.NetmikoAuthenticationException: 
@@ -184,13 +183,13 @@ def send_show_command(device, password, command, flag):
     except netmiko.exceptions.NetmikoTimeoutException:
         logging.warning(f"Устройство {ip} недоступно")
 
-def collect_data(devices, max_threads=2):      
+def collect_data(devices, max_threads=4):      
     result_list = []
     password = getpass.getpass(prompt="Введите пароль: ")
     with ThreadPoolExecutor(max_workers=max_threads) as executor:
         future_list = []
         for dev in devices:
-            if dev["device_type"] == "cisco_ios" and "172.16" in dev["host"]:
+            if dev["device_type"] == "cisco_ios" and "rt" in dev["host"]:
                 command = "show version"
                 flag = "rt_cisco"
             elif dev["device_type"] == "eltex_esr":
@@ -200,20 +199,22 @@ def collect_data(devices, max_threads=2):
                 command = "show version"
                 flag = "sw_cisco"
             elif dev["device_type"] == "eltex":
-                command = ["show system", "show system id", "show system", "show stack"]
+                command = ["show version", "show system id", "show system", "show stack"]
                 flag = "sw_eltex"
             f = executor.submit(send_show_command, dev, password, command, flag)      
             future_list.append(f)                                          
 
         for f in future_list:
-            result_list.append(f.result()[0])
+            for i in range(0, len(f.result())):  # f.result() - список словарей (содержит всего один словарь, если устройство не стек). Cделал список, т.к. в предыдущем скрипте использовал tabulate
+                result_list.append(f.result()[i])
     return result_list 
 
 if __name__ == "__main__":
-    with open("devices_home.yaml") as f:
+    with open("devices_work.yaml") as f:
         devices = yaml.safe_load(f)
     data = collect_data(devices)
-    fieldnames=list(data[0].keys()) 
+    #fieldnames=list(data[0].keys()) # не работает в с случае, если первое устройство не стек, а потом есть стек, т.к. столбец "Stack" должен быть создан прежде чем в него записать
+    fieldnames = "Hostname OS Version Stack Model Serial Uptime".split()
     with open("results.csv", "w", newline="") as f_csv:
         wr = csv.DictWriter(f_csv, fieldnames)
         wr.writeheader() 

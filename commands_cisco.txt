@@ -1,0 +1,11 @@
+archive
+log config
+hidekeys
+notify syslog contenttype plaintext
+path tftp://172.16.0.202/$h-$t
+write-memory
+kron policy-list BACK_UP_CONFIG
+cli copy running-config startup-config
+kron occurrence BACK_UP_CONFIG at 23:55 recurring
+policy-list BACK_UP_CONFIG
+
