@@ -1,0 +1,4 @@
+backup server tftp://172.16.0.202
+backup time-period 1440
+backup write-memory
+backup auto

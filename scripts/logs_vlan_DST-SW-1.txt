@@ -1,0 +1,157 @@
+configure terminal
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#vlan 10 name VLAN-TEST-1
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#interface vlan 10
+
+DST-SW-1(config-if)# ip address 10.1.10.254 255.255.255.0
+
+DST-SW-1(config-if)#
+
+
+DST-SW-1(config-if)#interface Po1
+
+DST-SW-1(config-if)# switchport trunk allowed vlan add 10
+
+DST-SW-1(config-if)#
+
+
+DST-SW-1(config-if)#default interface range Gi1/0/40-41
+
+DST-SW-1(config-if)#interface range Gi1/0/40-41
+
+DST-SW-1(config-if-range)# description _USERS_
+
+DST-SW-1(config-if-range)# storm-control broadcast kbps 100 trap
+
+DST-SW-1(config-if-range)# storm-control multicast kbps 100 trap
+
+DST-SW-1(config-if-range)# spanning-tree portfast
+
+DST-SW-1(config-if-range)# spanning-tree bpduguard enable
+
+DST-SW-1(config-if-range)# switchport access vlan 10
+
+DST-SW-1(config-if-range)# no shutdown
+
+DST-SW-1(config-if-range)# exit
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#vlan 20 name VLAN-TEST-2
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#interface vlan 20
+
+DST-SW-1(config-if)# ip address 10.1.20.254 255.255.255.0
+
+DST-SW-1(config-if)#
+
+
+DST-SW-1(config-if)#interface Po1
+
+DST-SW-1(config-if)# switchport trunk allowed vlan add 20
+
+DST-SW-1(config-if)#
+
+
+DST-SW-1(config-if)#default interface range Gi1/0/42, Gi1/0/43
+
+DST-SW-1(config-if)#interface range Gi1/0/42, Gi1/0/43
+
+DST-SW-1(config-if-range)# description _USERS_
+
+DST-SW-1(config-if-range)# storm-control broadcast kbps 100 trap
+
+DST-SW-1(config-if-range)# storm-control multicast kbps 100 trap
+
+DST-SW-1(config-if-range)# spanning-tree portfast
+
+DST-SW-1(config-if-range)# spanning-tree bpduguard enable
+
+DST-SW-1(config-if-range)# switchport access vlan 20
+
+DST-SW-1(config-if-range)# no shutdown
+
+DST-SW-1(config-if-range)# exit
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#vlan 30 name VLAN-TEST-3
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#interface Po1
+
+DST-SW-1(config-if)# switchport trunk allowed vlan add 30
+
+DST-SW-1(config-if)#
+
+
+DST-SW-1(config-if)#default interface range Gi1/0/44
+
+DST-SW-1(config-if)#interface range Gi1/0/44
+
+DST-SW-1(config-if-range)# description _USERS_
+
+DST-SW-1(config-if-range)# storm-control broadcast kbps 100 trap
+
+DST-SW-1(config-if-range)# storm-control multicast kbps 100 trap
+
+DST-SW-1(config-if-range)# spanning-tree portfast
+
+DST-SW-1(config-if-range)# spanning-tree bpduguard enable
+
+DST-SW-1(config-if-range)# switchport access vlan 30
+
+DST-SW-1(config-if-range)# no shutdown
+
+DST-SW-1(config-if-range)# exit
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#
+
+
+DST-SW-1(config)#end
+
+DST-SW-1#

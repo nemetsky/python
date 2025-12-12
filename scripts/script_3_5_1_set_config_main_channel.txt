@@ -1,0 +1,66 @@
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+
+import logging
+import netmiko
+import getpass
+import os
+
+date = datetime.now().strftime("%Y-%m-%d_%H-%M")
+try:
+    os.mkdir(f"logs_{date}")
+except FileExistsError:
+    pass
+
+logging.getLogger("netmiko").setLevel(logging.WARNING)
+logging.getLogger("paramiko").setLevel(logging.WARNING)
+log_file = logging.FileHandler(f"logs_{date}/log_main.txt", "w")
+log_monitor = logging.StreamHandler()
+
+logging.basicConfig(
+    handlers=(log_file, log_monitor),
+    format="%(asctime)s %(levelname)s: %(message)s",
+    level=logging.DEBUG,
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+def send_config_commands(device, password, username, config_commands):
+    logging.info(f"===> Connection: {device}")
+    try:
+        with netmiko.ConnectHandler(password=password, username=username, device_type="eltex_esr", host=device) as ssh:
+            result = ssh.send_config_set(config_commands)
+            result += ssh.send_command_timing("commit")
+            result += ssh.send_command_timing("confirm")
+        logging.info(f"<=== Received:   {device}")
+        return result
+    except netmiko.exceptions.SSHException as error:
+        logging.error(error)
+
+if __name__ == "__main__":
+    commands = {
+        "RT-3": [
+            "route-map IMPORT_EBGP",
+            "rule 10",
+            "action set local-preference 120",
+            "exit",
+            "exit",
+            "route-map EXPORT_EBGP",
+            "rule 10",
+            "no action set as-path prepend"
+        ],
+        "RT-4": [
+            "route-map EXPORT_EBGP",
+            "rule 10",
+            "action set as-path prepend 65002"
+        ]
+    }
+    username = input("Введите пользователя: ")
+    password = getpass.getpass(prompt="Введите пароль: ")
+    #devices = [{"host": "RT-3"}, {"host": "RT-4"}]
+    #for device in devices:
+    #    output = send_config_commands(device, password, username, commands[device["host"]])
+    for dev, command in commands.items():
+        output = send_config_commands(dev, password, username, command)
+        with open(f"logs_{date}/log_{dev}_{date}", "w", encoding="UTF-8") as f:
+            f.write(output)
+    print("!!! Трафик переключен на основной канал !!!")

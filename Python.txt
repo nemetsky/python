@@ -1,5 +1,5 @@
 ### НЕОБХОДИМО ПОСТАВИТЬ МОДУЛИ ###
-pip install pytest pytest-clarity==0.3.0a0 pyyaml tabulate jinja1 textfsm netmiko
+pip install pytest pytest-clarity==0.3.0a0 pyyaml tabulate jinja2 textfsm netmiko
 
 https://pythontutor.com/                         # Деббагер
 https://replit.com/languages/python3             # Тренажер

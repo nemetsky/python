@@ -1,0 +1,57 @@
+
+mls qos map cos-dscp 0 8 16 24 32 46 48 56
+mls qos srr-queue output cos-map queue 1 threshold 3 4 5
+mls qos srr-queue output cos-map queue 2 threshold 1 2
+mls qos srr-queue output cos-map queue 2 threshold 2 3
+mls qos srr-queue output cos-map queue 2 threshold 3 6 7
+mls qos srr-queue output cos-map queue 3 threshold 3 0
+mls qos srr-queue output cos-map queue 4 threshold 3 1
+mls qos srr-queue output dscp-map queue 1 threshold 3 32 34 40 46
+mls qos srr-queue output dscp-map queue 2 threshold 1 16 18 20 22 26 28 30 36
+mls qos srr-queue output dscp-map queue 2 threshold 1 38
+mls qos srr-queue output dscp-map queue 2 threshold 2 24
+mls qos srr-queue output dscp-map queue 2 threshold 3 48 56
+mls qos srr-queue output dscp-map queue 3 threshold 2 0
+mls qos srr-queue output dscp-map queue 4 threshold 1 8
+mls qos srr-queue output dscp-map queue 4 threshold 2 10 12 14
+mls qos queue-set output 1 threshold 2 80 90 100 100
+mls qos queue-set output 1 threshold 3 100 3000 100 3000
+mls qos queue-set output 1 threshold 4 100 3200 100 3200
+mls qos queue-set output 1 buffers 25 25 40 10
+mls qos
+!
+ip access-list extended MANAGEMENT
+ remark SSH
+ permit tcp any any eq 22
+ permit tcp any eq 22 any 
+!
+ip access-list extended MEDIA
+ permit ip 10.3.1.0 0.0.0.255 any
+ permit ip 10.3.2.0 0.0.1.255 any
+ permit ip 10.3.4.0 0.0.3.255 any
+ permit ip 10.20.32.0 0.0.7.255 any
+ permit ip 172.27.1.0 0.0.0.255 any
+!
+class-map match-all CLASS-MEDIA
+ match access-group name MEDIA
+!
+class-map match-all CLASS-MANAGEMENT
+ match access-group name MANAGEMENT
+!
+policy-map LVS-ACCESS-IN
+ class CLASS-MEDIA
+  trust dscp
+ class CLASS-MANAGEMENT
+  set dscp cs2
+ class class-default
+  set dscp default
+!
+int range gi1/0/40-41
+ srr-queue bandwidth share 1 30 35 5
+ priority-queue out 
+ service-policy input LVS-ACCESS-IN
+
+int range Gi1/0/42
+ srr-queue bandwidth share 1 30 35 5
+ priority-queue out 
+ mls qos trust dscp

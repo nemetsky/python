@@ -1,0 +1,101 @@
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
+from pprint import pprint
+
+import logging
+import netmiko
+import yaml
+import getpass
+import os
+import re
+
+date = datetime.now().strftime("%Y-%m-%d_%H-%M")
+try:
+    os.mkdir(f"logs_{date}")
+except FileExistsError:
+    pass
+
+logging.getLogger("netmiko").setLevel(logging.WARNING)
+logging.getLogger("paramiko").setLevel(logging.WARNING)
+log_file = logging.FileHandler(f"logs_{date}/log_main.txt", "w")
+log_monitor = logging.StreamHandler()
+
+logging.basicConfig(
+    handlers=(log_file, log_monitor),
+    format="%(asctime)s %(levelname)s: %(message)s",
+    level=logging.DEBUG,
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+
+def send_command(device, password, commands_cisco, commands_eltex_00, commands_eltex_xx):
+    ip = device["host"]
+    logging.info(f"===> Connection: {ip}")
+    try:
+        with netmiko.ConnectHandler(password=password, **device) as ssh:
+            output = ssh.send_command("show inventory")
+            if device["device_type"] == "cisco_ios":
+                commands = commands_cisco.copy()
+            elif device["device_type"] == "eltex" and "3300-" in output:
+                commands = commands_eltex_00.copy()
+            else:
+                commands = commands_eltex_xx.copy()
+            result = ssh.send_config_set(commands)          # read_timeout=60
+            if device["device_type"] == "eltex":
+                ssh.send_command_timing("wr")
+            else:
+                ssh.save_config()
+        logging.info(f"<=== Received:   {ip}")
+        return result
+    except netmiko.exceptions.NetmikoAuthenticationException: 
+        logging.error(f"Ошибка аутентификации к {ip}")
+    except netmiko.exceptions.NetmikoTimeoutException:
+        logging.error(f"Устройство {ip} недоступно")
+    except netmiko.exceptions.ReadTimeout:
+        logging.error(f"Некорректный ответ на команду от {ip}")
+
+
+def send_config_commands(devices, commands_cisco, commands_eltex_00, commands_eltex_xx, log_files, max_threads=8):
+    password = getpass.getpass(prompt="Введите пароль: ")
+    with ThreadPoolExecutor(max_workers=max_threads) as executor:
+        future_list = []
+        for device in devices:
+            future = executor.submit(send_command, device, password, commands_cisco, commands_eltex_00, commands_eltex_xx)
+            future_list.append(future)
+
+    result_dict = {}
+    for dev, output in zip (devices, future_list):
+        if output.result():
+            with open(log_files.format(date, dev["host"]), "w") as f:
+                f.write(output.result())
+            result_dict[dev["host"]] = output.result()
+    return result_dict
+
+
+def parse_output(result_dict):
+    regex = r"#(.*)\n+ *\^*\n*% (.+)"
+    template_error = 'На устройстве "{}" комманда "{}" выполнилась с ошибкой "{}"'
+    logging.info("########## ПРОВЕРКА ВВЕДЕННЫХ КОМАНД ##########")
+    for dev, output in result_dict.items():
+        matches = re.findall(regex, output)
+        if matches:
+            for match in matches:
+                logging.error(template_error.format(dev, match[0], match[1]))
+        else:
+            logging.info(f'Все команды успешно применились на устройстве "{dev}"')
+
+
+if __name__ == "__main__":
+    with open("commands_eltex_series_00_qos.txt") as f:
+        lines_eltex_00 = f.readlines()
+        commands_eltex_00 = [line.rstrip() for line in lines_eltex_00 if not re.match(r" *#", line)]
+    with open("commands_eltex_series_XX_qos.txt") as f:
+        lines_eltex_xx = f.readlines()
+        commands_eltex_xx = [line.rstrip() for line in lines_eltex_xx if not re.match(r" *#", line)]
+    with open("commands_cisco_qos.txt") as f:
+        lines_cisco = f.readlines()
+        commands_cisco = [line.rstrip() for line in lines_cisco if not re.match(r" *#", line)]
+    with open("devices_sw.yaml") as f:
+        devices = yaml.safe_load(f)
+    result_dict = send_config_commands(devices, commands_cisco, commands_eltex_00, commands_eltex_xx, "logs_{}/log_{}.txt")
+    parse_output(result_dict)

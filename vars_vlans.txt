@@ -1,0 +1,25 @@
+hostname: DST-SW-1     # "hostname" or "ip_address"
+os_type: eltex         # "eltex" or "cisco_ios"
+
+vlans:
+
+  - name: USERS-TEST-1
+    tag: 10
+    ip_address: 10.1.10.254
+    mask: 255.255.255.0
+    uplink: Po1
+    access_ports: Gi1/0/40-41
+
+  - name: USERS-TEST-2
+    tag: 20
+    ip_address: 10.1.20.254
+    mask: 255.255.255.0
+    uplink: Po1
+    access_ports: Gi1/0/42, Gi1/0/43
+
+  - name: USERS-TEST-3
+    tag: 30
+    #ip_address: 10.1.20.254
+    #mask: 255.255.255.0
+    uplink: Po1
+    access_ports: Gi1/0/43

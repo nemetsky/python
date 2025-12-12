@@ -1,0 +1,23 @@
+hostname: CORE-1           # "hostname" or "ip_address"
+os_type: cisco_ios         # "eltex" or "cisco_ios"
+
+vlans:
+
+  - name: VLAN-TEST-1
+    tag: 10
+    ip_address: 10.1.10.253
+    mask: 255.255.255.0
+    uplink: Po1
+    access_ports: Gi1/0/40-41
+
+  - name: VLAN-TEST-2
+    tag: 20
+    ip_address: 10.1.20.253
+    mask: 255.255.255.0
+    uplink: Po1
+    access_ports: Gi1/0/42, Gi1/0/43
+
+  - name: VLAN-TEST-3
+    tag: 30
+    uplink: Po1
+    access_ports: Gi1/0/44

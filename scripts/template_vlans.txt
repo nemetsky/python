@@ -1,0 +1,64 @@
+{% for vlan in vlans %}
+
+{% if os_type == 'eltex' %}
+
+vlan {{vlan.tag}} name {{vlan.name}}
+
+{% if vlan.ip_address %}
+interface vlan {{vlan.tag}}
+ ip address {{vlan.ip_address}} {{vlan.mask}}
+{% endif %}
+
+{% if vlan.uplink %}
+interface {{vlan.uplink}}
+ switchport trunk allowed vlan add {{vlan.tag}}
+{% endif %}
+
+{% if vlan.access_ports %}
+default interface range {{vlan.access_ports}}
+interface range {{vlan.access_ports}}
+ description _USERS_
+ storm-control broadcast kbps 100 trap
+ storm-control multicast kbps 100 trap
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ switchport access vlan {{vlan.tag}}
+ no shutdown
+ exit
+{% endif %}
+
+{% elif os_type == 'cisco_ios' %}
+
+vlan {{vlan.tag}}
+ name {{vlan.name}}
+
+{% if vlan.ip_address %}
+interface vlan {{vlan.tag}}
+ ip address {{vlan.ip_address}} {{vlan.mask}}
+ description {{vlan.name}}
+{% endif %}
+
+{% if vlan.uplink %}
+interface {{vlan.uplink}}
+ switchport trunk allowed vlan add {{vlan.tag}}
+ exit
+{% endif %}
+
+{% if vlan.access_ports %}
+default interface range {{vlan.access_ports}}
+interface range {{vlan.access_ports}}
+ description -- USERS --
+ switchport mode access
+ switchport access vlan {{vlan.tag}}
+ storm-control broadcast level pps 200 180
+ storm-control multicast level pps 200 180
+ storm-control action trap
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+ exit
+{% endif %}
+
+{% endif %}
+
+{% endfor %}

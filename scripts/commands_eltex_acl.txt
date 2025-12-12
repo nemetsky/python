@@ -1,0 +1,11 @@
+no management access-class
+no management access-list ACL-MGMT-IN
+management access-list ACL-MGMT-IN
+ deny service http
+ deny service https
+ deny service telnet
+ permit ip-source 192.168.1.0 mask 255.255.255.0
+ permit ip-source 172.16.0.0 mask 255.255.255.0
+ permit ip-source 10.101.0.200 service ssh
+ exit
+management access-class ACL-MGMT-IN

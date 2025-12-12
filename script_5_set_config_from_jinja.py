@@ -1,0 +1,38 @@
+from jinja2 import Environment, FileSystemLoader
+from pprint import pprint
+
+import netmiko
+import yaml
+import getpass
+
+env = Environment(loader=FileSystemLoader('.'), trim_blocks=True, lstrip_blocks=True)
+template = env.get_template('template_vlans.txt')
+
+password = getpass.getpass()
+
+with open('vars_vlans.txt') as f:
+    vars = yaml.safe_load(f)
+
+commands = template.render(vars).split('\n')
+params = {
+    "host": vars['hostname'],
+    "device_type": vars['os_type'],
+    "username": 'admin',
+    "password": password
+}
+try:
+    with netmiko.ConnectHandler(**params) as ssh:
+        result = ssh.send_config_set(commands)
+        with open('logs_vlan.txt', 'w') as f_out:
+            f_out.write(result)
+        if '% ' in result:
+            print("Некоторые команды применились с ошибками. Подробности в лог-файле 'logs_vlan.txt'")
+        else:
+            if params["device_type"] == "eltex":
+                ssh.send_command_timing("wr")
+            else:
+                ssh.save_config()
+            print("Команды успешно применены. Конфигурация сохранена. Подробности в лог-файле 'logs_vlan.txt'")
+except netmiko.exceptions.SSHException as error:
+    print(error)
+

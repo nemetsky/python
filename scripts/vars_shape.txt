@@ -1,0 +1,6 @@
+# Eltex
+#interface: gi1/0/5
+#shape_rate: 320000
+# Cisco
+interface: gi0/0/5
+shape_rate: 160000000

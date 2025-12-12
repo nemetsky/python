@@ -1,0 +1,104 @@
+configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+CORE-1(config)#
+CORE-1(config)#
+CORE-1(config)#vlan 10
+CORE-1(config-vlan)# name VLAN-TEST-1
+CORE-1(config-vlan)#
+CORE-1(config-vlan)#interface vlan 10
+CORE-1(config-if)# ip address 10.1.10.253 255.255.255.0
+CORE-1(config-if)# description VLAN-TEST-1
+CORE-1(config-if)#
+CORE-1(config-if)#interface Po1
+CORE-1(config-if)# switchport trunk allowed vlan add 10
+CORE-1(config-if)# exit
+CORE-1(config)#
+CORE-1(config)#default interface range Gi1/0/40-41
+CORE-1(config)#interface range Gi1/0/40-41
+CORE-1(config-if-range)# description -- USERS --
+CORE-1(config-if-range)# switchport mode access
+CORE-1(config-if-range)# switchport access vlan 10
+CORE-1(config-if-range)# storm-control broadcast level pps 200 180
+CORE-1(config-if-range)# storm-control multicast level pps 200 180
+CORE-1(config-if-range)# storm-control action trap
+CORE-1(config-if-range)# spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast will be configured in 2 interfaces due to the range command 
+ but will only have effect when the interfaces are in a non-trunking mode.
+CORE-1(config-if-range)# spanning-tree bpduguard enable
+CORE-1(config-if-range)# no shutdown
+CORE-1(config-if-range)# exit
+CORE-1(config)#
+CORE-1(config)#
+CORE-1(config)#
+CORE-1(config)#
+CORE-1(config)#vlan 20
+CORE-1(config-vlan)# name VLAN-TEST-2
+CORE-1(config-vlan)#
+CORE-1(config-vlan)#interface vlan 20
+CORE-1(config-if)# ip address 10.1.20.253 255.255.255.0
+CORE-1(config-if)# description VLAN-TEST-2
+CORE-1(config-if)#
+CORE-1(config-if)#interface Po1
+CORE-1(config-if)# switchport trunk allowed vlan add 20
+CORE-1(config-if)# exit
+CORE-1(config)#
+CORE-1(config)#default interface range Gi1/0/42, Gi1/0/43
+CORE-1(config)#interface range Gi1/0/42, Gi1/0/43
+CORE-1(config-if-range)# description -- USERS --
+CORE-1(config-if-range)# switchport mode access
+CORE-1(config-if-range)# switchport access vlan 20
+CORE-1(config-if-range)# storm-control broadcast level pps 200 180
+CORE-1(config-if-range)# storm-control multicast level pps 200 180
+CORE-1(config-if-range)# storm-control action trap
+CORE-1(config-if-range)# spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast will be configured in 2 interfaces due to the range command 
+ but will only have effect when the interfaces are in a non-trunking mode.
+CORE-1(config-if-range)# spanning-tree bpduguard enable
+CORE-1(config-if-range)# no shutdown
+CORE-1(config-if-range)# exit
+CORE-1(config)#
+CORE-1(config)#
+CORE-1(config)#
+CORE-1(config)#
+CORE-1(config)#vlan 30
+CORE-1(config-vlan)# name VLAN-TEST-3
+CORE-1(config-vlan)#
+CORE-1(config-vlan)#
+CORE-1(config-vlan)#interface Po1
+CORE-1(config-if)# switchport trunk allowed vlan add 30
+CORE-1(config-if)# exit
+CORE-1(config)#
+CORE-1(config)#default interface range Gi1/0/44
+CORE-1(config)#interface range Gi1/0/44
+CORE-1(config-if-range)# description -- USERS --
+CORE-1(config-if-range)# switchport mode access
+CORE-1(config-if-range)# switchport access vlan 30
+CORE-1(config-if-range)# storm-control broadcast level pps 200 180
+CORE-1(config-if-range)# storm-control multicast level pps 200 180
+CORE-1(config-if-range)# storm-control action trap
+CORE-1(config-if-range)# spanning-tree portfast
+%Warning: portfast should only be enabled on ports connected to a single
+ host. Connecting hubs, concentrators, switches, bridges, etc... to this
+ interface  when portfast is enabled, can cause temporary bridging loops.
+ Use with CAUTION
+
+%Portfast will be configured in 1 interfaces due to the range command 
+ but will only have effect when the interfaces are in a non-trunking mode.
+CORE-1(config-if-range)# spanning-tree bpduguard enable
+CORE-1(config-if-range)# no shutdown
+CORE-1(config-if-range)# exit
+CORE-1(config)#
+CORE-1(config)#
+CORE-1(config)#
+CORE-1(config)#end
+CORE-1#

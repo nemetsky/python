@@ -1,0 +1,56 @@
+from concurrent.futures import ThreadPoolExecutor
+from jinja2 import Environment, FileSystemLoader
+from itertools import repeat
+from datetime import datetime
+
+import logging
+import netmiko
+import getpass
+import yaml
+import os
+
+date = datetime.now().strftime("%Y-%m-%d_%H-%M")
+try:
+    os.mkdir(f"logs_{date}")
+except FileExistsError:
+    pass
+
+logging.getLogger("netmiko").setLevel(logging.WARNING)
+logging.getLogger("paramiko").setLevel(logging.WARNING)
+log_file = logging.FileHandler(f"logs_{date}/log_main.txt", "w")
+log_monitor = logging.StreamHandler()
+
+logging.basicConfig(
+    handlers=(log_file, log_monitor),
+    format="%(asctime)s %(levelname)s: %(message)s",
+    level=logging.DEBUG,
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
+
+def send_config_commands(device, password, config_commands):
+    ip = device["host"]
+    logging.info(f"===> Connection: {ip}")
+    try:
+        with netmiko.ConnectHandler(password=password, **device) as ssh:
+            result = ssh.send_config_set(config_commands)
+            result += ssh.send_command_timing("commit")
+            result += ssh.send_command_timing("confirm")
+        logging.info(f"<=== Received:   {ip}")
+        with open(f"logs_{date}/log_{ip}_{date}", "w", encoding="UTF-8") as f:
+            f.write(result)
+    except netmiko.exceptions.SSHException as error:
+        logging.error(error)
+
+if __name__ == "__main__":
+    env = Environment(loader=FileSystemLoader('.'), trim_blocks=True, lstrip_blocks=True)
+    template = env.get_template('template_shape_eltex.txt')
+    with open('vars_shape.txt') as f:
+        vars = yaml.safe_load(f)
+    commands = template.render(vars).split('\n')
+    with open("devices_rt.yaml") as f:
+        devices = yaml.safe_load(f)
+    password = getpass.getpass(prompt="Введите пароль: ")
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        executor.map(send_config_commands, devices, repeat(password), repeat(commands))
+    print("!!! Конфигурация применена !!!")
+

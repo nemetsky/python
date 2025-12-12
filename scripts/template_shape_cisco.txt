@@ -1,0 +1,8 @@
+{% set shape = shape_rate / 1000000 %}
+interface {{ interface }}
+policy-map QOS_OUT_SHAPE_{{ shape | int }}M
+ class class-default
+  shape average {{ shape_rate }}
+   service-policy QOS_OUT
+interface {{ interface }}
+ service-policy output QOS_OUT_SHAPE_{{ shape | int }}M

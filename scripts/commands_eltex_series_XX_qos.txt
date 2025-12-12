@@ -1,0 +1,61 @@
+do terminal width 0
+qos advanced ports-trusted
+qos advanced-mode trust dscp
+qos map enable dscp-cos
+qos map dscp-cos 24 to 3
+qos map dscp-cos 34 to 4
+qos map dscp-cos 46 to 5
+qos map dscp-queue 24 to 5
+qos map dscp-queue 34 to 6
+qos map dscp-queue 46 to 7
+qos map dscp-queue 48 to 5
+qos map dscp-queue 26 to 4
+qos map dscp-queue 18 to 3
+qos map dscp-queue 10 to 2
+qos map dscp-queue 9 11 12 13 14 15 17 to 1
+qos map dscp-queue 19 20 21 22 23 25 27 28 to 1
+qos map dscp-queue 29 30 31 32 33 35 36 37 to 1
+qos map dscp-queue 38 39 40 41 42 43 44 45 to 1
+qos map dscp-queue 47 49 50 51 52 53 54 55 to 1
+qos map dscp-queue 56 57 58 59 60 61 62 63 to 1
+
+ip access-list extended MEDIA
+ permit ip any any 172.27.1.0 0.0.0.255 any
+ permit ip any any 10.3.40.0 0.0.1.255 any
+ permit ip TEST
+exit
+ip access-list extended CLASS-DEFAULT
+ permit ip any any any any
+exit
+ip access-list extended MANAGEMENT
+ permit tcp any any any 22
+ permit tcp any 22 any any
+exit
+priority-queue out num-of-queues 3
+class-map CLASS-MEDIA
+ match access-group MEDIA
+exit                                                  
+class-map CLASS-MANAGEMENT
+ match access-group MANAGEMENT
+exit
+class-map CLASS-DEFAULT
+ match access-group CLASS-DEFAULT
+exit
+policy-map LVS-ACCESS-IN
+ class CLASS-MEDIA
+  trust
+ exit
+ class CLASS-MANAGEMENT
+  set dscp 16
+  set cos 2
+ exit
+ class CLASS-DEFAULT
+  set dscp 0
+  set cos 0
+ exit
+exit                                                  
+wrr-queue bandwidth 15 30 30 10 15
+qos statistics interface
+interface range Gi1/0/40-42
+ service-policy input LVS-ACCESS-IN default-action permit-any
+
