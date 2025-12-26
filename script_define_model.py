@@ -4,20 +4,24 @@ import getpass
 
 def send_show_command(device, password, command):                 # отправка команд show
     ip = device["host"]                                             
-    print(f"Подключаюсь к {ip}")
+    #print(f"Подключаюсь к {ip}")
     try:
         with netmiko.ConnectHandler(password=password, **device) as ssh:
             output = ssh.send_command(command)
-            return output
-    # except netmiko.exceptions.NetmikoAuthenticationException:   # исключение при ошибке аутентификации
-    #     print("Ошибка аутентификации")
-    # except netmiko.exceptions.NetmikoTimeoutException:          # исключение при таймауте подключения
-    #     print(f"IP-адрес {ip} недоступен")
-    except netmiko.exceptions.SSHException as error:              # вместо 2-х исключение можно указать одно общее, которое включает в себя оба исключения
-        print(error)
+            if "% " in output:
+                result = print(ip + " CISCO")
+            else:
+                result = print(ip + " ELTEX")
+            return result
+    except netmiko.exceptions.NetmikoAuthenticationException:   # исключение при ошибке аутентификации
+        print(f"{ip} ошибка аутентификации")
+    except netmiko.exceptions.NetmikoTimeoutException:          # исключение при таймауте подключения
+        print(f"{ip} недоступен")
+    #except netmiko.exceptions.SSHException as error:              # вместо 2-х исключение можно указать одно общее, которое включает в себя оба исключения
+    #    print(error)
 
 
-def send_config_commands(device, password, config_commands, log=True):          # отправка команд конфигурации
+def send_config_commands(device, password, config_commands, log=False):          # отправка команд конфигурации
     ip = device["host"]
     if log:
         print(f"Подключаюсь к {ip}...")
@@ -27,12 +31,12 @@ def send_config_commands(device, password, config_commands, log=True):          
 
  
 if __name__ == "__main__":                                        # отправка команд show
-    command = "show version"
+    command = "show system"
     password = getpass.getpass()
-    with open("devices_sterra.yaml") as f:
+    with open("devices_test.yaml") as f:
         devices = yaml.safe_load(f)
     for dev in devices:
-        print(send_show_command(dev, password, command))
+        send_show_command(dev, password, command)
 
 """
 if __name__ == "__main__":                                        # отправка команд конфигурации

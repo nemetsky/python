@@ -1,4 +1,4 @@
-﻿import netmiko
+import netmiko
 import getpass
 import re
 import yaml
@@ -155,6 +155,7 @@ def main_parse_eltex_sw(eltex_sw_ver, eltex_sw_serial, eltex_sw_system, eltex_st
                 dict_sw["Uptime"] = eltex_sw_system_unit[1]
                 result.append(dict_sw)
     return result
+  
     
 def send_show_command(device, password, command, flag):
     ip = device["host"]                                             
@@ -183,13 +184,14 @@ def send_show_command(device, password, command, flag):
     except netmiko.exceptions.NetmikoTimeoutException:
         logging.warning(f"Устройство {ip} недоступно")
 
-def collect_data(devices, max_threads=4):      
+
+def collect_data(devices, max_threads=16):      
     result_list = []
     password = getpass.getpass(prompt="Введите пароль: ")
     with ThreadPoolExecutor(max_workers=max_threads) as executor:
         future_list = []
         for dev in devices:
-            if dev["device_type"] == "cisco_ios" and "rt" in dev["host"]:
+            if dev["device_type"] == "cisco_ios" and "RT" in dev["host"]:
                 command = "show version"
                 flag = "rt_cisco"
             elif dev["device_type"] == "eltex_esr":
@@ -210,11 +212,11 @@ def collect_data(devices, max_threads=4):
     return result_list 
 
 if __name__ == "__main__":
-    with open("devices_work.yaml") as f:
+    with open("devices_test.yaml") as f:
         devices = yaml.safe_load(f)
     data = collect_data(devices)
-    #fieldnames=list(data[0].keys()) # не работает в с случае, если первое устройство не стек, а потом есть стек, т.к. столбец "Stack" должен быть создан прежде чем в него записать
-    fieldnames = "Hostname OS Version Stack Model Serial Uptime".split()
+    #fieldnames=list(data[0].keys())
+    fieldnames = "Hostname OS Version Stack	Model Serial Uptime".split()
     with open("results.csv", "w", newline="") as f_csv:
         wr = csv.DictWriter(f_csv, fieldnames)
         wr.writeheader() 

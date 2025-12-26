@@ -1,17 +1,19 @@
 from concurrent.futures import ThreadPoolExecutor
 from itertools import repeat
 from datetime import datetime
+from tabulate import tabulate
 
 import logging
 import netmiko
 import yaml
 import getpass
 import os
+import textfsm
 
 logging.getLogger("netmiko").setLevel(logging.WARNING)
 logging.getLogger("paramiko").setLevel(logging.WARNING)
 
-logging.basicConfig(format="%(asctime)s %(threadName)s %(levelname)s: %(message)s", level=logging.DEBUG)
+logging.basicConfig(format="%(asctime)s %(levelname)s: %(message)s", level=logging.DEBUG)
 
 
 def send_show_command(device, password, command):
@@ -28,28 +30,41 @@ def send_show_command(device, password, command):
         logging.warning(f"Устройство {ip} недоступно")
 
 
-def collect_configs(devices, command, output_file, max_threads=4):             
+def collect_inventory(devices, command, max_threads=8):             
     date = datetime.now().strftime("%Y-%m-%d_%H-%M")
     try:
-        os.mkdir(f"conf_{date}")
+        os.mkdir(f"outputs_{date}")
     except FileExistsError:
         print(f"Каталог conf_{date} уже существует")
-    password = getpass.getpass()
+    password = getpass.getpass("Введите пароль: ")
     with ThreadPoolExecutor(max_workers=max_threads) as executor:
         results = executor.map(
             send_show_command, devices, repeat(password), repeat(command)
         )
+    result_dict = {}
     for dev, output in zip(devices, results): 
         try:
-            with open(output_file.format(date, dev["host"]), "w") as f:
-                f.write(output)                                     
+            result_dict[dev["host"]] = output
         except TypeError:
-            print(f"Не удалось собрать конфигурацию с {dev['host']}")
+            print(f"Не удалось собрать информацию с {dev['host']}")
+    return result_dict
 
-        
+
+def parse_outputs_fsm(dict_inventory, template_fsm, output_file):
+    date = datetime.now().strftime("%Y-%m-%d_%H-%M")
+    os.mkdir(f"inventory_{date}")
+    for dev, output in dict_inventory.items():
+        if output:
+            with open(template_fsm) as f1, open(output_file.format(date, dev), "w") as f2:
+                fsm = textfsm.TextFSM(f1)
+                header = fsm.header
+                result = (tabulate(fsm.ParseText(output), headers=header, tablefmt="simple_outline"))
+                f2.write(result)
+
+
 if __name__ == "__main__":
-    command = "show run"
-    with open("devices_work.yaml") as f:
+    command = "show inventory"
+    with open("devices.yaml") as f:
         devices = yaml.safe_load(f)
-    collect_configs(devices, command, "conf_{}/{}_config.txt")
- 
+    dict_inventory = collect_inventory(devices, command)
+    parse_outputs_fsm(dict_inventory, "template_fsm_inventory.txt", "outputs_{}/{}_inventory.txt")
