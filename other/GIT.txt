@@ -214,3 +214,12 @@ git config --list
 git config --global http.proxy http://172.31.0.209:8090
 git config --global --unset http.proxy
 
+
+
+====================================
+Мои команды
+
+git add .
+git commit -m add_asa_script_traektoriya
+git push https://<token>@github.com/nemetsky/python.git
+git pull
