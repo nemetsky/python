@@ -1,0 +1,12 @@
+1) Установит на ПК (если ОС - Windows) компилятор Python for Windows последней версии
+
+
+2) py -m pip install openpyxl - установка дополнений для возможности выгрузки информации в XLSX файл
+
+
+3) в папку с parce_obj'name'.py необходимо положить файл с конфигурацией МСЭ (running-config.txt)
+
+
+4) Запустить py parse_obj_xlsx.py running-config.txt
+   
+

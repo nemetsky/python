@@ -1,0 +1,25 @@
+- host: 10.31.191.11
+  device_type: cisco_ios
+  username: nemetskiy
+- host: 10.31.191.12
+  device_type: cisco_ios
+  username: nemetskiy
+- host: 10.31.191.13
+  device_type: cisco_ios
+  username: nemetskiy
+- host: 10.31.191.14
+  device_type: cisco_ios
+  username: nemetskiy
+- host: 10.31.191.15
+  device_type: cisco_ios
+  username: nemetskiy
+- host: 10.31.191.16
+  device_type: cisco_ios
+  username: nemetskiy
+- host: 10.31.191.17
+  device_type: cisco_ios
+  username: nemetskiy
+- host: 10.31.191.18
+  device_type: cisco_ios
+  username: nemetskiy
+

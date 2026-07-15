@@ -1,0 +1,10 @@
+username vinogradov-as privilege 15 secret 9 $9$/b9FN6jAUgApm.$kP4owTgHZQvw8CBMZ1QpvHOZEco8LXehjEQgUUOAKq6
+username pukhov-pi privilege 15 secret 9 $9$rpIFFXcV8QEFHq$b.n.sHbl7ZJGCRPOAePzDOGWnilrvYWZe9M5JtE5J2I
+
+ip access-list extended ACL_SSH_IN
+remark -Pukhov-
+permit ip host 10.31.191.25 any
+permit ip host 10.31.191.35 any
+remark -Vinogradov-
+permit ip host 10.31.191.24 any
+permit ip host 10.31.191.34 any

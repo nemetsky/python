@@ -1,0 +1,1320 @@
+access-list ACL_DMZ_CORP_IN remark ===| Access for ld3test.so-ups.ru | SD_90845 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-LANDOCS3-CNT-TEST-PORTS host 172.31.0.140 host 172.16.117.20
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-LANDOCS3-REDIS-TEST-PORTS host 172.31.0.140 host 10.20.27.21
+access-list ACL_DMZ_CORP_IN remark ===| Access to KICS | SD_823615 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.252 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.252 host 172.16.71.64 eq 13000
+access-list ACL_DMZ_CORP_IN remark ===| Access to IA AIP test servers for ia-ntc-ts.cdu.so | SD_89909 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-OC-AIP-SRV-TEST-PORTS host 172.31.0.165 object-group IA-CK11-AIP-SRV-TEST
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-OC-W-AIP-SRV-TEST-PORTS host 172.31.0.165 host 172.16.82.96
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.82.79 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-SM-AIP-SRV-TEST-PORTS host 172.31.0.165 object-group IA-SM-AIP-SRV-TEST
+access-list ACL_DMZ_CORP_IN remark ===| Access to SIEM database | SD_806062 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.234 host 172.16.107.236 eq 9200
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-dr-extfront servers to ia-dr-backend servers | SD_186566 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DR-EXTFRONT-SRV object-group IA-DR-BACKEND-SRV range 8081 8084
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-ntc-ts.cdu.so to asdu-fpa-app.cdu.so | SD_83579 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.82.57 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.11.57 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-vpn-ts1.cdu.so to internet | SD_778865 |===
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.237 any
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-nscm| SD_90611 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group OMSIB-SRV object-group IA-NSCM-SRV eq ssh
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group OMSIB-SRV object-group IA-NSCM-SRV eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access for NTC-TS to IA SMZU servers | SD_79665 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 object-group SMZU-OPER-SRV eq 1433
+access-list ACL_DMZ_CORP_IN remark ===| Access for SZR | SD_76545 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 178.74.128.78 eq 4993
+access-list ACL_DMZ_CORP_IN remark ===| Access to SZR-TST | SD_76210 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.20.26.6 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to SSRDP Servers from ODU | SD_90961 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.161 object-group ODU-SSRDP-SERVERS eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access to IA SSRDP Networks in Rumyantsevo | SD_75528 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.161 object-group IA-SSRDP-RUM-NETWORKS eq 3389
+access-list ACL_DMZ_CORP_IN extended permit icmp host 172.31.0.161 object-group IA-SSRDP-RUM-NETWORKS
+access-list ACL_DMZ_CORP_IN remark ===| Access to SZR Server | SD_75604 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group DP-CDU-CLUSTER host 172.16.72.30 eq https
+access-list ACL_DMZ_CORP_IN remark ===| SD - 90568 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.254.198 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.254.197 eq 8001
+access-list ACL_DMZ_CORP_IN remark ===| SD - 64137 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.201 host 10.20.1.50 eq nfs
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.205 host 10.20.1.50 eq nfs
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 host 178.74.128.162 eq ssh
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.153 host 10.12.4.11 eq syslog
+access-list ACL_DMZ_CORP_IN remark ===| Access to SMZU | SD_72819, 97557 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 object-group SMZU-HOSTS eq 3389
+access-list ACL_DMZ_CORP_IN remark remark ===| PAK ETP | SD_71565 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.22.141 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to PAK SSNTI servers | SD71519|===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 212.164.129.53 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.181.18 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.181.10 eq 8000
+access-list ACL_DMZ_CORP_IN remark ===| Access to test ZRP | SD_71367 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.100 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to IA PAK KITS |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.11.73 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to IA PAK KITS | SD70891 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.22.141 eq 5000
+access-list ACL_DMZ_CORP_IN remark ===| Access for UserGate hosts for testing purposes | SD_795058 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS object-group IA-USERGATE-TEST-HOSTS-HTTPS eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS object-group IA-USERGATE-TEST-HOSTS-WWW eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.72 eq 8080
+access-list ACL_DMZ_CORP_IN remark ===| SD - 69434 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.207 host 10.16.0.24 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.208 host 10.16.0.24 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.209 host 10.16.0.24 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Temp Section - BEGIN |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.154 host 172.16.101.131 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access to test ZRP | SD_74393 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.82.48 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to test horizon | SD_65111 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 object-group HORIZON-TEST-USERS eq 9443
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 object-group HORIZON-TEST-USERS eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 object-group HORIZON-TEST-USERS eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 object-group HORIZON-TEST-USERS eq 3211
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 object-group HORIZON-TEST-USERS eq 22443
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 object-group HORIZON-TEST-USERS eq 32111
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 object-group HORIZON-TEST-USERS eq 4172
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 object-group HORIZON-TEST-USERS eq 9427
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 object-group HORIZON-TEST-USERS eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 host 172.16.82.170 eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.222 host 172.16.82.170 eq https
+access-list ACL_DMZ_CORP_IN extended permit object-group WAF-PP-2 host 172.31.0.222 object-group WAF-Servers-2
+access-list ACL_DMZ_CORP_IN extended permit object-group WAF-PP host 172.31.0.222 object-group WAF-Servers
+access-list ACL_DMZ_CORP_IN remark ===| Temp Section - END |===
+access-list ACL_DMZ_CORP_IN remark ===| ICMP Traffic |===
+access-list ACL_DMZ_CORP_IN extended permit icmp 172.31.0.0 255.255.255.0 any
+access-list ACL_DMZ_CORP_IN remark ===| Access for PAK SOI | SD_59371 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.205 host 172.16.11.52 eq 8020
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.201 host 172.16.11.52 eq 8020
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.205 host 10.20.1.50 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.201 host 10.20.1.50 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access for PZTA | SD_473573 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.232 any eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access for KITS Polygon | SD_255463 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group KITS-NODES-PORTS object-group KITS-NODES-POLYGON object-group KITS-NODES-ITERACTION-HOSTS
+access-list ACL_DMZ_CORP_IN remark remark ===| PAK AC ENERGY | SD_405511 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.72.30 eq 8090
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.72.30 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.72.30 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.72.30 eq 8080
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.72.30 eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.90.87 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.90.87 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.90.87 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.90.87 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.230 host 172.16.90.87 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.230 host 172.16.90.87 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Iteraction between OLAP BAE | SD_302015 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.190 host 10.17.12.29 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.190 host 10.17.11.154 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.190 host 10.17.12.29 eq 2383
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.12.44 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.22.64 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.22.64 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.22.66 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.22.66 eq 221
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.22.66 eq 10389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.21.97 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.21.98 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.81.32 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.90.84 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.81.17 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.81.17 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to POLGON SOI | SD_547630 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group POLIGON-SOI-1-PORTS host 172.31.0.201 host 172.16.21.137
+access-list ACL_DMZ_CORP_IN remark ===| Access to POLGON SOI | SD_488704 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group POLIGON-SOI-1-PORTS host 172.31.0.193 host 172.16.21.138
+access-list ACL_DMZ_CORP_IN extended permit object-group POLIGON-SOI-1-PORTS host 172.31.0.192 host 172.16.21.138
+access-list ACL_DMZ_CORP_IN extended permit object-group POLIGON-SOI-1-PORTS host 172.31.0.193 host 172.16.21.192
+access-list ACL_DMZ_CORP_IN extended permit object-group POLIGON-SOI-1-PORTS host 172.31.0.193 host 172.16.21.137
+access-list ACL_DMZ_CORP_IN extended permit object-group POLIGON-SOI-1-PORTS host 172.31.0.192 host 172.16.21.137
+access-list ACL_DMZ_CORP_IN remark ===| Access to ESM | SD_451072 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.193 host 172.16.11.45 eq 162
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.193 host 172.16.11.45 eq 161
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.192 host 172.16.11.45 eq 162
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.192 host 172.16.11.45 eq 161
+access-list ACL_DMZ_CORP_IN remark ===| Access to ASM RZA | SD_484502 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 172.24.112.3 eq ssh
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 172.24.112.3 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 172.24.112.3 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 172.16.11.16 eq 8080
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.18.220.139 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access | SD_72541 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 10.20.6.21 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 10.20.6.21 eq 8009
+access-list ACL_DMZ_CORP_IN remark ===| Access | SD_64530 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 10.20.6.21 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 10.20.6.21 eq 8080
+access-list ACL_DMZ_CORP_IN remark ===| Access | SD_55343 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.160 host 172.16.11.59 eq 8093
+access-list ACL_DMZ_CORP_IN remark ===| Access to ZUP | SD_54910 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group FPA-CDU-PORTS-TO-ZUP host 172.31.0.160 host 172.16.21.162
+access-list ACL_DMZ_CORP_IN remark ===| SSRDP | SD_293989 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.161 object-group ODU-RDU-Branch-Office-SSRDP eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| KTFS -> SOKIB | SD_94769 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.50.182 eq rsh
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.21.128 eq rsh
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.82.47 eq rsh
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.50.150 eq rsh
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.21.128 eq 9998
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.82.47 eq 9998
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.50.150 eq 9998
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.50.182 eq 9998
+access-list ACL_DMZ_CORP_IN remark ===| Access to SMZUP | SD_64484 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.88.6.66 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access to ASDU FPA NEXUS | SD_62679 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.11.58 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.11.58 eq https
+access-list ACL_DMZ_CORP_IN remark ===| SD_56767 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.6.11 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.6.10 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.6.14 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.6.13 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.6.12 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.6.15 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.1.22 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.1.21 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.1.28 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.1.27 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.1.26 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.20.1.25 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.11.35 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access to WEB_RDP_HTML5 | SD_56904 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group WEB_RDP_HTML5-PP host 172.31.0.200 object-group WEB_RDP_HTML5-HOSTS
+access-list ACL_DMZ_CORP_IN remark ===| Access to Remote Desktop Gateway | SD_56831 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group RDPGW-PP host 172.31.0.200 object-group RDPGW-HOSTS
+access-list ACL_DMZ_CORP_IN remark ===| SD_464519 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group BACKUP-SRV-PORTS host 172.31.0.139 object-group BACKUP-SRV
+access-list ACL_DMZ_CORP_IN remark ===| SD_345660 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 host 172.16.71.157 eq 135
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 host 172.16.71.157 range 49152 65535
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 host 172.16.71.173 eq 135
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 host 172.16.71.173 range 49152 65535
+access-list ACL_DMZ_CORP_IN remark ===| ZRP-STEND -> IBM Datapower |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 172.16.8.51 eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 172.16.8.52 eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 172.16.8.51 eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 172.16.8.52 eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 172.16.82.73 range 2404 2409
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 172.16.82.73 range 2404 2409
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 172.16.82.74 range 2404 2409
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 172.16.82.74 range 2404 2409
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.137 eq 4590
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.137 eq 4592
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.137 eq 4591
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.222 eq 4591
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.222 eq 4592
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.222 eq 4590
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.243 eq 4591
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.243 eq 4592
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.136 eq 9876
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.136 eq 4590
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.136 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.136 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.136 eq 4591
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 178.74.128.136 eq 4992
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.240 eq 4591
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.243 eq 4590
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.138 eq 4590
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.139 eq 4590
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.140 eq 4590
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.240 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.240 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.240 eq 4590
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 178.74.128.240 eq 9876
+access-list ACL_DMZ_CORP_IN remark ===| VCS-e -> SOKIB |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.153 host 172.16.21.128 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.153 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.82.47 eq rsh
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.230 host 172.16.82.47 eq rsh
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.230 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.174 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 172.16.82.47 eq rsh
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.153 host 172.16.50.150 eq syslog
+access-list ACL_DMZ_CORP_IN remark ===| Access to SSNTI | SD_62336 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.165.145 eq 8000
+access-list ACL_DMZ_CORP_IN remark ===| Access to Site BR | SD_281364 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp any host 178.74.128.236 eq 444
+access-list ACL_DMZ_CORP_IN remark ===| Access to PAK Energovizor | SD_217739 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.188 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.188 host 172.16.21.60 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.188 host 172.16.21.60 eq 995
+access-list ACL_DMZ_CORP_IN remark ===| Access to internal PAK Energy Polygon |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 178.74.128.220 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 178.74.128.220 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to PAK SKDDP | SD_289305 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 host 10.17.11.80 eq 4777
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 host 172.16.71.116 eq 4777
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.71.188 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.71.188 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group INTERFACE-DMZ-DATAPOWER host 10.17.11.41 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.71.188 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.71.188 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.23 eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.23 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.23 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.25 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.25 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.82.25 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.82.25 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.82.23 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.82.23 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.82.23 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.82.23 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.81.17 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.82.15 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.82.15 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.216 host 172.16.71.82 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.215 host 172.16.71.82 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 172.16.71.82 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.216 host 172.16.71.81 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.215 host 172.16.71.81 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 172.16.71.81 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.216 host 172.16.71.135 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.215 host 172.16.71.135 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 172.16.71.135 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.216 host 172.16.71.134 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.216 host 172.16.71.127 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.215 host 172.16.71.127 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 172.16.71.127 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.216 host 172.16.71.112 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.215 host 172.16.71.112 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 172.16.71.112 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.216 host 172.16.9.7 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.215 host 172.16.9.7 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 172.16.9.7 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.216 host 10.17.11.52 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.215 host 10.17.11.52 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 10.17.11.52 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.216 host 172.16.90.84 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.215 host 172.16.90.84 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 172.16.90.84 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.90.84 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.90.84 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.90.84 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.81.32 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 92.126.230.35 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 195.208.1.107 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 92.126.230.35 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.214 host 195.208.1.107 eq https
+access-list ACL_DMZ_CORP_IN extended permit udp object-group INTERFACE-DMZ-DATAPOWER host 10.17.11.91 eq nfs
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group INTERFACE-DMZ-DATAPOWER host 10.17.11.91 eq nfs
+access-list ACL_DMZ_CORP_IN extended permit udp object-group INTERFACE-DMZ-DATAPOWER host 10.17.11.91 eq sunrpc
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group INTERFACE-DMZ-DATAPOWER host 10.17.11.91 eq sunrpc
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 10.17.11.52 eq www
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.229 host 172.16.21.128 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp 172.31.0.0 255.255.255.0 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.229 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.229 host 172.16.50.150 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.71.82 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.71.81 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.71.135 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.71.134 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.71.127 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.71.112 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.15 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.9.7 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.11.52 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 10.17.11.52 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 10.17.11.52 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.9.7 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.9.7 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.9.7 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.71.112 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.82.15 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.71.112 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.71.112 eq 8304
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.71.127 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.71.127 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.71.127 eq 1414
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.71.134 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.71.134 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.71.134 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.71.135 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.71.135 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.71.135 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.71.81 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.71.81 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.71.81 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.71.82 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.71.82 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.71.82 eq ldap
+access-list ACL_DMZ_CORP_IN remark ===| Access for Microsoft RDS (1C) | SD_60179 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 10.16.0.9 eq 3422
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.174 host 10.16.0.9 eq 3422
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.174 host 172.16.21.162 eq netbios-dgm
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.174 host 172.16.21.162 eq 389
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.174 host 172.16.21.162 eq netbios-ns
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.21.162 range 49152 65535
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.21.162 eq 5985
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.21.162 eq 445
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.21.162 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.21.162 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.174 host 172.16.21.162 eq 135
+access-list ACL_DMZ_CORP_IN remark ===| Access for Infosuite Terminal server (1C) |===
+access-list ACL_DMZ_CORP_IN remark ===| Access from PAK SMPR | SD_361379 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.1.22 host 172.24.48.163 eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.1.22 host 172.24.48.161 eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.1.21 host 172.24.48.163 eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.1.21 host 172.24.48.161 eq ftp
+access-list ACL_DMZ_CORP_IN remark ===| Access to VDI (NTC) | SD_90530 (821562) |===
+access-list ACL_DMZ_CORP_IN remark ===| Access to PAK VEEAM backup servers | SD_55757 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.172 host 10.16.0.161 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.171 host 10.16.0.161 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.179 host 10.16.0.174 eq 902
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.179 host 10.16.0.173 eq 902
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.172 host 10.16.0.177 eq 902
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.172 host 10.16.0.176 eq 902
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.172 host 172.16.21.147 range 2500 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.172 host 10.16.0.174 eq 902
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.172 host 10.16.0.173 eq 902
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.171 host 10.16.0.179 eq 902
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.171 host 10.16.0.178 eq 902
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.171 host 10.17.33.99 range 2500 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.171 host 172.16.20.56 range 2500 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.171 host 172.16.21.147 range 2500 5000
+access-list ACL_DMZ_CORP_IN remark ===| Access to PAK SSNTI servers |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.165.150 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.17.57.12 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.181.124 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.181.132 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.180.157 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.180.149 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.180.155 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.180.147 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.165.142 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.23.88.216 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.165.67 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.43.45 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.180.6 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.48.236 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.180.41 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.180.106 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.180.118 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.180.114 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.142.109 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.165.147 eq 8000
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-ssnticom-tst.cdu.so to objects | SD_113924 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 object-group SSNTI-ODU-RDU_FTP eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.47.140 eq 2221
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.170.188 eq 2121
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.170.189 eq 2121
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 10.52.0.37 eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.73.122 eq 14147
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 83.146.112.66 eq 11652
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.91.18 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.58.140 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.66.228 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.180.138 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.43.66 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.181 host 172.16.21.221 eq snmp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.181 host 172.16.21.221 eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.16.0.62 eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.57.140 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.180.146 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.180.148 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.112.134 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.180.30 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.180.26 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.112.134 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.44.21 eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.44.21 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.44.14 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.84.109 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.180.10 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.173.126 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.172.126 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.172.163 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.212.139 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.44.73 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 10.17.21.41 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 10.17.21.42 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 10.17.21.43 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.168.156 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.168.155 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 10.7.191.200 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 10.17.12.26 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 212.120.166.198 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.196.14 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.112.206 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 10.193.103.62 eq 8001
+access-list ACL_DMZ_CORP_IN remark ===| Access for NTC Terminal server | SD_540779 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.22.64.74 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.22.64.73 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.22.64.72 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access for NTC Terminal server |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.72.127 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.72.127 eq 8444
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.72.129 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.72.129 eq 8444
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.72.131 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.72.131 eq 8444
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 object-group BRACH-OFFICE-RDP_Hosts_for_NTC-TS eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.21.94 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.21.94 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.71.31 eq 135
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.11.66 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.71.117 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.21.28 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access for DC LVK Terminal server |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.71.31 range 49152 65535
+access-list ACL_DMZ_CORP_IN remark ===| McAfee Web Gateway -> McAfee SIEM |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.154 host 172.16.21.128 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.159 host 172.16.21.128 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.211 host 172.16.21.128 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.212 host 172.16.21.128 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.154 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.159 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.211 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.212 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.212 host 172.16.50.150 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.211 host 172.16.50.150 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.159 host 172.16.50.150 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.154 host 172.16.50.150 eq syslog
+access-list ACL_DMZ_CORP_IN remark ===| McAfee Web Gateway -> McAfee EPO |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.159 host 172.16.21.159 eq 9111
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.159 host 172.16.21.159 eq 9112
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.154 host 172.16.21.159 eq 9111
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.154 host 172.16.21.159 eq 9112
+access-list ACL_DMZ_CORP_IN remark ===| Access to NTP servers |===
+access-list ACL_DMZ_CORP_IN extended permit udp any object ntp-1.cdu.so eq ntp
+access-list ACL_DMZ_CORP_IN extended permit udp any object ntp-2.cdu.so eq ntp
+access-list ACL_DMZ_CORP_IN remark ===| SOI servers -> Inside segment |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.150 object logger eq domain
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.150 object mailhub-master eq domain
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.150 object mailhub-slave eq domain
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.150 host 10.0.10.25
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.151 object logger eq domain
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.151 object mailhub-master eq domain
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.151 object mailhub-slave eq domain
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.151 host 10.0.10.25
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.152 object logger eq domain
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.152 object mailhub-master eq domain
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.152 object mailhub-slave eq domain
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.152 host 10.0.10.25
+access-list ACL_DMZ_CORP_IN remark ===| Access for MUSEUM CDU |===
+access-list ACL_DMZ_CORP_IN extended permit object-group MUSEUM-CDU-PORTS-TO-IA object-group IA-DMZ-MUSEUM-CDU_HOSTS object-group IA-TRANSIT-MUSEUM     -CDU_HOSTS
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DMZ-MUSEUM-CDU_HOSTS host 178.74.128.238 eq ssh
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DMZ-MUSEUM-CDU_HOSTS host 178.74.128.238 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DMZ-MUSEUM-CDU_HOSTS host 178.74.128.238 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DMZ-MUSEUM-CDU_HOSTS host 178.74.128.131 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DMZ-MUSEUM-CDU_HOSTS host 178.74.128.132 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| Access to Microsoft Exchange 2016 Servers in IA |===
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 object-group IA-EXCHANGE-2010 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 object-group IA-EXCHANGE-2010 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| Access for MDM Server CDU |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.170 host 178.74.128.206 eq 7225
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.170 host 178.74.128.206 eq 7221
+access-list ACL_DMZ_CORP_IN remark ===| Access for AIISKUE-CDU |===
+access-list ACL_DMZ_CORP_IN extended permit object-group AIISKUE-PORTS host 172.31.0.139 object-group AIISKUE-HOSTS
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.139 host 213.87.15.37 eq 2205
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.139 host 213.87.15.38 eq 2205
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.139 172.16.12.0 255.255.255.192
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.139 172.31.0.0 255.255.0.0
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.139 object-group IA-EXCHANGE-2010
+access-list ACL_DMZ_CORP_IN remark ===| UAG -> ODU and RDU Networks |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UAG-INTERNAL-HOSTS object-group SO-UPS-BRANCH-NETWORKS eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UAG-INTERNAL-HOSTS object-group SO-UPS-BRANCH-NETWORKS eq 3268
+access-list ACL_DMZ_CORP_IN remark ===| UAG -> Internal Networks |===
+access-list ACL_DMZ_CORP_IN extended permit ip object-group UAG-INTERNAL-HOSTS 172.16.0.0 255.255.0.0
+access-list ACL_DMZ_CORP_IN extended permit ip object-group UAG-INTERNAL-HOSTS 10.0.0.0 255.224.0.0
+access-list ACL_DMZ_CORP_IN remark ===| External CK-Proxy MEK-104 traffic |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx1.cdu.so object-group KEGOC-NAT-NETWORK-SCADA-TTK eq 2406
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx1.cdu.so object-group KAZAKHSTAN-NAT-ADDRESSES-TTK eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy1.cdu.so object-group KAZAKHSTAN-NAT-ADDRESSES-TTK eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx2.cdu.so object-group KEGOC-NAT-NETWORK-SCADA-TTK eq 2406
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx2.cdu.so object-group KAZAKHSTAN-NAT-ADDRESSES-TTK eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy2.cdu.so object-group KAZAKHSTAN-NAT-ADDRESSES-TTK eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx1.cdu.so object-group KEGOC-NAT-NETWORK-SCADA-RTK eq 2406
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx1.cdu.so object-group KAZAKHSTAN-NAT-ADDRESSES-RTK eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy1.cdu.so object-group KAZAKHSTAN-NAT-ADDRESSES-RTK eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx2.cdu.so object-group KEGOC-NAT-NETWORK-SCADA-RTK eq 2406
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx2.cdu.so object-group KAZAKHSTAN-NAT-ADDRESSES-RTK eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy2.cdu.so object-group KAZAKHSTAN-NAT-ADDRESSES-RTK eq 2404
+access-list ACL_DMZ_CORP_IN remark ===| External CK-Proxy ICCP traffic |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy1.cdu.so host 172.16.60.13 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy2.cdu.so host 172.16.60.13 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy1.cdu.so host 172.16.60.14 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy2.cdu.so host 172.16.60.14 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy1.cdu.so host 172.24.0.6 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy1.cdu.so host 172.24.0.7 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy1.cdu.so host 172.24.0.101 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy1.cdu.so host 172.24.0.102 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy2.cdu.so host 172.24.0.6 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy2.cdu.so host 172.24.0.7 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy2.cdu.so host 172.24.0.101 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ck-proxy2.cdu.so host 172.24.0.102 eq 102
+access-list ACL_DMZ_CORP_IN remark ===| Access to IA Domain Controllers |===
+access-list ACL_DMZ_CORP_IN extended permit ip any object-group dc-hosts-cdu
+access-list ACL_DMZ_CORP_IN remark ===| Access to windows activation service |===
+access-list ACL_DMZ_CORP_IN extended permit tcp any object kmssrv2-cdu eq 1688
+access-list ACL_DMZ_CORP_IN extended permit tcp any object kmssrv-cdu eq 1688
+access-list ACL_DMZ_CORP_IN remark ===| Access to AVK servers |===
+access-list ACL_DMZ_CORP_IN extended permit object-group AVK-clients2servers-PORTS any object-group AVK-HOSTS-CDU
+access-list ACL_DMZ_CORP_IN remark ===| Access to windows update service (WSUS) |===
+access-list ACL_DMZ_CORP_IN extended permit tcp any object sus-cdu eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp any object sus-cdu eq https
+access-list ACL_DMZ_CORP_IN remark ===| TMG -> Internal Networks |===
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.140 172.16.0.0 255.255.0.0
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.140 10.0.0.0 255.224.0.0
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.133 172.16.0.0 255.255.0.0
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.133 10.0.0.0 255.224.0.0
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.133 host 10.100.139.10
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.133 host 10.100.139.12
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.134 172.16.0.0 255.255.0.0
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.134 10.0.0.0 255.224.0.0
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.135 172.16.0.0 255.255.0.0
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.135 10.0.0.0 255.224.0.0
+access-list ACL_DMZ_CORP_IN remark ===| External CK-Proxy -> Internal CK-Proxy |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group ck-proxy-dmz host 10.17.11.11 eq 5724
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group ck-proxy-dmz host 10.17.11.28 eq 2404
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group ck-proxy-dmz host 10.17.11.11 eq 5723
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group ck-proxy-dmz object-group ck-proxy-ia object-group ck7proxy-ports
+access-list ACL_DMZ_CORP_IN remark ===| SD_91298 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.11.97 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.11.97 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access for AS ENERGY | SD_91442 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.210 host 172.16.105.6 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for AS ENERGY | SD_91442 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.230 host 172.16.105.6 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for AS ENERGY | SD_91442 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.212 host 172.16.105.6 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for AS ENERGY | SD_91442 |===
+access-list ACL_DMZ_CORP_IN remark ===| SD_91717 |===
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.222 host 172.16.21.131
+access-list ACL_DMZ_CORP_IN remark ===| SK-Proxy -> SK11-Proxy SD_91817 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.21.4 eq 2408
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.21.5 eq 2408
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.21.4 eq 2408
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.21.5 eq 2408
+access-list ACL_DMZ_CORP_IN remark ===| terminal srv -> poligon archm ntc SD_91802 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 10.17.22.23 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access for publication portal | SD_843851 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.13.2 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.23 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.21.71 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.151 eq https
+access-list ACL_DMZ_CORP_IN remark ===| NTC  Terminal server->SKDPP ODU hosts | SD_92754 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.20.0.107 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.18.0.23 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.22.4.58 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.23.65.60 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.21.5.14 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.17.200.98 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.19.9.39 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| SK-Proxy 11 -> SK11-Proxy poligon SD_93202 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.21.4 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.21.5 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.21.4 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.21.5 eq 102
+access-list ACL_DMZ_CORP_IN remark ===| UserGate hosts -> SKDPP SRV | SD_863008 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.128 eq ssh
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.128 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| VDI through UG | SD_869913 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.82.170 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.82.170 eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.82.170 eq 4172
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 10.20.76.34 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 10.20.76.34 eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 10.20.76.34 eq 4172
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.107.20 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.107.20 eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.107.20 eq 4172
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.82.172 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.82.172 eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.82.172 eq 4172
+access-list ACL_DMZ_CORP_IN remark ===| VDI through UG | SD_870108 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 10.20.76.11 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 10.20.76.11 eq 639
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 10.20.76.12 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 10.20.76.12 eq 639
+access-list ACL_DMZ_CORP_IN remark ===| SK-Proxy 11 -> SK11-Proxy poligon SD_94421 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.21.4 eq 103
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.21.5 eq 103
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.21.4 eq 103
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.21.5 eq 103
+access-list ACL_DMZ_CORP_IN remark remark ===| Usergate -> rabbit | SD_874521 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.102 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.102 eq www
+access-list ACL_DMZ_CORP_IN remark ===| UserGate hosts -> IA LVS subnets | SD_878748 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS object-group IA-USERGATE-LVS-ACCESS eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Usergate -> ASUZ | SD_96103 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.82.48 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.82.57 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.11.57 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Usergate -> Web-resources | SD_96641 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.81.37 eq 8080
+access-list ACL_DMZ_CORP_IN remark ===| Usergate -> ia-ex-nlb.cdu.so | SD_896367 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| NTC Terminal server ->  SMZU SaratovRDU | SD_97517 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.23.85.182 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.23.85.159 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.23.85.161 eq 3389
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.23.85.162 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access for VDI NEW | SD_97583 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-VDI-PORTS host 172.31.0.222 object-group IA-VDI-NETWORKS
+access-list ACL_DMZ_CORP_IN remark ===| Access SSNTI to Permskaya GRES | SD_97740 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.177.93 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.177.85 eq 8000
+access-list ACL_DMZ_CORP_IN remark ===| Access for VDI  | SD_98665 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-VDI-PORTS host 172.31.0.171 object-group IA-VDI-NETWORKS
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-VDI-PORTS host 172.31.0.172 object-group IA-VDI-NETWORKS
+access-list ACL_DMZ_CORP_IN remark ===| Access to ASA RZA for KubanRDU | SD_98774 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 172.24.112.12 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.196 host 172.24.112.12 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access to SMZU HabarRDU for NTC | SD_98813 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.20.253.105 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access to SSNTI for Iriklinskaya GRES | SD_98837 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.167.68 eq 8000
+access-list ACL_DMZ_CORP_IN remark ===| Access for Poligon Proxy | SD_99086 |===
+access-list ACL_DMZ_CORP_IN extended permit ip object ia-tstproxy-ext host 10.17.25.1
+access-list ACL_DMZ_CORP_IN extended permit ip object ia-tstproxy-ext host 10.17.25.2
+access-list ACL_DMZ_CORP_IN extended permit ip object ia-tstproxy-ext host 10.17.25.3
+access-list ACL_DMZ_CORP_IN remark ===| SD_99349 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.98 eq https
+access-list ACL_DMZ_CORP_IN remark ===| SD_99551 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.86 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.87 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.82.88 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for POV  | SD_916320 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.248 host 172.16.72.48 eq 9003
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.248 host 172.16.72.49 eq 5001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.248 host 172.16.72.49 eq 34222
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.248 host 172.16.72.49 eq 34444
+access-list ACL_DMZ_CORP_IN remark ===| Access for VipNet TIAS  | SD_1032335 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.248 host 172.16.101.49 eq 5001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.248 host 172.16.101.49 eq 34222
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.248 host 172.16.101.49 eq 34444
+access-list ACL_DMZ_CORP_IN remark ===| Access for POV  | SD_917622 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.248 host 172.16.72.48 eq 9002
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.248 host 172.16.72.48 eq 9006
+access-list ACL_DMZ_CORP_IN remark ===| Access for SSNTI to PS110-Pionerskaya  | SD_99899 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.90.48 eq ftp
+access-list ACL_DMZ_CORP_IN remark ===| Access for SKDPP  | SD_916894 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 178.74.128.0 255.255.255.0 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 178.74.128.0 255.255.255.0 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access for SSNTI | SD_101419 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.97.5 eq ftp
+access-list ACL_DMZ_CORP_IN remark ===| Access for support UG for SaratovRDU  | SD_102022 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-USERGATE-PORTS host 172.31.0.198 host 172.31.122.15
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.198 host 172.31.122.15 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.198 host 172.31.122.15 eq 8300
+access-list ACL_DMZ_CORP_IN remark ===| Access to Service BiZone  | SD_942861 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.234 host 172.16.82.8 eq 5514
+access-list ACL_DMZ_CORP_IN remark ===| SD_104651 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.150 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| VKS SBS Protey | SD_104699 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 10.3.0.0 255.255.255.0 eq sip
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.153 10.3.0.0 255.255.255.0 eq sip
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 10.3.100.64 255.255.255.192 eq sip
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.153 10.3.100.64 255.255.255.192 eq sip
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.153 10.0.0.0 255.0.0.0 range 16384 32766
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.153 172.27.0.0 255.255.255.0 range 16384 32766
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.153 172.27.1.0 255.255.255.0 range 16384 32766
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-ex-nlb.cdu.so | SD_954488 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.234 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| Access for SSNTI to PS110 Pionerskaya | SD_106025 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.91.10 eq ftp
+access-list ACL_DMZ_CORP_IN remark ===| Access FTP for Taupe | SD_106448 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.207 host 172.16.0.62 eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.208 host 172.16.0.62 eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.209 host 172.16.0.62 eq ftp
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-ntc-ts.cdu.so to portal.cdu.so | SD_107271 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.105.14 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.105.14 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-ntc-ts.cdu.so to ftp.cdu.so | SD_134282 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.0.62 eq ftp
+access-list ACL_DMZ_CORP_IN remark ===| UserGate hosts -> ia-mdeb.cdu.so for publication on TAUPE | SD_107713 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.72.176 eq https
+access-list ACL_DMZ_CORP_IN remark ===| UserGate hosts -> ia-wt.cdu.so for publication on TAUPE | SD_107713 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.93 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-ex-nlb.cdu.so for ex2016.cdu.so | SD_110294 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.163 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.166 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| Access for NTC CUBE to VoIP | SD_111902 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.178 object-group IA-VOIP-PHONE-NETWORKS range 16384 32767
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.178 object-group IA-CUCM-SERVERS eq sip
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.178 object-group IA-CUCM-SERVERS eq sip
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-siem-wslog.cdu.so for so-ia-ruagnt.cdu.so | SD_984109 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.251 host 10.17.12.17 eq 135
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.251 host 10.17.12.17 eq 445
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.251 host 10.17.12.17 range 49152 65535
+access-list ACL_DMZ_CORP_IN remark ===| Access for KSMG| SD_1015023 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.249 host 172.16.21.63 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.249 host 172.16.20.11 eq domain
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.249 host 172.16.20.11 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.249 host 172.16.20.11 eq 88
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.249 host 172.16.20.11 eq 88
+access-list ACL_DMZ_CORP_IN remark ===| Access for SSNTI | SD_14372 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.182.140 eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.24.182.141 eq 8000
+access-list ACL_DMZ_CORP_IN remark ===| Access for sokib-rezerv.cdu.so | SD_1040487, 1047541 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.217 host 172.16.101.49 eq 34222
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.217 host 172.16.101.49 eq 34444
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.217 host 172.16.101.49 eq 5001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.217 host 172.16.72.48 range 9002 9003
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.217 host 172.16.72.48 eq 9006
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.217 host 172.31.0.250 eq rsh
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.217 host 172.31.0.250 eq syslog
+access-list ACL_DMZ_CORP_IN remark ===| Access for sokib-rezerv.cdu.so to ia-vipnet-tias.cdu.so | SD_1357252 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.217 host 172.16.101.49 eq 34349
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.217 host 172.16.101.49 eq 34359
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-opera.cdu.so and portal.cdu.so for UserGate hosts in IA | SD_1040538 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.105.14 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access for CK11.Proxy to RUP ODU Belarus | SD_114822 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx1.cdu.so host 172.24.0.6 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx1.cdu.so host 172.24.0.7 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx2.cdu.so host 172.24.0.6 eq 102
+access-list ACL_DMZ_CORP_IN extended permit tcp object ia-ck11prx2.cdu.so host 172.24.0.7 eq 102
+access-list ACL_DMZ_CORP_IN remark ===| KUMA access | SD_1044204_1133061 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.141 host 172.16.101.16 eq 7210
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.251 host 172.16.101.16 eq 7210
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.251 host 172.16.101.15 range 5540 5599
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.250 host 172.16.101.15 eq 5514
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.141 host 172.16.101.17 eq 7240
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.141 host 172.16.101.17 eq 7617
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.141 host 172.16.101.17 eq 7618
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.141 host 172.16.101.17 eq 7648
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.141 host 172.16.101.18 eq 7242
+access-list ACL_DMZ_CORP_IN remark ===| TST ZDU CK-11 Stunnel | SD_116043_1129204_1132858 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.22.45 eq 24001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.22.45 eq 24002
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.22.47 eq 24001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.22.47 eq 10000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.182 host 10.17.22.48 eq 24001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.22.45 eq 24001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.22.45 eq 24002
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.22.47 eq 24001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.22.47 eq 10000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.183 host 10.17.22.48 eq 10000
+access-list ACL_DMZ_CORP_IN remark ===| Access to energy objects for ia-ssnticom.cdu.so | SD_1042542 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 object-group OBJECTS-SSNTICOM-FTP eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.206 object-group OBJECTS-SSNTICOM-FTP eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 object-group OBJECTS-SSNTICOM-SOAP eq 8000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.206 object-group OBJECTS-SSNTICOM-SOAP eq 8000 inactive
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.206 host 172.28.73.122 eq 14147
+access-list ACL_DMZ_CORP_IN remark ===| KSMG IA -> KSMG ODU SD_1049213 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.249 object-group BRANCHES_KSMG eq smtp
+access-list ACL_DMZ_CORP_IN remark ===|  Branches office -> IUS TechUchet RZA | SD_116238 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.146 host 10.20.26.57 eq 5432
+access-list ACL_DMZ_CORP_IN remark ===| Access to Astra Linux repositories for turza-t.cdu.so | SD_116322 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.146 host 172.16.107.30 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.146 host 10.20.6.91 eq www
+access-list ACL_DMZ_CORP_IN remark ===| IUS Techu4et -> IUS FPA | SD_194491 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.146 host 172.16.101.39 eq 18181
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.146 host 172.16.101.39 eq 18181
+access-list ACL_DMZ_CORP_IN remark ===| Access for KSMG| SD_116713 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.249 host 172.16.21.128 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.249 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN remark ===| CK11.Proxy -> ESM | SD_116715 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.176 object-group CA_Spectrum-HOSTS eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.175 object-group CA_Spectrum-HOSTS eq snmptrap
+access-list ACL_DMZ_CORP_IN remark ===| ia-ssnticom.cdu.so -> ia-ssntisql.cdu.so | SD_116876 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.206 host 10.17.12.26 eq 1433
+access-list ACL_DMZ_CORP_IN remark ===| DMZ_CORP IA -> IA ASTRA REP | SD_116877 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.0.0 object-group IA-ASTRA-REP eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.0.0 object-group IA-ASTRA-REP eq https
+access-list ACL_DMZ_CORP_IN remark ===| ia-ntc-ts.cdu.so -> rdu-sv-pnz-skdpp-intclr | SD_118552 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.23.83.200 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| SD_117274 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.208 host 172.16.71.153 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.207 host 172.16.71.153 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-dr-extfront1-tst  | SD_186566 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DR-EXTFRONT-TST host 172.16.107.83 range 8081 8084
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DR-EXTFRONT-TST host 172.16.107.84 range 8081 8084
+access-list ACL_DMZ_CORP_IN remark ===| Access for publication services on UserGate | SD_1067344 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.81.15 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.111.71 eq 8081
+access-list ACL_DMZ_CORP_IN remark ===| vcs-e-cdu.so-ups.ru -> so-ups.ru, ck11 api, as meteo | SD_119536 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 172.16.8.33 eq 9443
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 172.16.8.33 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 172.16.71.209 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 178.248.238.231 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ODU-VS OWA publication on UserGate | SD_1069940 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.20.18.15 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for DataPower servers to ETP (v7.0.34) | SD_118104 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DMZ-CORP-DATAPOWER-SERVER host 10.17.12.141 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for KSMG to Exchange | SD_118154 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.249 object-group IA-EXCHANGE-SERVERS object-group SMTP-PORTS
+access-list ACL_DMZ_CORP_IN remark ===| Access for KSMG to ESM | SD_118150 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.249 object-group CA_Spectrum-HOSTS eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.249 object-group CA_Spectrum-HOSTS eq snmp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.249 object-group CA_Spectrum-HOSTS eq 161
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.249 object-group CA_Spectrum-HOSTS eq 162
+access-list ACL_DMZ_CORP_IN remark ===| Access for UserGate hosts to ia-expert-cdu.cdu.so | SD_118515 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.34 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for UserGate hosts to mediacenter.cdu.so | SD_118514 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-USERGATE-HOSTS host 172.16.71.10 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access for SSNTI to ldap.so-ups.ru | SD_118648 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 178.74.128.165 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access for KSMG node server in IA | SD_119119 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.173 object-group IA-EXCHANGE-SERVERS eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.173 object-group BRANCHES_KSMG eq smtp
+access-list ACL_DMZ_CORP_IN extended permit object-group BRANCHES-DC-HOSTS-KSMG-PORTS host 172.31.0.173 host 172.16.20.11
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.173 host 172.16.20.11 eq domain
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.20.11 eq domain
+access-list ACL_DMZ_CORP_IN extended permit object-group BRANCHES-DC-HOSTS-KSMG-PORTS host 172.31.0.173 host 172.16.20.12
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.173 host 172.16.20.12 eq domain
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.20.12 eq domain
+access-list ACL_DMZ_CORP_IN extended permit object-group BRANCHES-DC-HOSTS-KSMG-PORTS host 172.31.0.173 host 172.16.71.1
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.173 host 172.16.71.1 eq domain
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.71.1 eq domain
+access-list ACL_DMZ_CORP_IN extended permit object-group BRANCHES-DC-HOSTS-KSMG-PORTS host 172.31.0.173 object-group BRANCHES-DC-HOSTS-KSMG
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.20.101 eq ntp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.20.102 eq ntp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.21.128 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.21.221 eq snmp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.21.221 eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.21.222 eq snmp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.21.222 eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.21.230 eq snmp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.173 host 172.16.21.230 eq snmptrap
+access-list ACL_DMZ_CORP_IN remark ===| Access for KUMA | SD_1087340 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.250 host 172.16.20.11 eq 445
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.250 host 172.16.20.12 eq 445
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.250 host 172.16.20.51 eq 445
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.250 host 172.16.20.52 eq 445
+access-list ACL_DMZ_CORP_IN remark ===| Access tor ESM | SD_119247 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.192 object-group CA_Spectrum-HOSTS eq 61616
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.193 object-group CA_Spectrum-HOSTS eq 61616
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-kuma-coll-dmz.cdu.so to KSC-servers in branches | SD_1106526 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.141 object-group BRANCHES-KSC-SERVERS eq 1433
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-ex-nlb.cdu.so for virtual UserGate | SD_1116885 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.21.71 eq https
+access-list ACL_DMZ_CORP_IN remark ===| VIPNET NS IA - VIPNET TIAS IA | SD_1123594 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group PORTS-VIPNET-SD_1123594 host 172.31.0.248 host 172.16.101.49
+access-list ACL_DMZ_CORP_IN extended permit object-group PORTS-VIPNET-SD_1123594 host 172.31.0.141 host 172.16.101.49
+access-list ACL_DMZ_CORP_IN remark ===| Access to backup servers for CK-Proxy servers | SD_123673 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-BACKUP-SRV-PORTS object-group IA-CK-PROXY-SRV-DMZ object-group IA-BACKUP-SRV
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-szp-usg-utm.cdu.so | SD_1130121 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.34 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.10 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.105.14 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.179 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-szp-usg-utm.cdu.so | SD_1131453 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.72.176 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.0.62 eq ftp
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-ssnticom.cdu.so | SD_124567 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 172.28.73.122 range 30000 31000
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-ts-ssrdp-sup.cdu.so to skh-ssrdp-esxi.oduvs.so | SD_124870 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.161 host 10.155.115.196 eq https
+access-list ACL_DMZ_CORP_IN remark ===| UserGate hosts -> ESM trap | SD_125147|===
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-USERGATE-HOSTS host 172.16.21.230 eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-USERGATE-HOSTS host 172.16.21.222 eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-USERGATE-HOSTS host 172.16.21.221 eq snmptrap
+access-list ACL_DMZ_CORP_IN remark ===| Access for dp-test.cdu.so to ia-bae-tst.cdu.so | SD_125381 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.22.78 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 10.17.22.78 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-nau-iis.cdu.so for virtual UserGate | SD_XXXXXX |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.178 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.164 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-nextcloud.cdu.so for virtual UserGate | SD_125911 |===
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.185 host 172.16.71.102
+access-list ACL_DMZ_CORP_IN remark ===| Access to osok-oduyu.oduyu.so for virtual UserGate | SD_128082 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.19.9.110 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for KWTS | SD_126603 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.131 object-group CA_Spectrum-HOSTS eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.132 object-group CA_Spectrum-HOSTS eq snmptrap
+access-list ACL_DMZ_CORP_IN remark ===| vcs-e-cdu.so-ups.ru -> ia-oc-w-aiptst.cdu.so | SD_1161310 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 172.16.82.96 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 172.16.82.96 eq 9443
+access-list ACL_DMZ_CORP_IN remark ===| Access for PZTA | SD_1170731 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.21.48 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| vcs-e-cdu.so-ups.ru -> as meteo | SD_1182134 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 172.16.71.101 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 172.16.71.208 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.153 host 172.16.71.207 eq https
+access-list ACL_DMZ_CORP_IN remark ===| ia-fueldmz-app ->  ia-fuel-db | SD_132075 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.221 host 172.16.72.121 eq 5432
+access-list ACL_DMZ_CORP_IN remark ===| Access for pilot projects SKKI | SD_132672 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.209 host 172.16.107.76 eq 1344
+access-list ACL_DMZ_CORP_IN remark === SIB SafeInspect | SD_1211998 ===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 host 178.74.128.219 eq ssh
+access-list ACL_DMZ_CORP_IN remark ===| Access to DMZ_INET and DMZ_INET_NLB for ia-skdpp-extclr.cdu.so (SSH) | SD_1230413 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 178.74.128.128 255.255.255.128 eq ssh
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 178.74.128.64 255.255.255.192 eq ssh
+access-list ACL_DMZ_CORP_IN remark === | Access to ia-pzvp.cdu.so for SIB-server | SD_1232473 | ===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.232 host 10.20.21.45 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for teal.so-ups.ru | SD_1247365|===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.72.214 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.72.207 eq https
+access-list ACL_DMZ_CORP_IN remark ===| SIB KUMA -> CyberTrace | SD_1247365|===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.141 host 172.16.21.225 eq 9999
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-portal-brx1.cdu.so for teal.so-ups.ru | SD_139841 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.111.20 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.111.20 range 8890 8891
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.111.21 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.111.21 range 8890 8891
+access-list ACL_DMZ_CORP_IN remark ===| EXPRESS -> Docker | SD_1261620|===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER host 172.16.82.48 eq 18180
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-CONFERENCE-CLUSTER host 172.16.82.48 eq 18180
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER host 172.16.101.39 eq 18181
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-CONFERENCE-CLUSTER host 172.16.101.39 eq 18181
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER host 172.16.82.48 eq 18181
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-CONFERENCE-CLUSTER host 172.16.82.48 eq 18181
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER host 172.16.101.39 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-CONFERENCE-CLUSTER host 172.16.101.39 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER host 172.16.82.48 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-CONFERENCE-CLUSTER host 172.16.82.48 eq https
+access-list ACL_DMZ_CORP_IN remark ===| EXPRESS FRONT -> 443, 5001 | SD_1261620|===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER object-group IA-EXPRESS-ETS-APP-CLUSTER eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER object-group IA-EXPRESS-CTS-IA-APP-CLUSTER eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER object-group IA-EXPRESS-CTS-GUEST-APP-CLUSTER eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER object-group IA-EXPRESS-ETS-APP-CLUSTER eq 5001
+access-list ACL_DMZ_CORP_IN extended deny ip object-group IA-EXPRESS-FRONT-CLUSTER 10.0.0.0 255.0.0.0
+access-list ACL_DMZ_CORP_IN extended deny ip object-group IA-EXPRESS-FRONT-CLUSTER 172.16.0.0 255.240.0.0
+access-list ACL_DMZ_CORP_IN extended deny ip object-group IA-EXPRESS-FRONT-CLUSTER 192.168.0.0 255.255.0.0
+access-list ACL_DMZ_CORP_IN extended deny ip object-group IA-EXPRESS-FRONT-CLUSTER 169.254.0.0 255.255.0.0
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER any eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-EXPRESS-FRONT-CLUSTER any eq 5001
+access-list ACL_DMZ_CORP_IN remark ===| EXPRESS CONFERENCE -> SIP, RTP | SD_1261620|===
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-EXPRESS-CONFERENCE-CLUSTER 10.3.0.0 255.255.255.128 range 1024 65535
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-EXPRESS-CONFERENCE-CLUSTER 10.3.0.0 255.255.255.128 eq sip
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-EXPRESS-CONFERENCE-CLUSTER 10.3.100.64 255.255.255.192 range 1024 65535
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-EXPRESS-CONFERENCE-CLUSTER 10.3.100.64 255.255.255.192 eq sip
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-EXPRESS-CONFERENCE-CLUSTER object-group IA-OFFICE-NETWORK range 20000 40000
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-EXPRESS-CONFERENCE-CLUSTER object-group IA-EXPRESS-CTS-IA-APP-CLUSTER eq sip
+access-list ACL_DMZ_CORP_IN remark ===| FUEL Poligon -> FUEL | SD_141661|===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.157 host 172.16.82.211 eq 5432
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-egapp.cdu.so for virtual UserGate | SD_142548|===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.136 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.136 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to  ia-rsp-tst.cdu.so for virtual UserGate | SD_142551|===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.82.62 eq https
+access-list ACL_DMZ_CORP_IN remark ===| ia-ssnticom.cdu.so -> MOESK | SD_113924 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 10.36.220.16 eq 8002
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.181 host 10.36.220.16 eq 8001
+access-list ACL_DMZ_CORP_IN remark ===| Access for CK11-PROXY to ZDU-SERVERS | SD_145320" |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-CK11-PROXY-SERVERS object-group IA-ZDU-SERVERS eq 10000
+access-list ACL_DMZ_CORP_IN remark ===| Access for CK11-PROXY to ASU-TP PS500 Zvesda | SD_145320 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-CK11-PROXY-SERVERS host 10.41.201.17 eq 2406
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-CK11-PROXY-SERVERS host 10.41.201.47 eq 2406
+access-list ACL_DMZ_CORP_IN remark ===| Access for ZABBIX IA | SD_1317846 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-ZABBIX-AGENT-PORTS host 172.31.0.158 object-group IA-ZABBIX-APP-SERVERS
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-szp-usg-utm.cdu.so to UserGate license servers | SD_1332454 |===
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.228 any4 inactive
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-pzta-core.cdu.so to ia-kata1.cdu.so and ia-kata2.cdu.so | SD_148009 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.211 host 172.16.101.14 eq isakmp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.211 host 172.16.101.14 eq 4500
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.101.14 eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.101.14 eq 8444
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.101.14 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.101.14 range 11000 11006
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.211 host 172.16.101.14 eq domain
+access-list ACL_DMZ_CORP_IN extended permit esp host 172.31.0.211 host 172.16.101.14
+access-list ACL_DMZ_CORP_IN extended permit ah host 172.31.0.211 host 172.16.101.14
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.211 host 172.16.101.19 eq isakmp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.211 host 172.16.101.19 eq 4500
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.101.19 eq 8443
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.101.19 eq 8444
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.101.19 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.211 host 172.16.101.19 range 11000 11006
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.211 host 172.16.101.19 eq domain
+access-list ACL_DMZ_CORP_IN extended permit esp host 172.31.0.211 host 172.16.101.19
+access-list ACL_DMZ_CORP_IN extended permit ah host 172.31.0.211 host 172.16.101.19
+access-list ACL_DMZ_CORP_IN remark ===| SK Proxy -> SRK KIBER BACKUP | SD_148716 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-2 host 172.31.0.129 object-group IA-CYBERBKP-SRV-2
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-1 host 172.31.0.129 host 10.20.1.67
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-2 host 172.31.0.130 object-group IA-CYBERBKP-SRV-1
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-1 host 172.31.0.130 host 10.17.12.90
+access-list ACL_DMZ_CORP_IN remark ===| DMZ_CORP -> KATA | SD_148156 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 host 172.16.101.19 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 host 172.16.101.14 eq https
+access-list ACL_DMZ_CORP_IN remark ===| EXPRESS -> INET 5001 | SD_ |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.203 object-group IA-EXPRESS-TO-INET-5001 eq 5001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.202 object-group IA-EXPRESS-TO-INET-5001 eq 5001
+access-list ACL_DMZ_CORP_IN remark ===| OPEP (ASKUE) -> SRK KIBER BACKUP | SD_148948 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-1 host 172.31.0.139 host 10.17.12.90
+access-list ACL_DMZ_CORP_IN remark ===| Access for Poligon Toplivo to Nexus | SD_150250 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.157 host 172.16.101.39 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-fueldmz-app-p.cdu.so to ia-fpa-git.cdu.so | SD_150333 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.157 host 172.16.101.39 eq 18181
+access-list ACL_DMZ_CORP_IN remark ===| Access to rdu-vs-prim-skdpp-intclr.oduvs.so for ia-ntc-ts.cdu.so | SD_1381730 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.20.252.68 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Temporary access to ra.entensys.com for ia-szp-zokii-usg-ctrl.cdu.so | SD_1413797 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.197 object-group USERGATE-REMOTE-ASSISTANT-SERVERS eq ssh
+access-list ACL_DMZ_CORP_IN remark ===| Access to SOI-servers in ATS for SOI-servers in IA | SD_161780 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-SOI-SERVERS object-group ATS-SOI-SERVERS eq 8020
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-POLYGON-SOI-SERVERS object-group ATS-SOI-SERVERS eq 8020
+access-list ACL_DMZ_CORP_IN remark ===| Access between Polygons ISEI24 | SD_158929 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-ISEI24-WEB-POLYGON-SERVERS object-group IA-ISEI24-APP-POLYGON-SERVERS eq 8080
+access-list ACL_DMZ_CORP_IN remark ===| Access for Demand-Response servers to asdu-fpa-nexus.cdu.so | SD_159057 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DR-EXTFRONT-POLYGON-SERVERS host 172.16.101.39 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-DR-EXTFRONT-SERVERS host 172.16.101.39 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for IA DataPower-servers to Zabbix ESM-servers | SD_157254 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.210 object-group IA-ZABBIX-APP-SERVERS eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.212 object-group IA-ZABBIX-APP-SERVERS eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.230 object-group IA-ZABBIX-APP-SERVERS eq snmptrap
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-eppr-srv.cdu.so from pzvp-1, pzvp-2 | SD_160212 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.166 host 10.16.0.51 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.163 host 10.16.0.51 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.166 host 10.16.0.51 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.163 host 10.16.0.51 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access for aiiskue-cdu to electric meters MOXA-converters in branches | SD_166719 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.139 object-group BRANCHES-AIISKUE-MOXA eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.139 object-group BRANCHES-AIISKUE-MOXA eq 950
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.139 object-group BRANCHES-AIISKUE-MOXA eq 966
+access-list ACL_DMZ_CORP_IN remark ===| Access to external CTS-servers for Express Messenger | SD_160988 |===
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.136 host 212.69.99.39 range 20000 40000
+access-list ACL_DMZ_CORP_IN remark ===| Access for SKDPP to WebTutor | SD_163043 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.71.93 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for RuPost Mail-servers | SD_165015 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.249 object-group IA-RPMAIL-SERVERS eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.173 object-group IA-RPMAIL-SERVERS eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-rpmail-prx.cdu.so by HTTP/S to RuPost-servers in branches | SD_165672 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.121 object-group IA-RPMAIL-SERVERS eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.121 object-group BRANCHES-RPMAIL-SERVERS eq https
+access-list ACL_DMZ_CORP_IN remark ===| ia-teal.cdu.so -> ia-fpa-web.cdu.so | SD_1652640 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.101.40 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-teal.cdu.so to ia-smkt-tst.cdu.so | SD_1480436 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 10.20.6.74 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-teal.cdu.so to ia-opera-app.cdu.so | SD_192912 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.72.24 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-teal.cdu.so to ia-opera-app-p.cdu.so | SD_195407 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.82.44 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-teal.cdu.so to ia-crm-ro(1/2).cdu.so | SD_192912 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.29 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.192 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.193 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.29 eq 9502
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.192 eq 9502
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.185 host 172.16.71.193 eq 9502
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-rpmail-wkspd.cdu.so to RuPost Servers | SD_165845 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.122 host 178.74.128.165 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.122 object-group IA-RPMAIL-SERVERS eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.122 object-group IA-RPMAIL-SERVERS eq 465
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.122 object-group IA-RPMAIL-SERVERS eq 993
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.122 object-group BRANCHES-RPMAIL-SERVERS eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.122 object-group BRANCHES-RPMAIL-SERVERS eq 465
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.122 object-group BRANCHES-RPMAIL-SERVERS eq 993
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.122 host 178.154.204.17 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.122 host 130.193.34.88 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for RuPost proxy-servers to RuPost servers in branches | SD_165935 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-RPMAIL-PROXY-SERVERS-BRANCHES object-group BRANCHES-RPMAIL-SERVERS eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to FPA | SD_166216 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.221 host 172.16.101.39 eq 18181
+access-list ACL_DMZ_CORP_IN remark ===| Access to Zabbix ESM-servers from ia-soi-mq1.cdu.so for Zabbix agent ports | SD_168695 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-ZABBIX-AGENT-PORTS host 172.31.0.192 object-group IA-ZABBIX-APP-SERVERS
+access-list ACL_DMZ_CORP_IN remark ===| Access for CRL CHECK | SD_169678 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 host 178.74.128.165 eq ldap
+access-list ACL_DMZ_CORP_IN extended permit tcp 172.31.0.0 255.255.255.0 host 178.74.128.165 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-taupe.cdu.so (UserGate web-portal) | SD_1524296 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.0.62 eq ftp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.71.178 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.71.164 eq https
+access-list ACL_DMZ_CORP_IN extended permit ip host 172.31.0.118 host 172.16.71.102
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.19.9.110 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.72.214 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.72.207 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.111.20 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.111.20 range 8890 8891
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.111.21 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.111.21 range 8890 8891
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.71.136 eq www
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.71.136 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.82.62 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 10.20.6.74 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ISEI24 | SD_168317 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.180 host 172.16.111.86 eq 8080
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.180 host 172.16.111.85 eq 8080
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.179 host 172.16.111.86 eq 8080
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.179 host 172.16.111.85 eq 8080
+access-list ACL_DMZ_CORP_IN remark ===| Access for Linux KSC-servers in branches to ia-ksc-srv.cdu.so in IA | SD_170178 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group BRANCHES-KSC-LINUX-SERVERS host 172.16.71.63 eq 13000
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group BRANCHES-KSC-LINUX-SERVERS host 172.16.71.63 eq 13299
+access-list ACL_DMZ_CORP_IN remark ===| ZABBIX PROXY DMZ -> ZABBIX IA | SD_190536 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-ZABBIX-PROXY-DMZ-CORP-SERVERS object-group IA-POLYGON-ZBX-APP-SERVERS eq 10051
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-ksmg-mc2.cdu.so | SD_169993 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.116 object-group IA-EXCHANGE-SERVERS eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.116 object-group BRANCHES-EXCHANGE-SERVERS eq smtp
+access-list ACL_DMZ_CORP_IN extended permit object-group BRANCHES-DC-HOSTS-KSMG-PORTS host 172.31.0.116 object-group BRANCHES-DOMAIN-CONTROLLERS-SE     RVERS
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.116 host 172.16.20.101 eq ntp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.116 host 172.16.20.102 eq ntp
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.116 host 172.16.82.47 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.116 host 172.16.21.128 eq syslog
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.116 host 172.16.21.221 eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.116 host 172.16.21.222 eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.116 host 172.16.21.230 eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.116 host 172.16.72.234 eq snmptrap
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.116 host 172.16.72.235 eq snmptrap
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-skdpp-extclr.cdu.so to ia-skdpp-mnr01/02.cdu.so | SD_170885 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 host 10.17.11.102 eq 4777
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 host 10.17.11.116 eq 4777
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-ppp-ext1/2.cdu.so and ia-sbr-ext1/2.cdu.so to SBR DB-servers | SD_170921 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.111 host 172.16.112.40 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.112 host 172.16.112.40 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.114 host 172.16.112.40 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.115 host 172.16.112.40 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.110 host 172.16.112.40 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.113 host 172.16.112.40 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.111 host 172.16.82.2 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.112 host 172.16.82.2 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.114 host 172.16.82.2 eq 1433
+access-list ACL_DMZ_CORP_IN remark ===| Access for SBR | SD_1643734 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.112 host 178.74.128.173 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.112 host 178.74.128.203 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.112 host 178.74.128.202 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.111 host 178.74.128.173 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.111 host 178.74.128.203 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.111 host 178.74.128.202 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for SBR | SD_1537930 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.112 host 178.74.128.236 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.111 host 178.74.128.236 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.112 host 10.20.22.10 eq 8082
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.111 host 10.20.22.10 eq 8082
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.115 host 172.16.82.2 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.113 host 172.16.82.2 eq 1433
+access-list ACL_DMZ_CORP_IN remark ===| Access for SBR | SD_189424 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.110 host 178.74.128.173 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.113 host 10.17.11.65 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.113 host 10.17.11.66 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.113 host 10.17.11.68 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.114 host 10.17.11.65 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.114 host 10.17.11.66 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.114 host 10.17.11.68 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.115 host 10.17.11.65 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.115 host 10.17.11.66 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.115 host 10.17.11.68 eq 1433
+access-list ACL_DMZ_CORP_IN remark ===| Access for SBR | SD_189432 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.96 host 178.74.128.236 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.97 host 178.74.128.236 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.99 host 172.16.82.2 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.100 host 172.16.82.2 eq 1433
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.96 host 10.20.26.232 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.96 host 10.20.26.233 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.96 host 10.20.26.234 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.96 host 10.20.26.237 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.97 host 10.20.26.232 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.97 host 10.20.26.233 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.97 host 10.20.26.234 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.97 host 10.20.26.237 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.99 host 10.20.26.232 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.99 host 10.20.26.233 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.99 host 10.20.26.234 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.99 host 10.20.26.237 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.100 host 10.20.26.232 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.100 host 10.20.26.233 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.100 host 10.20.26.234 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.100 host 10.20.26.237 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.96 host 10.20.26.239 eq 8082
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.97 host 10.20.26.239 eq 8082
+access-list ACL_DMZ_CORP_IN remark ===| Access to external CTS-servers for Express Messenger conference cluster | SD_1599299 |===
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-EXPRESS-CONFERENCE-CLUSTER object-group EXTERNAL-EXPRESS-MESSENGER-CTS-SERVERS rang     e 20000 40000
+access-list ACL_DMZ_CORP_IN remark ===| Access for AIISKUE-CDU | SD_1551237 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.139 host 172.21.185.6 eq 502
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.139 host 172.21.185.5 eq 502
+access-list ACL_DMZ_CORP_IN remark ===| Access to CyberBackup-servers for ia-smev.cdu.so | SD_173923, 176525 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-1 host 172.31.0.117 host 10.17.12.90
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-2 host 172.31.0.117 host 10.17.15.11
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-2 host 172.31.0.117 host 10.17.15.12
+access-list ACL_DMZ_CORP_IN remark ===| ia-pppr-proxy.cdu.so -> PPR APP SRV | SD_176915 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.187 host 172.16.111.200 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.187 host 172.16.111.203 eq 31415
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.187 host 172.16.111.207 eq www
+access-list ACL_DMZ_CORP_IN remark ===| Podryadchik DMZ -> SKDPP SRV | SD_176909 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.165 host 172.16.71.128 eq ssh
+access-list ACL_DMZ_CORP_IN remark ===| Access for dp-test.cdu.so to ia-enerapp-tst.cdu.so | SD_177496 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.229 host 172.16.81.2 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-skdpp-extclr.cdu.so to ia-smzu-s1.cdu.so | SD_177490 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.143 host 172.16.82.107 eq 3389
+access-list ACL_DMZ_CORP_IN remark ===| Access for kid-portal.cdu.so (Kontur.ID) to ia-ex-nlb.cdu.so | SD_186842 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.233 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| Access for ODUSZ for RPMAIL | SD_188851 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.103 object-group ODU-SZ-RPMAIL-SERVERS eq ssh
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.103 object-group ODU-SZ-RPMAIL-SERVERS eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for CYBERBKP-SRV | SD_189495 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-2 host 172.31.0.139 object-group IA-CYBERBKP-SRV-3
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.103 object-group ODU-SZ-RPMAIL-SERVERS eq 5000
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-dmz-skom1.so-ups.ru to ia-skom-db(1/2).cdu.so | SD_189709 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.104 host 10.20.22.20 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.104 host 10.20.22.21 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.104 host 10.20.22.22 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.105 host 10.20.22.20 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.105 host 10.20.22.21 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.105 host 10.20.22.22 eq 5000
+access-list ACL_DMZ_CORP_IN remark ===| Access for Zabbix Proxy | SD_190255 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-ZABBIX-DMZ-CORP-PROXY-SERVERS object-group BRANCHES-ZABBIX-APP-SERVERS eq 10051
+access-list ACL_DMZ_CORP_IN remark ===| Access for Zabbix proxy-servers in DMZ_CORP to servers in DMZ_INET | SD_191689 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-ZABBIX-DMZ-CORP-PROXY-SERVERS 178.74.128.64 255.255.255.192 eq 10050
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-ZABBIX-DMZ-CORP-PROXY-SERVERS 178.74.128.128 255.255.255.128 eq 10050
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-ZABBIX-PROXY-DMZ-CORP-SERVERS 178.74.128.64 255.255.255.192 eq 10050
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-ZABBIX-PROXY-DMZ-CORP-SERVERS 178.74.128.128 255.255.255.128 eq 10050
+access-list ACL_DMZ_CORP_IN remark ===| Access for IDS-servers (POV) | SD_1677383 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.93 host 172.16.21.71 eq 587
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.94 host 172.16.21.71 eq 587
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.93 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.94 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.93 host 172.16.101.49 eq 34349
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.94 host 172.16.101.49 eq 34349
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.93 host 172.16.101.49 eq 34359
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.94 host 172.16.101.49 eq 34359
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.93 host 172.16.101.49 eq 5001
+access-list ACL_DMZ_CORP_IN extended permit udp host 172.31.0.94 host 172.16.101.49 eq 5001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.93 host 172.16.72.48 eq 9003
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.94 host 172.16.72.48 eq 9003
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.93 host 172.16.72.48 eq 9006
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.206 host 178.74.128.168 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.94 host 172.16.72.48 eq 9006
+access-list ACL_DMZ_CORP_IN remark ===| Access for cim2 to ia-ex-nlb | SD_200438 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.85 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.86 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-km-av3/4.so-ups.ru for ia-vcs-exp-e1/2-int.cdu.so | SD_1693145_193363 |===
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-EXPRESS-CONFERENCE-CLUSTER host 178.74.128.181 range 20000 65535
+access-list ACL_DMZ_CORP_IN extended permit udp object-group IA-EXPRESS-CONFERENCE-CLUSTER host 178.74.128.182 range 20000 65535
+access-list ACL_DMZ_CORP_IN remark ===| Access to Protei | SD_1705618 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.119 range 5020 5080
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.53 range 5020 5080
+access-list ACL_DMZ_CORP_IN extended permit udp object-group UC-SBC-Ext host 10.3.0.53 range 5020 5080
+access-list ACL_DMZ_CORP_IN extended permit udp object-group UC-SBC-Ext host 10.3.0.119 range 5020 5080
+access-list ACL_DMZ_CORP_IN extended permit udp object-group UC-SBC-Ext host 10.3.0.53 range 16384 32765
+access-list ACL_DMZ_CORP_IN extended permit udp object-group UC-SBC-Ext host 10.3.0.119 range 16384 32765
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.109 eq 2379
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.49 eq 2379
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.109 eq ssh
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.49 eq ssh
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.105 range 8300 8350
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.48 range 8300 8350
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.109 range 8300 8350
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.49 range 8300 8350
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.105 eq 5672
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group UC-SBC-Ext host 10.3.0.48 eq 5672
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-clm.cdu.so for ia-elk1/2.cdu.so | SD_195651 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.90 host 172.16.10.88 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.91 host 172.16.10.88 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-elk-db-cl for ia-elk1/2 | SD_198447 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.90 host 172.16.111.33 eq 5000
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.91 host 172.16.111.33 eq 5000
+access-list ACL_DMZ_CORP_IN remark ===| WAF CIM-ZRP-IA -> CIM-ZRP-ODUYU POLIGON | SD_196777 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.160 host 172.19.1.200 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.163 host 172.19.1.200 eq https
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.166 host 172.19.1.200 eq https
+access-list ACL_DMZ_CORP_IN remark ===| KUMA access | SD_197896 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.234 host 172.16.101.17 eq 7240
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.234 host 172.16.101.16 eq 7210
+access-list ACL_DMZ_CORP_IN remark ===| Access to ia-fpa-web | SD_1742540 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.101.40 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for UserGate Management Center (MC) v7.4.2 | SD_1743322 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-USERGATE-PORTS host 172.31.0.228 host 172.31.122.15
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.228 host 172.31.122.15 eq 8001
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.228 host 172.31.122.15 eq 8300
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-taupe.cdu.so to ia-opera-app-p.cdu.so | SD_199916 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.118 host 172.16.82.44 eq https
+access-list ACL_DMZ_CORP_IN remark ===| Access for KUMA-collector servers to KUMA-storage servers | SD_200078 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp object-group IA-KUMA-COLLECTOR-SERVERS object-group IA-KUMA-STORAGE-SERVERS eq 7221
+access-list ACL_DMZ_CORP_IN remark ===| Access for cim2-base-app-p.cdu.so/cim2-model-app-p.cdu.so to ia-ex-nlb.cdu.so | SD_201210 |===
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.74 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN extended permit tcp host 172.31.0.75 host 172.16.21.71 eq smtp
+access-list ACL_DMZ_CORP_IN remark ===| Access for ia-elk-db/db1/db2/db3.cdu.so to ia-bkp1/2.cdu.so/ia-bkp-r2.cdu.so | SD_201217 |===
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-2 host 172.31.0.64 object-group IA-CYBERBKP-SRV-2
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-2 host 172.31.0.65 object-group IA-CYBERBKP-SRV-2
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-2 host 172.31.0.66 object-group IA-CYBERBKP-SRV-2
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-2 host 172.31.0.67 object-group IA-CYBERBKP-SRV-2
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-1 host 172.31.0.64 host 10.20.1.68
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-1 host 172.31.0.65 host 10.20.1.68
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-1 host 172.31.0.66 host 10.20.1.68
+access-list ACL_DMZ_CORP_IN extended permit object-group IA-CYBERBKP-PORTS-1 host 172.31.0.67 host 10.20.1.68
+access-list ACL_DMZ_CORP_IN remark ===| Explicit deny any other traffic |===
+access-list ACL_DMZ_CORP_IN extended deny ip any any

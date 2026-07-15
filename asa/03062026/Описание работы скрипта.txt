@@ -1,0 +1,24 @@
+1) Установит на ПК (если ОС - Windows) компилятор Python for Windows последней версии
+
+
+2) py -m pip install openpyxl - установка дополнений для возможности выгрузки информации в XLSX файл
+
+
+3) в папку с parce_acl'name'.py необходимо положить файлы ACL_EXT.txt (полный вывод статистики ACL - show access-list <ACL_NAME> | redirect ACL_EXT.txt) и 
+   ACL_BRIEF.txt (сокращенный вывод статистики ACL - show access-list <ACL_NAME> brief | redirect ACL_BRIEF.txt), имена файлов должны быть именно такими как указано
+
+
+4) Запустить py parse_acl_xlsx.py (вывод статистики по ACL, включая детализацию по всем объектам в составе групп)
+   Запустить py parse_acl_xlsx_v2.py (вывод статистики по ACL без детализации по объектам в составе групп)
+   Запустить py parse_acl_xlsx_v3.py (вывод статистики по ACL без детализации по объектам в составе групп и дополнительными полями:
+                                      комментарий к ACL, строка ACL в текстовом виде из конфигурации)
+
+
+
+show access-list ACL_TRANSIT_IN | redirect tftp://172.16.50.177/ACL_EXT.txt
+show access-list ACL_TRANSIT_IN brief | redirect tftp://172.16.50.177/ACL_BRIEF.txt
+
+
+show access-list ACL_DMZ_CORP_IN | redirect tftp://172.16.50.177/ACL_EXT.txt
+show access-list ACL_DMZ_CORP_IN brief | redirect tftp://172.16.50.177/ACL_BRIEF.txt
+

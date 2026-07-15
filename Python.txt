@@ -1,6 +1,9 @@
 ### НЕОБХОДИМО ПОСТАВИТЬ МОДУЛИ ###
 pip install pytest pytest-clarity==0.3.0a0 pyyaml tabulate jinja2 textfsm netmiko
 
+### Установка модуля через Proxy
+pip --proxy http://nemetskiy-sv.cdu.so:<password>@172.31.0.209:8090 install openpyxl --trusted-host pypi.org --trusted-host files.pythonhosted.org
+ 
 https://pythontutor.com/                         # Деббагер
 https://replit.com/languages/python3             # Тренажер
 https://docs.python.org/3.8/py-modindex.html     # Стандартная библитека модулей
@@ -116,7 +119,7 @@ s = ('Test'
 'String')                 # TestString
 
 # разбить строку в разные строки
-a = ("test\n" "hello\n")
+a = ("test\n" "hello\n")            # print(a)
 
 # еще важный пример разбить строку на разные строки (часто пригодится)
 template = ( 
@@ -183,12 +186,12 @@ cmd.count("e")                           # 2 раза, посчитать ско
 cmd.find("face")                         # найти подстроку, вернет индекс с которого она начинается, если не найдет то вернет -1
 
 index = cmd.find("face")                 # записали в переменную index индекс с которого начинается подсрока face в строке cmd
-cmd[index:]                              # сделали срез в строке
+cmd[index:]                              # сделали срез в строке, получим  'face Gi0/0'
 
 cmd = " switchport mode access"
 find_word = "mode"
 index = cmd.find(find_word)
-cmd[index:index + len(find_word)]        # получим слово "mode" сделав срез
+cmd[index:index + len(find_word)]        # получим слово "mode" сделав срез (не совсем понял index:index)
 
 cmd.replace("access", "trunk")                               # заменить подсроку в строке (заменяет все вхождения)
 cmd.replace("o", "test", 1)                                  # заменить только первое вхождение
@@ -260,7 +263,7 @@ f"interface {intf}"                   # получим "interface Gi0/0"
 cmd = "switchport trunk allowed vlan"
 vlan = "1,2,3,4"
 f"{cmd} {vlan}"                       # получим объединение строк, также как: cmd + " " + vlan
-f"{cmd.upper()} {vlan}"               # плюс также в том, что в f-строке можно использовать методы в переменной
+f"{cmd.upper()} {vlan}"               # плюс также в том, что в f-строке можно использовать методы в переменной !!!!
 
 oct1, oct2, oct3, oct4 = 10, 1, 100, 168 
 template = f"{oct1:<9}{oct2:<9}{oct3:<9}{oct4:<9}\n{oct1:08b} {oct2:08b} {oct3:08b} {oct4:08b}"   # тоже самое форматирование через ф-строку (выведет в двоичном и десятичном форате Ip-адрес)
