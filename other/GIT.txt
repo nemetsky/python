@@ -217,9 +217,23 @@ git config --global --unset http.proxy
 
 
 ====================================
-Мои команды
+Мои команды (Push с токеном работал без запросов логинов и паролей, пока я не обновил токен - regenerate в связи с истеченем срока токена)
+
 
 git add .
 git commit -m add_asa_script_traektoriya
 git push https://<token>@github.com/nemetsky/python.git
 git pull
+
+====================================
+Потом снова начал выдавать окна с менеджером и запрашивать пароль
+ввел команды 
+
+git config --global --list
+git config --global credential.helperselector.selected manager
+git config --global credential.helper store
+# git config --global --unset credential.helperselector.selected=manager
+
+и сохранил пароль в Windows/диспетчер учетных записей, добавив git:https://github.com , логин - nemetsky , пароль от Ginhub
+после этого просто начал давать делать  git push без ввода логина и пароля и токена
+
