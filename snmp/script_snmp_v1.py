@@ -11,17 +11,23 @@ output_pid_object = session.walk('1.3.6.1.2.1.47.1.1.1.1.13')
 output_sn_object = session.walk('1.3.6.1.2.1.47.1.1.1.1.11')
 output_sfp_pid_object = session.walk('1.3.6.1.4.1.35265.1.23.53.1.1.1.10')
 output_sfp_sn_object = session.walk('1.3.6.1.4.1.35265.1.23.53.1.1.1.6')
+output_ports_unit_object = session.walk('1.3.6.1.4.1.89.53.3.1.5')
+output_ports_unit_stack_object = session.walk('1.3.6.1.4.1.89.53.23.1.4')
 
 number_sw = int(output_number_sw_object[0].value)
 output_pid = []
 output_sn = []
 output_sfp_pid = []
 output_sfp_sn = []
-out_dict = {}
+output_ports_unit = []
+output_ports_unit_stack = []
 
+# заготовка пустого итогового словаря
+out_dict = {}
 for i in range(1,number_sw+1):
     out_dict[i] = []
 
+# определяем шасси и блоки питания 
 for item in output_sn_object:
     #oid = item.oid + '.' + item.index
     output_sn.append((item.index, item.value))
@@ -39,6 +45,7 @@ for pid, sn in result_module:
         elif index in range(134217728,201326592):
             out_dict[2].append(list1)
 
+# определяем SFP 
 for item in output_sfp_sn_object:
     output_sfp_sn.append((item.index, item.value))
 for item in output_sfp_pid_object:
@@ -46,16 +53,26 @@ for item in output_sfp_pid_object:
 
 result_sfp = list(zip(output_sfp_pid, output_sfp_sn))
 
+# вспомогательный словарь (индекс порта - юнит)
+ports_unit_dict = {}
+for item in output_ports_unit_object:
+    output_ports_unit.append((item.index, item.value))
+for item in output_ports_unit_stack_object:
+    output_ports_unit_stack.append((item.index, item.value))
+    
+total_ports_unit = output_ports_unit + output_ports_unit_stack
+
+for i in total_ports_unit:
+    index = i[0].split('.')[-1]
+    ports_unit_dict[index] = i[1]
+
+
 if result_sfp[0][0][1] != None:
     for sfp_pid, sfp_sn in result_sfp:
         list1 = [sfp_pid[1], sfp_sn[1]]
-        index = int(sfp_pid[0])
-        if index <= 156:
-            out_dict[1].append(list1)
-        elif index in range(157,313):
-            out_dict[2].append(list1)
-        elif index in range(313,469):
-            out_dict[3].append(list1)
-        elif index in range(469,625):
-            out_dict[4].append(list1)
+        index = sfp_pid[0]
+        number_stack = int(ports_unit_dict[index])
+        out_dict[number_stack].append(list1)
+
 pprint(out_dict)
+

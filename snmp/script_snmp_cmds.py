@@ -87,22 +87,31 @@ output_sfp_sn = snmpwalk(
 result_sfp = list(zip(output_sfp_pid, output_sfp_sn)) # таже складываем/сопоставляем трансиверы (PID и SN) с помощью функции zip
 
 # делаем вспомогательный словарь, к котором сопосталяем индекс порта с номером юнита  {'49': '1', '50': '1', '51': '1 ...} Как оказалось в словарь не попадают стековые порты
+num_dict = {}
 output_index_num = snmpwalk(
     oid='1.3.6.1.4.1.89.53.3.1.5',
     community='CDUro', 
     ipaddress=ip, 
 )
-num_dict = {}
+output_index_stack = snmpwalk(
+    oid='1.3.6.1.4.1.89.53.23.1.4',
+    community='CDUro', 
+    ipaddress=ip, 
+)
+for i in output_index_stack:
+    index = i[0].split('.')[-1]
+    num_dict[index] = i[1]
+
 for i in output_index_num:
     index = i[0].split('.')[-1]
     num_dict[index] = i[1]
-#print(num_dict)
+print(num_dict)
 
 
 if result_sfp[0][0][1] != None:
     for sfp_pid, sfp_sn in result_sfp:
         list1 = [sfp_pid[1].strip('"'), sfp_sn[1].strip('"')]
-        
+        """
         index = int(sfp_pid[0].split('.')[-1])        # первый способ, неудобный так как диапазон индексов вручную задан               
         if index <= 156:                                       
             out_dict[1].append(list1)
@@ -112,11 +121,11 @@ if result_sfp[0][0][1] != None:
             out_dict[3].append(list1)
         elif index in range(469,625):
             out_dict[4].append(list1)
-        
-        #index = sfp_pid[0].split('.')[-1]            # второй правильный способ используя вспомогательный словарь,
-        #number_stack = int(num_dict[index])          # но как оказалось в словаре нет стековых портов
-        #pprint(num_dict[index])
-        #out_dict[number_stack].append(list1)
+        """
+        index = sfp_pid[0].split('.')[-1]            # второй правильный способ используя вспомогательный словарь,
+        number_stack = int(num_dict[index])          # но как оказалось в словаре нет стековых портов
+        pprint(num_dict[index])
+        out_dict[number_stack].append(list1)
         
 pprint(out_dict)   
         
