@@ -1,0 +1,168 @@
+sudo apt update
+sudo apt install nginx
+sudo systemctl status nginx
+sudo systemctl enable nginx          # добавить в автозагрузку
+
+# посмотреть статусы
+"""
+sudo systemctl status nginx
+sudo systemctl is-enabled nginx 
+sudo systemctl is-active nginx
+"""
+
+/etc/nginx/nginx.conf							# основной файл конфигурации
+
+sudo mkdir /etc/nginx/ssl
+
+# Запрос на сертификат 
+sudo openssl req -new -newkey rsa:2048 -nodes -keyout ia-syslog-ng1.key -out ia-syslog-ng1.csr
+
+# Конвертация из DER в Base-64
+sudo openssl x509 -inform DER -in ia-syslog-ng1.cdu.so.cer -outform PEM -out ia-syslog-ng1_.cdu.so.cer
+
+# Склеить сертификат сервера и корневой сертификат
+sudo cat ia-syslog-ng1.cdu.so.cer SO_RSA_CP_CA.cer > /etc/nginx/ssl/ia-syslog-ng1_chain.crt  	# может быть отказона в доступе, так как sudo применяется только к cat, лучше тогда вот так:
+sudo cat ia-syslog-ng1.cdu.so.cer SO_RSA_CP_CA.cer | sudo tee ia-syslog-ng1_chain.crt
+
+# файл конфигурации для наших настроек редиректа 
+sudo nano /etc/nginx/sites-available/default    
+# настройки для http (для теста)
+"""
+server {
+        listen 80 default_server;
+        server_name _;
+        # Логирование запросов и ошибок (полезно для отладки)
+        access_log /var/log/nginx/flask_access.log;
+        error_log /var/log/nginx/flask_error.log;
+
+        location /script {
+                proxy_pass http://127.0.0.1:5001;
+                # Передаем реальные заголовки, чтобы Flask знал IP клиента
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+        }
+"""
+
+# настройки для https
+"""
+server {
+        listen 443 ssl;
+        server_name ia-syslog-ng1.cdu.so;
+        ssl_certificate /etc/nginx/ssl/ia-syslog-ng1_chain.crt;
+        ssl_certificate_key /etc/nginx/ssl/ia-syslog-ng1.key;
+        # Логирование запросов и ошибок (полезно для отладки)
+        access_log /var/log/nginx/flask_access.log;
+        error_log /var/log/nginx/flask_error.log;
+
+        location /script {
+                proxy_pass http://127.0.0.1:5001;
+                # Передаем реальные заголовки, чтобы Flask знал IP клиента
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+        }
+"""
+
+sudo nginx -t									# проверка файла конфигурации
+sudo systemctl restart nginx
+sudo tail -n 20 /var/log/nginx/flask_error.log
+
+# установка Gunicorn
+pip --proxy=http://nemetskiy-sv.cdu.so@172.31.0.209:8090 install gunicorn --break-system-packages --trusted-host pypi.org --trusted-host files.pythonhosted.org
+
+# тестово для проверки работы всей связки Nginx + Gunicorn + Flask запустить gunicorn и передать в него скрипт script_flask_v2.py с внутренним объектом flask (app)
+gunicorn --workers 3 --bind 127.0.0.1:5001 script_flask_v2:app
+
+# выполнить с клиента httpie запрос
+http -v POST https://ia-syslog-ng1.cdu.so/script X-API-Key:key12345 ip=172.25.0.2     # все должно сработать
+
+# настройка gunicorn как сервиса
+sudo nano /etc/systemd/system/flask_script_snmp.service
+"""
+[Unit]
+Description=Gunicorn instance to serve Flask Script API
+After=network.target
+
+[Service]
+# Имя пользователя Linux, под которым будет работать скрипт (например, root или ubuntu)
+User=admin-st
+Group=admin-st
+
+# Путь к папке, где лежит ваш app.py
+WorkingDirectory=/opt/scripts
+
+# Путь к исполняемому файлу gunicorn. 
+# Если использовали venv, путь будет: /path/to/your/project/venv/bin/gunicorn
+# Если ставили глобально, то просто: /usr/local/bin/gunicorn (можно узнать через команду `which gunicorn`)
+ExecStart=/home/admin-st/.local/bin/gunicorn --workers 3 --bind 127.0.0.1:5001 script_flask_v2:app
+
+# Автоматический перезапуск скрипта при падении через 5 секунд
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+"""
+!!! Количество --workers 3 указывается исходя из формулы (2 * CPU) + 1, то есть если у нас 8 CPU, то указываем 17
+
+
+# перезапуск конфигурации systemd (чтобы система увидела новый сервис)
+sudo systemctl daemon-reload
+
+# запуск сервиса
+sudo systemctl start flask_script_snmp
+sudo systemctl enable flask_script_snmp
+sudo systemctl status flask_script_snmp
+ps aux | grep unic
+
+# Посмотреть логи в реальном времени (если скрипт делает print или записывает ошибки)
+sudo journalctl -u flask_script_snmp -f   # -n 50
+
+# Посмотреть логи Nginx, кто подключался и когда
+sudo tail -f /var/log/nginx/flask_access.log
+
+
+
+
+#  Ограничить доступ по IP в Nginx
+"""
+location /execute {
+    allow 123.123.123.123;  # IP вашего удалённого сервера
+    deny all;
+    proxy_pass http://127.0.0.1:8000;
+}
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

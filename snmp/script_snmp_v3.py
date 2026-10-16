@@ -1,4 +1,4 @@
-from ezsnmp import Session
+﻿from ezsnmp import Session
 from pprint import pprint
 #import time
 
@@ -33,7 +33,9 @@ def main_sw_cisco(session):
 
     for type, unit, pid, sn in zip(list_type_module, list_number_unit, list_pid_module, list_sn_module):
         if type[1] == '3' and pid[1] != '':
-            if sw_count > 1:                                 # если это стек 
+            if 'OID' in list_stack[0][1]:                    # случай для VSS, т.к. там нет такого OID и у него начинается номера юнитов с 1
+                number_unit = str(int(unit[1])) 
+            elif sw_count > 1:                               # если это стек 
                 number_unit = str(int(unit[1]) + 1)          # номер юнита увеличивает на 1, т.к. в Cisco нумерация начинается с 0 и превращаем обратнов  строку
             else:
                 number_unit = str(int(unit[1]) + 2)          # увеличиваем на 2 если не стек, т.к. нумерация юнитов в коммутаторах и маршрутизаторах начинается с -1
@@ -44,7 +46,7 @@ def main_sw_cisco(session):
     for index, parent in list_index_parent:
         parent_dict[index] = parent
 
-    #for type, pid, sn in zip(list_type_module, list_pid_module, list_sn_module):
+    #for type, pid, sn in zip(list_type_module, list_pid_module, list_sn_module):      # Вариант без FRU
     for type, pid, sn, fru in zip(list_type_module, list_pid_module, list_sn_module,list_fru_tag):
         #if (type[1] != '11' and type[1] != '3') and sn[1] != '':
         if (type[1] != '11' and type[1] != '3') and pid[1] != '' and fru[1] == '1':    # если копмонент не является стеком или шасси, и модуль заменяемый
@@ -164,13 +166,15 @@ if __name__ == "__main__":
     #ip = '10.11.10.211'    # MES 2348ЗP
     #ip = '10.20.11.32'     # ia-mdc-lan-accs-csw-a09-1
     #ip = '172.16.50.173'   # ia-mdc-aux-uc-csw-1
-    #ip = '10.20.11.43'     # MES 2308P 
+    #ip = '10.20.11.43'     # MES 2308P
     #ip = '10.11.10.15'     # ia-rdc-lan-aggr-csw-137-1
     #ip = '10.20.11.4'      # MES 5448
     #ip = '172.16.50.137'   # Cisco 9300 stack
-    #ip = '172.25.0.4'      # Eltex ESR 1500
-    ip = '172.25.0.2'      # Cisco ASR 1001X
-    
+    ip = '172.25.0.4'      # Eltex ESR 1500
+    #ip = '172.25.0.2'      # Cisco ASR 1001X
+    #ip = '10.12.4.254'      # Cisco 6500
+    #ip = '172.16.145.2'     # Cisco 6800
+
     session = Session(hostname=ip, community='CDUro', version=2)
     vendor_object = session.get('1.3.6.1.2.1.1.2.0')
     vendor_index = vendor_object[0].value.split('.')[-3]
@@ -185,3 +189,4 @@ if __name__ == "__main__":
         result_dict = main_sw_cisco(session)
 
     pprint(result_dict)
+
