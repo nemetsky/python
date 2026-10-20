@@ -1,5 +1,9 @@
 from ezsnmp import Session
+from ezsnmp.exceptions import TimeoutError
 from pprint import pprint
+import logging
+import sys
+import subprocess
 
 type_options = {
     '1': 'other',
@@ -19,6 +23,9 @@ type_options = {
     '15': 'storageDrive'
 }
 
+logger = logging.getLogger("module_snmp")    # настраиваем дочерний логгер для главного модуля
+logger.setLevel(logging.INFO)
+
 # функция получает вывод OID в виде объектов Python, возвращает список кортежей [(index, значение),...]
 def get_list(iterable_object):
     list1 = []
@@ -26,9 +33,8 @@ def get_list(iterable_object):
         list1.append((item.index, item.value))
     return list1
 
-
+# функция, в которую передаем сессию snmp коммутатора или маршрутизатора Cisco, возвращает итоговый словарь опций
 def main_cisco(session):
-    result_dict = {}
     index_parent_object = session.walk('1.3.6.1.2.1.47.1.1.1.1.4')
     type_module_object = session.walk('1.3.6.1.2.1.47.1.1.1.1.5')
     number_unit_object = session.walk('1.3.6.1.2.1.47.1.1.1.1.6')
@@ -42,28 +48,29 @@ def main_cisco(session):
     list_pid_module = get_list(pid_module_object)
     list_fru_tag = get_list(fru_tag_object)
 
-    sw_index_unit_dict = {}  # вспомогательный словарь {Индекс коммутатора: номер юнита}
+    result_dict = {}         # основной словарь {Номер юнита : список списков опций}
+    sw_index_unit_dict = {}  # вспомогательный словарь 1 {Индекс коммутатора: номер юнита}
+    parent_dict = {}         # вспомогательный словарь 2 {Индекс опции/модуля: Родительский индекс}
 
     for type, unit, pid, sn in zip(list_type_module, list_number_unit, list_pid_module, list_sn_module):
         if type[1] == '3' and pid[1] != '':
-            number_unit = str(int(unit[1]))
-            result_dict[number_unit] = [[type_options[type[1]], pid[1].strip(), sn[1].strip()]]    # добавялем в итоговый словарь шасси
-            sw_index_unit_dict[type[0]] = number_unit                                              # сразу формируем вспомогательный словарь
+            number_unit = unit[1]                                                                   # определяем номер юнита
+            result_dict[number_unit] = [[type_options[type[1]], pid[1].strip(), sn[1].strip()]]     # добавялем в основной словарь шасси
+            sw_index_unit_dict[type[0]] = number_unit                                               # сразу формируем вспомогательный словарь 1
 
-    parent_dict = {}                           # вспомогательный словарь {Индекс компонента: Родительский индекс}
     for index, parent in list_index_parent:
-        parent_dict[index] = parent
+        parent_dict[index] = parent                                                                 # формируем вспомогательный словарь 2
 
     for type, pid, sn, fru in zip(list_type_module, list_pid_module, list_sn_module, list_fru_tag):
-        if (type[1] != '11' and type[1] != '3') and pid[1] != '' and fru[1] == '1':    # если компонент не является стеком или шасси, и модуль заменяемый
-            current_index = type[0]                                                    # делаем цикл в котором ищем самый родительский индекс модуля, чтобы привязать модуль к шасси
-            while True:
+        if (type[1] != '11' and type[1] != '3') and pid[1] != '' and fru[1] == '1':                 # если компонент не является стеком или шасси, и модуль заменяемый
+            current_index = type[0]                                                                 # определяем индекс опции
+            while True:                                                                             # делаем цикл в котором ищем самый родительский индекс опции/модуля, чтобы привязать его к шасси
                 parent_index = parent_dict[current_index]
                 current_index = parent_index
-                if parent_index in sw_index_unit_dict:          # если родительский индекс есть в нашем вспомогательном словаре юнитов, мы нашли родителя и выходим из цикла
-                     unit = sw_index_unit_dict[current_index]
+                if parent_index in sw_index_unit_dict:                                              # если родительский индекс есть в нашем вспомогательном словаре 1, мы нашли родительское шасси и выходим из цикла
+                     unit = sw_index_unit_dict[current_index]                                       # определяем номер юнита шасси
                      break
-            result_dict[unit].append([type_options[type[1]], pid[1].strip(), sn[1].strip()])           # добавляем в итоговый словарь компонент (БП, модуль, трансивер и т.п.)
+            result_dict[unit].append([type_options[type[1]], pid[1].strip(), sn[1].strip()])        # добавляем в основной словарь к нашему шасси опцию (БП, модуль, трансивер и т.п.)
     return result_dict
 
 
@@ -158,37 +165,82 @@ def main_rt_eltex(session):
                                                                                              # т.е. как с коммутаторами надо найти ветку где номер порта сопоставляется с номером юнита
     return result_dict
 
-def verify_and_select(result_dict, serial):
+def verify_sn_and_select(result_dict, serial):
     result = []
     for unit, options in result_dict.items():
         for type, pn, sn in options:
             if type == type_options['3'] and sn == serial:
                 return options
-    return 'серийный номер не совпадает'
+    logger.warning(error := "Серийный номер из СУУС ИТ не совпадает с серийным номером оборудования")
+    return error
+
+def check_dns(ip, fqdn):
+    try:
+        record_a = subprocess.run(['dig', fqdn, '+short'], stdout=subprocess.PIPE, encoding="utf=8")
+        #record_a = subprocess.run(['dig', fqdn, '+short'], capture_output=True, text=True, check=True)       # Можно так, тоже самое
+        ip_in_dns = record_a.stdout.rstrip('\n')
+        record_rtp = subprocess.run(['dig', '-x', ip, '+short'], stdout=subprocess.PIPE, encoding="utf=8")
+        fqdn_in_dns = record_rtp.stdout.rstrip('.\n')
+        #check_a = True if ip = ip_in_dns else False:                                                         # Можно так
+        #check_a = (ip == ip_in_dns)
+        error1 = error2 = ''
+        if ip_in_dns == '':
+            logger.error(error1 := 'Отсутствует запись DNS для %s в прямой зоне. ' %fqdn)
+            check_a = True
+        elif check_a := (ip != ip_in_dns):                                                                   # используем маржовый оператор
+            logger.error(error1 := 'Запись DNS для %s не совпадает в прямой зоне (%s != %s). ' %(fqdn, ip, ip_in_dns))
+        if fqdn_in_dns == '':
+            logger.error(error2 := 'Отсутствует запись DNS для %s в обратной зоне.'  %ip)
+            check_rtp = True
+        elif check_rtp := (fqdn != fqdn_in_dns):
+            logger.error(error2 := 'Запись DNS для %s не совпадает в обратной зоне (%s != %s).' %(ip, fqdn, fqdn_in_dns))
+        if not check_a and not check_rtp:
+            return True
+        else:
+            return error1 + error2
+    except Exception as e:
+        logger.error(f"Произошла ошибка при проверке DNS-записи: {e}")
+        return f"Произошла ошибка DNS"
 
 def main(ip):
     vendors = {
         '9': 'Cisco',
         '35265': 'Eltex'
     }
-    session = Session(hostname=ip, community='CDUro', version=2)
-    vendor_object = session.get('1.3.6.1.2.1.1.2.0')
-    vendor_index = vendor_object[0].value.split('.')[-3]         # по индексу определяем вендоре в словаре vendors 
+    logger.info(f"---> Подключаюсь к {ip}")
+    try:
+        session = Session(hostname=ip, community='CDUro', version=2)
+        vendor_object = session.get('1.3.6.1.2.1.1.2.0')
+        vendor_index = vendor_object[0].value.split('.')[-3]         # по индексу определяем вендоре в словаре vendors 
+        vendor_name_object = session.get('1.3.6.1.2.1.1.1.0')
+        if vendors[vendor_index] == 'Eltex':
+            if 'ESR' in vendor_name_object[0].value:                 # пока так определяем, что это маршрутизатор Eltex
+                result_dict = main_rt_eltex(session)
+            else:
+                result_dict = main_sw_eltex(session)
+        elif vendors[vendor_index] == 'Cisco':
+            result_dict = main_cisco(session)
+        logger.info("<--- Список опций с %s успешно собран", ip)
+        return result_dict
+    except TimeoutError:
+        logger.error(error := "Устройство %s недоступно по SNMP" %ip)
+        return error
+    except Exception as Error:
+        line_num = sys.exc_info()[2].tb_lineno
+        logger.error("Устройство %s не поддерживается. Ошибка скрипта в строке %s: %s: %s", ip, line_num, Error.__class__.__name__, Error)
+        return f"Произошла ошибка. Устройство не поддерживается."
 
-    vendor_name_object = session.get('1.3.6.1.2.1.1.1.0')
-    if vendors[vendor_index] == 'Eltex':
-        if 'ESR' in vendor_name_object[0].value:                 # пока так определяем, что это маршрутизатор Eltex
-            result_dict = main_rt_eltex(session)
-        else:
-            result_dict = main_sw_eltex(session)
-    elif vendors[vendor_index] == 'Cisco':
-        result_dict = main_cisco(session)
-    return result_dict
 
 if __name__ == '__main__':
-    #ip = '10.11.10.210'    # Cisco
+    # настраиваем в этом месте логирование (RootLogger) для случая, если запускаем модуль отдельно
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format="%(asctime)s %(levelname)8s %(name)s: %(message)s",
+        datefmt='%Y-%m-%d %H:%M:%S',
+    )
+    ip = '10.11.10.210'    # Cisco
     #ip = '10.11.10.211'    # MES 2348P
-    ip = '10.20.11.32'     # ia-mdc-lan-accs-csw-a09-1
+    #ip = '10.20.11.32'     # ia-mdc-lan-accs-csw-a09-1
     #ip = '172.16.50.173'   # ia-mdc-aux-uc-csw-1
     #ip = '10.20.11.43'     # MES 2308P
     #ip = '10.11.10.15'     # ia-rdc-lan-aggr-csw-137-1
@@ -198,22 +250,15 @@ if __name__ == '__main__':
     #ip = '172.25.0.2'      # Cisco ASR 1001X
     #ip = '10.12.4.254'     # Cisco 6500
     #ip = '172.16.145.2'    # Cisco 6800
-    serial = 'ESD9023438'
-    
-    result_dict = main(ip)
-    pprint(result_dict)
-    print('#'*50) 
-    pprint(verify_and_select(result_dict, serial))
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    serial = 'FDO1524X2BG'
+
+    #result = main(ip)
+    #pprint(result)
+    #print('#'*50)
+    #pprint(verify_sn_and_select(result, serial))
+
+    ip = '10.20.11.32'
+    #ip = '178.74.128.173'
+    name = 'ia-mdc-lan-accs-csw-a09-1.cd.so'
+    #name = 'br.so-ups.ru'
+    print(type(check_dns(ip, name)))
