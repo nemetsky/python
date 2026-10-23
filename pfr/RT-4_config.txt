@@ -1,0 +1,187 @@
+hostname RT-4
+
+object-group network PREFIX_TO_EBGP
+  ip prefix 172.25.204.1/32
+  ip prefix 10.204.0.0/24
+  ip prefix 172.16.50.4/30
+exit
+
+aaa authentication mode break
+aaa authentication login default tacacs local
+aaa authentication enable default tacacs enable
+aaa accounting login start-stop tacacs
+aaa accounting commands stop-only tacacs
+aaa authentication attempts max-fail 3 180
+
+aaa authorization commands default tacacs local
+
+tacacs-server host 172.16.0.204
+  key ascii-text encrypted 91BD007FBF1B4DE8D0
+  priority 10
+  source-address 172.16.0.14
+exit
+
+ip protocols bgp preference 20
+ip protocols ospf preference 110
+
+route-map IMPORT_EBGP
+  rule 10
+    description "RDU-1_CorpPrefix"
+    match as-path end 65017
+    match community 65000:3
+    action set local-preference 350
+  exit
+  rule 20
+    description "RDU-1_OffPrefix"
+    match as-path end 65017
+    match community 65000:4
+    action set local-preference 450
+  exit
+  rule 30
+    description "RDU-2_CorpPrefix"
+    match as-path end 65018
+    match community 65000:3
+    action set local-preference 350
+  exit
+  rule 40
+    description "RDU-2_OffPrefix"
+    match as-path end 65018
+    match community 65000:4
+    action set local-preference 450
+  exit
+  rule 100
+    action set local-preference 50
+  exit
+exit
+route-map CorpPrefix_BGP_Attr
+  rule 10
+    action set community 65000:3
+  exit
+exit
+route-map OffPrefix_BGP_Attr
+  rule 10
+    action set community 65000:4
+  exit
+exit
+route-map EXPORT_EBGP
+  rule 10
+    match ip address object-group PREFIX_TO_EBGP
+  exit
+  rule 100
+    action deny
+  exit
+exit
+route-map CONDITION-MAP
+  rule 10
+    match ip address 172.16.50.4/30
+  exit
+exit
+route-map ADVERTISE-MAP
+  rule 10
+    match ip address 10.204.0.0/24
+  exit
+  rule 20
+    match ip address 172.25.204.1/32
+  exit
+exit
+route-map BGP-TO-OSPF1
+  rule 10
+    match community regex '65000:3'
+    action set metric ospf type-1 100
+  exit
+  rule 20
+    description "OffPrefix_All"
+    match community regex '65000:4'
+    action set metric ospf type-1 90
+  exit
+  rule 30
+    match ip address 172.17.100.4/30
+    action set metric ospf type-1 50
+  exit
+  rule 40
+    match ip address 172.18.100.4/30
+    action set metric ospf type-1 50
+  exit
+  rule 1000
+    action deny
+  exit
+exit
+
+router bgp 65002
+  router-id 172.25.0.22
+  timers keepalive 1
+  timers holdtime 3
+  neighbor 10.232.0.1
+    description "RT-2"
+    remote-as 65001
+    timers keepalive 7
+    timers holdtime 21
+    address-family ipv4 unicast
+      route-map IMPORT_EBGP in
+      route-map EXPORT_EBGP out
+      advertise-map ADVERTISE-MAP exist-map CONDITION-MAP
+      enable
+    exit
+    enable
+  exit
+  neighbor 172.25.0.21
+    description "RT-3"
+    remote-as 65002
+    update-source loopback 1
+    address-family ipv4 unicast
+      next-hop-self all
+      enable
+    exit
+    enable
+  exit
+  address-family ipv4 unicast
+    network 10.204.0.0/24 route-map OffPrefix_BGP_Attr
+    network 172.25.204.1/32 route-map CorpPrefix_BGP_Attr
+    network 172.16.50.4/30
+  exit
+  enable
+exit
+
+router ospf log-adjacency-changes
+router ospf 1
+  router-id 172.25.0.22
+  redistribute bgp 65002 route-map BGP-TO-OSPF1
+  area 0.0.0.0
+    enable
+  exit
+  enable
+exit
+
+interface gigabitethernet 1/0/1
+  description "RT-2_[Gi0/0/4]"
+  ip firewall disable
+  ip address 10.232.0.2/30
+  lldp transmit
+  lldp receive
+exit
+interface gigabitethernet 1/0/2
+  description "DST-SW-2_[Gi1/0/2]"
+  ip firewall disable
+  lldp transmit
+  lldp receive
+exit
+interface gigabitethernet 1/0/2.204
+  ip firewall disable
+  ip address 10.204.0.14/24
+  ip ospf instance 1
+  ip ospf
+exit
+interface gigabitethernet 1/0/2.300
+  ip firewall disable
+  ip address 172.16.0.14/24
+exit
+interface loopback 1
+  ip address 172.25.0.22/32
+  ip ospf instance 1
+  ip ospf
+exit
+interface loopback 2
+  ip address 172.16.50.5/30
+exit
+
+ip ssh server

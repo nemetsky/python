@@ -1,0 +1,22 @@
+{
+    "RDU-1": {
+        "ttk": {
+            "state": "good",
+            "bgp": "up"
+        },
+        "rtk": {
+            "state": "good",
+            "bgp": "up"
+        },
+        "map_corp_prefix": {
+            "rule": 10,
+            "lp": "450"
+        },
+        "map_off_prefix": {
+            "rule": 20,
+            "lp": "350"
+        },
+        "prefix_ttk": "172.16.50.0/30",
+        "prefix_rtk": "172.16.50.4/30"
+    }
+}

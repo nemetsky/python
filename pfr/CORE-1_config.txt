@@ -1,0 +1,516 @@
+Building configuration...
+
+Current configuration : 13396 bytes
+!
+! Last configuration change at 16:12:49 MSK Fri Oct 23 2026
+! NVRAM config last updated at 16:12:58 MSK Fri Oct 23 2026
+!
+version 15.2
+no service pad
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone year
+no service password-encryption
+!
+hostname CORE-1
+!
+boot-start-marker
+boot-end-marker
+!
+logging buffered 1000000
+!
+username cisco privilege 15 password 0 1
+username admin privilege 15 password 0 1
+username eccm privilege 15 secret 9 $9$FjRIlm/HNyYC0d$gTernDFScWwpsDIYYME3pzMDP72m1VJdh5CmX2gjEYY
+no aaa new-model
+clock timezone MSK 3 0
+switch 1 provision ws-c2960xr-48fpd-i
+system mtu routing 1500
+!
+!
+!
+!
+ip routing
+!
+!
+no ip domain-lookup
+ip domain-name cdu.so
+ip host RT-1 10.200.0.11
+ip host RT-2 10.200.0.12
+ip host RT-3 10.231.0.2
+ip host RT-4 10.232.0.2
+ip host ODU-corp 172.25.204.1
+ip host ODU-office 10.204.0.113
+no ip igmp snooping
+vtp mode transparent
+!
+!
+!
+!
+!
+!
+mls qos map cos-dscp 0 8 16 24 32 46 48 56
+mls qos srr-queue output cos-map queue 1 threshold 3 4 5
+mls qos srr-queue output cos-map queue 2 threshold 1 2
+mls qos srr-queue output cos-map queue 2 threshold 2 3
+mls qos srr-queue output cos-map queue 2 threshold 3 6 7
+mls qos srr-queue output cos-map queue 3 threshold 3 0
+mls qos srr-queue output cos-map queue 4 threshold 3 1
+mls qos srr-queue output dscp-map queue 1 threshold 3 32 34 40 46
+mls qos srr-queue output dscp-map queue 2 threshold 1 16 18 20 22 26 28 30 36
+mls qos srr-queue output dscp-map queue 2 threshold 1 38
+mls qos srr-queue output dscp-map queue 2 threshold 2 24
+mls qos srr-queue output dscp-map queue 2 threshold 3 48 56
+mls qos srr-queue output dscp-map queue 3 threshold 2 0
+mls qos srr-queue output dscp-map queue 4 threshold 1 8
+mls qos srr-queue output dscp-map queue 4 threshold 2 10 12 14
+mls qos queue-set output 1 threshold 2 80 90 100 100
+mls qos queue-set output 1 threshold 3 100 3000 100 3000
+mls qos queue-set output 1 threshold 4 100 3200 100 3200
+mls qos queue-set output 1 buffers 25 25 40 10
+mls qos
+!
+!
+archive
+ log config
+  notify syslog contenttype plaintext
+  hidekeys
+ path tftp://172.16.0.202/$h-$t
+ write-memory
+!
+spanning-tree mode mst
+spanning-tree loopguard default
+spanning-tree extend system-id
+spanning-tree pathcost method long
+!
+spanning-tree mst configuration
+ name MSTP
+ revision 1
+ instance 1 vlan 100-102
+ instance 2 vlan 300
+!
+spanning-tree mst 0-2 priority 4096
+spanning-tree vlan 99-102,200-202 priority 4096
+errdisable recovery cause udld
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause channel-misconfig
+errdisable recovery cause pagp-flap
+errdisable recovery cause dtp-flap
+errdisable recovery cause link-flap
+errdisable recovery cause sfp-config-mismatch
+errdisable recovery cause gbic-invalid
+errdisable recovery cause l2ptguard
+errdisable recovery cause psecure-violation
+errdisable recovery cause port-mode-failure
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery cause pppoe-ia-rate-limit
+errdisable recovery cause mac-limit
+errdisable recovery cause vmps
+errdisable recovery cause storm-control
+errdisable recovery cause inline-power
+errdisable recovery cause arp-inspection
+errdisable recovery cause loopback
+errdisable recovery cause small-frame
+errdisable recovery cause psp
+errdisable recovery cause loopdetect
+errdisable recovery cause mrp-miscabling
+errdisable recovery interval 30
+!
+!
+!
+!
+vlan internal allocation policy ascending
+!
+vlan 100-102,200-202 
+!
+vlan 300
+ name 300
+!
+lldp run
+!
+class-map match-all CLASS-MEDIA
+ match access-group name MEDIA
+class-map match-all CLASS-MANAGEMENT
+ match access-group name MANAGEMENT
+!
+policy-map LVS-ACCESS-IN
+ class CLASS-MEDIA
+  trust dscp
+ class CLASS-MANAGEMENT
+  set dscp cs2
+ class class-default
+  set dscp default
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 172.25.0.1 255.255.255.255
+ downshift disable
+!
+interface Loopback1
+ description -- TEST for PFR --
+ ip address 172.17.0.1 255.255.255.0
+ ip ospf network point-to-point
+ downshift disable
+!
+interface Loopback2
+ description -- TEST for PFR --
+ ip address 172.18.0.1 255.255.255.0
+ ip ospf network point-to-point
+ downshift disable
+!
+interface Loopback3
+ description -- TEST for PFR --
+ ip address 10.17.0.1 255.255.255.0
+ ip ospf network point-to-point
+ downshift disable
+!
+interface Loopback4
+ description -- TEST for PFR --
+ ip address 10.18.0.1 255.255.255.0
+ ip ospf network point-to-point
+ downshift disable
+!
+interface Port-channel1
+ switchport trunk allowed vlan 99,200-202
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+ load-interval 30
+!
+interface Port-channel3
+ switchport trunk allowed vlan 99-102,200-202,300
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+ load-interval 30
+ spanning-tree mst simulate pvst disable
+ spanning-tree mst 0-2 cost 100
+ spanning-tree cost 100
+!
+interface FastEthernet0
+ no ip address
+ no ip route-cache
+!
+interface GigabitEthernet1/0/1
+ switchport trunk allowed vlan 99-102,200-202,300
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+ load-interval 30
+ speed 1000
+ channel-group 3 mode active
+!
+interface GigabitEthernet1/0/2
+ switchport trunk allowed vlan 99-102,200-202,300
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+ load-interval 30
+ speed 1000
+ channel-group 3 mode active
+!
+interface GigabitEthernet1/0/3
+ load-interval 30
+!
+interface GigabitEthernet1/0/4
+!
+interface GigabitEthernet1/0/5
+!
+interface GigabitEthernet1/0/6
+!
+interface GigabitEthernet1/0/7
+!
+interface GigabitEthernet1/0/8
+!
+interface GigabitEthernet1/0/9
+!
+interface GigabitEthernet1/0/10
+!
+interface GigabitEthernet1/0/11
+ switchport trunk allowed vlan 99,200-202
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+ load-interval 30
+ channel-group 1 mode active
+!
+interface GigabitEthernet1/0/12
+ switchport trunk allowed vlan 99,200-202
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+ load-interval 30
+ channel-group 1 mode active
+!
+interface GigabitEthernet1/0/13
+!
+interface GigabitEthernet1/0/14
+!
+interface GigabitEthernet1/0/15
+!
+interface GigabitEthernet1/0/16
+!
+interface GigabitEthernet1/0/17
+!
+interface GigabitEthernet1/0/18
+!
+interface GigabitEthernet1/0/19
+!
+interface GigabitEthernet1/0/20
+ no switchport
+ no ip address
+!
+interface GigabitEthernet1/0/21
+ switchport trunk allowed vlan 99,101,102,201,202
+ switchport trunk native vlan 99
+ switchport mode trunk
+ switchport nonegotiate
+ load-interval 30
+!
+interface GigabitEthernet1/0/22
+!
+interface GigabitEthernet1/0/23
+!
+interface GigabitEthernet1/0/24
+!
+interface GigabitEthernet1/0/25
+!
+interface GigabitEthernet1/0/26
+!
+interface GigabitEthernet1/0/27
+!
+interface GigabitEthernet1/0/28
+!
+interface GigabitEthernet1/0/29
+!
+interface GigabitEthernet1/0/30
+!
+interface GigabitEthernet1/0/31
+!
+interface GigabitEthernet1/0/32
+!
+interface GigabitEthernet1/0/33
+!
+interface GigabitEthernet1/0/34
+!
+interface GigabitEthernet1/0/35
+!
+interface GigabitEthernet1/0/36
+!
+interface GigabitEthernet1/0/37
+!
+interface GigabitEthernet1/0/38
+!
+interface GigabitEthernet1/0/39
+!
+interface GigabitEthernet1/0/40
+!
+interface GigabitEthernet1/0/41
+!
+interface GigabitEthernet1/0/42
+!
+interface GigabitEthernet1/0/43
+!
+interface GigabitEthernet1/0/44
+!
+interface GigabitEthernet1/0/45
+!
+interface GigabitEthernet1/0/46
+ switchport access vlan 99
+!
+interface GigabitEthernet1/0/47
+!
+interface GigabitEthernet1/0/48
+!
+interface GigabitEthernet1/0/49
+!
+interface GigabitEthernet1/0/50
+!
+interface TenGigabitEthernet1/0/1
+!
+interface TenGigabitEthernet1/0/2
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan99
+ no ip address
+!
+interface Vlan100
+ ip address 10.100.0.11 255.255.255.0
+ ip ospf authentication null
+ ip ospf network point-to-point
+ ip ospf 1 area 1
+ ip ospf cost 5
+ bfd interval 600 min_rx 600 multiplier 3
+ no bfd echo
+!
+interface Vlan101
+ ip address 10.101.0.11 255.255.255.0
+ ip ospf cost 1
+ vrrp 101 ip 10.101.0.1
+ vrrp 101 preempt delay minimum 180
+ vrrp 101 priority 200
+!
+interface Vlan200
+ ip address 10.200.0.111 255.255.255.0
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 stand
+ ip ospf network broadcast
+ ip ospf 1 area 1
+ ip ospf cost 10
+ bfd interval 600 min_rx 600 multiplier 3
+!
+interface Vlan300
+ no ip address
+!
+router ospf 1
+ router-id 172.25.0.1
+ auto-cost reference-bandwidth 1000
+ nsf ietf
+ area 1 authentication
+ area 1 stub
+ timers throttle spf 10 100 5000
+ timers throttle lsa 10 100 5000
+ timers lsa arrival 80
+ passive-interface default
+ no passive-interface Vlan100
+ no passive-interface Vlan200
+ network 10.17.0.0 0.0.0.255 area 1
+ network 10.18.0.0 0.0.0.255 area 1
+ network 10.100.0.0 0.0.0.255 area 1
+ network 10.101.0.0 0.0.0.255 area 1
+ network 10.200.0.0 0.0.0.255 area 1
+ network 172.0.0.0 0.31.255.255 area 1
+ bfd all-interfaces
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+ip ssh version 2
+!
+ip access-list extended MANAGEMENT
+ remark SSH
+ permit tcp any any eq 22
+ permit tcp any eq 22 any
+ip access-list extended MEDIA
+ permit ip 10.3.1.0 0.0.0.255 any
+ permit ip 10.3.2.0 0.0.1.255 any
+ permit ip 10.3.4.0 0.0.3.255 any
+ permit ip 10.20.32.0 0.0.7.255 any
+ permit ip 172.27.1.0 0.0.0.255 any
+!
+ip sla responder
+ip sla responder udp-echo ipaddress 10.100.0.11 port 1808
+kron occurrence BACK_UP_CONFIG at 23:55 recurring
+ policy-list BACK_UP_CONFIG
+!
+kron policy-list BACK_UP_CONFIG
+ cli copy running-config startup-config
+!
+logging source-interface Loopback0
+logging host 172.16.0.210
+logging host 172.16.0.212
+access-list 61 permit 172.16.0.210
+arp 10.101.0.100 000c.2984.02a7 ARPA
+!
+!
+snmp-server community ECCMro RO 61
+snmp-server community public RO
+snmp-server community private RO
+snmp-server community CDUro RO
+snmp-server trap-source Loopback0
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps transceiver all
+snmp-server enable traps call-home message-send-fail server-fail
+snmp-server enable traps eigrp
+snmp-server enable traps tty
+snmp-server enable traps ospf state-change
+snmp-server enable traps ospf errors
+snmp-server enable traps ospf retransmit
+snmp-server enable traps ospf lsa
+snmp-server enable traps ospf cisco-specific state-change nssa-trans-change
+snmp-server enable traps ospf cisco-specific state-change shamlink interface
+snmp-server enable traps ospf cisco-specific state-change shamlink neighbor
+snmp-server enable traps ospf cisco-specific errors
+snmp-server enable traps ospf cisco-specific retransmit
+snmp-server enable traps ospf cisco-specific lsa
+snmp-server enable traps license
+snmp-server enable traps auth-framework sec-violation
+snmp-server enable traps bfd
+snmp-server enable traps cef resource-failure peer-state-change peer-fib-state-change inconsistency
+snmp-server enable traps config-copy
+snmp-server enable traps config
+snmp-server enable traps config-ctid
+snmp-server enable traps pki
+snmp-server enable traps trustsec-sxp conn-srcaddr-err msg-parse-err conn-config-err binding-err conn-up conn-down binding-expn-fail oper-nodeid-change binding-conflict
+snmp-server enable traps energywise
+snmp-server enable traps fru-ctrl
+snmp-server enable traps entity
+snmp-server enable traps event-manager
+snmp-server enable traps hsrp
+snmp-server enable traps ipmulticast
+snmp-server enable traps ike policy add
+snmp-server enable traps ike policy delete
+snmp-server enable traps ike tunnel start
+snmp-server enable traps ike tunnel stop
+snmp-server enable traps ipsec cryptomap add
+snmp-server enable traps ipsec cryptomap delete
+snmp-server enable traps ipsec cryptomap attach
+snmp-server enable traps ipsec cryptomap detach
+snmp-server enable traps ipsec tunnel start
+snmp-server enable traps ipsec tunnel stop
+snmp-server enable traps ipsec too-many-sas
+snmp-server enable traps ospfv3 state-change
+snmp-server enable traps ospfv3 errors
+snmp-server enable traps power-ethernet group 1
+snmp-server enable traps power-ethernet police
+snmp-server enable traps pim neighbor-change rp-mapping-change invalid-pim-message
+snmp-server enable traps cpu threshold
+snmp-server enable traps rep
+snmp-server enable traps bridge newroot topologychange
+snmp-server enable traps stpx inconsistency root-inconsistency loop-inconsistency
+snmp-server enable traps syslog
+snmp-server enable traps vtp
+snmp-server enable traps vlancreate
+snmp-server enable traps vlandelete
+snmp-server enable traps flash insertion removal
+snmp-server enable traps port-security
+snmp-server enable traps envmon fan shutdown supply temperature status
+snmp-server enable traps stackwise
+snmp-server enable traps errdisable
+snmp-server enable traps mac-notification change move threshold
+snmp-server enable traps vlan-membership
+snmp-server host 172.16.0.210 version 2c ECCMro 
+snmp mib flash cache
+!
+line con 0
+line vty 0 4
+ login local
+ length 0
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+!
+monitor session 1 source interface Po1
+monitor session 1 destination interface Gi1/0/46 encapsulation replicate
+ntp server 172.16.0.202
+ntp server 10.101.0.202
+no mac address-table learning vlan 102,222 
+mac address-table static 1010.1000.0006 vlan 100 interface GigabitEthernet1/0/4 
+mac address-table static 1010.1000.0005 vlan 200 interface GigabitEthernet1/0/3 
+!
+end

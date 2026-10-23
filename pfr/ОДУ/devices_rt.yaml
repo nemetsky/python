@@ -1,0 +1,6 @@
+- host: RT-3
+  device_type: eltex_esr
+  username: sshkey
+  #password: password
+  use_keys: true
+  key_file: /home/administrator/.ssh/id_rsa

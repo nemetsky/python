@@ -1,0 +1,377 @@
+
+spanning-tree mode mst
+spanning-tree loopback-guard
+spanning-tree priority 16384
+!
+spanning-tree mst configuration
+ instance 1 vlan 100-102
+ instance 2 vlan 300
+ name MSTP
+ revision 1
+exit
+!
+bridge multicast filtering
+!
+vlan database
+ vlan 99,201,204,222,300,701-703,801
+exit
+!
+port-channel load-balance src-dst-mac-ip-port
+port jumbo-frame
+!
+lldp chassis-id host-name
+!
+errdisable recovery interval 30
+errdisable recovery cause loopback-detection
+errdisable recovery cause port-security
+errdisable recovery cause dot1x-src-address
+errdisable recovery cause acl-deny
+errdisable recovery cause stp-bpdu-guard
+errdisable recovery cause stp-loopback-guard
+errdisable recovery cause udld
+errdisable recovery cause storm-control
+errdisable recovery cause l2pt-guard
+errdisable recovery cause vpc
+!
+ip igmp snooping
+ip igmp snooping vlan 222
+ip igmp snooping vlan 701
+ip igmp snooping vlan 702
+ip igmp snooping vlan 703
+ip igmp snooping vlan 801
+!
+no boot host auto-config
+no boot host auto-update
+!
+qos advanced-mode trust dscp
+qos map enable dscp-cos
+qos map dscp-cos 24 to 3
+qos map dscp-cos 34 to 4
+qos map dscp-cos 46 to 5
+qos map dscp-queue 9 to 1
+qos map dscp-queue 10 to 2
+qos map dscp-queue 11 to 1
+qos map dscp-queue 12 to 1
+qos map dscp-queue 13 to 1
+qos map dscp-queue 14 to 1
+qos map dscp-queue 15 to 1
+qos map dscp-queue 17 to 1
+qos map dscp-queue 18 to 3
+qos map dscp-queue 19 to 1
+qos map dscp-queue 20 to 1
+qos map dscp-queue 21 to 1
+qos map dscp-queue 22 to 1
+qos map dscp-queue 23 to 1
+qos map dscp-queue 24 to 5
+qos map dscp-queue 25 to 1
+qos map dscp-queue 26 to 4
+qos map dscp-queue 27 to 1
+qos map dscp-queue 28 to 1
+qos map dscp-queue 29 to 1
+qos map dscp-queue 30 to 1
+qos map dscp-queue 31 to 1
+qos map dscp-queue 32 to 1
+qos map dscp-queue 33 to 1
+qos map dscp-queue 35 to 1
+qos map dscp-queue 36 to 1
+qos map dscp-queue 37 to 1
+qos map dscp-queue 38 to 1
+qos map dscp-queue 39 to 1
+qos map dscp-queue 40 to 1
+qos map dscp-queue 41 to 1
+qos map dscp-queue 42 to 1
+qos map dscp-queue 43 to 1
+qos map dscp-queue 44 to 1
+qos map dscp-queue 45 to 1
+qos map dscp-queue 46 to 7
+qos map dscp-queue 47 to 1
+qos map dscp-queue 48 to 5
+qos map dscp-queue 49 to 1
+qos map dscp-queue 50 to 1
+qos map dscp-queue 51 to 1
+qos map dscp-queue 52 to 1
+qos map dscp-queue 53 to 1
+qos map dscp-queue 54 to 1
+qos map dscp-queue 55 to 1
+qos map dscp-queue 56 to 1
+qos map dscp-queue 57 to 1
+qos map dscp-queue 58 to 1
+qos map dscp-queue 59 to 1
+qos map dscp-queue 60 to 1
+qos map dscp-queue 61 to 1
+qos map dscp-queue 62 to 1
+qos map dscp-queue 63 to 1
+!
+priority-queue out num-of-queues 3
+!
+hostname ACCESS-MSS-1
+!
+logging host 172.16.0.202 facility local4 description SYSLOG1
+logging origin-id hostname
+no logging console
+logging file informational
+logging events spanning-tree topology-change
+!
+aaa authentication mode break
+aaa authentication login authorization default local
+aaa authentication enable authorization default none
+!
+line console
+ exec-timeout 120
+ history size 100
+exit
+!
+line ssh
+ history size 100
+ exec-timeout 120
+exit
+!
+enable password level 15 encrypted 356a192b7913b04c54574d18c28d46e6395428ab
+!
+username eccm password encrypted a0ff40a35fafc5ad2ba746d3645369d70eeab934 privilege 15
+username admin password encrypted 356a192b7913b04c54574d18c28d46e6395428ab privilege 15
+!
+ip ssh server
+!
+snmp-server server
+snmp-server location STAND
+snmp-server contact MEDVED
+encrypted snmp-server community /KXuhhx3v5pnzs1eopMs9v30BgUrlNHWR0egxj1k+r4= ro 172.16.0.212 view Default
+encrypted snmp-server community fKk1a5usMr4/7xOlMHXzaBxO0bnTUkc6QGck2dyveq4= ro 172.16.0.210 view Default
+encrypted snmp-server community qFiDC/J5H872AchiufYPZN8DRuLwUa5Mh4avgWaNg/M= ro view Default
+encrypted snmp-server community qFiDC/J5H872AchiufYPZN8DRuLwUa5Mh4avgWaNg/M= ro 172.16.0.103 view Default
+encrypted snmp-server community qFiDC/J5H872AchiufYPZN8DRuLwUa5Mh4avgWaNg/M= ro 172.16.0.202 view Default
+encrypted snmp-server community q7af8Spac7+O1yZob3/e4r265aNbWAxO56i5a2x4Kj8= ro view Default
+encrypted snmp-server host 172.16.0.202 traps version 2c qFiDC/J5H872AchiufYPZN8DRuLwUa5Mh4avgWaNg/M=
+encrypted snmp-server host 172.16.0.210 traps version 2c fKk1a5usMr4/7xOlMHXzaBxO0bnTUkc6QGck2dyveq4=
+snmp-server enable traps mac-notification change
+snmp-server enable traps ospf
+no snmp-server enable traps erps
+snmp-server enable traps storage notification
+snmp-server enable traps storage recovery-notification
+snmp-server enable traps cpu notification
+snmp-server enable traps cpu recovery-notification
+snmp-server enable traps memory notification
+snmp-server enable traps memory recovery-notification
+snmp-server enable traps sensor notification
+snmp-server enable traps sensor recovery-notification
+!
+no ip http server
+no ip http secure-server
+!
+clock timezone MSK +3
+clock source ntp
+!
+sntp client poll timer 60
+sntp unicast client enable
+sntp unicast client poll
+sntp server 172.16.0.202 poll
+ntp server 172.16.0.202
+!
+ip domain name cdu.so
+ip name-server  172.16.0.201
+ip host rt-1 10.231.0.1
+ip host rt-2 10.232.0.1
+ip host rt-3 10.204.0.13
+ip host rt-4 10.204.0.14
+ip host core-1 10.200.0.111
+ip host rdu-1-corp 172.17.0.1
+ip host rdu-2-corp 172.18.0.1
+ip host rdu-1-office 10.17.0.1
+ip host rdu-2-office 10.18.0.1
+!
+cpu threshold index 1 5min greater-than 30 flap-interval 35 severity warning
+cpu threshold index 2 5min greater-than 40 flap-interval 45 severity crit
+cpu threshold index 3 5min greater-than 50 flap-interval 55
+!
+no ip telnet server
+!
+backup server tftp://172.16.0.202
+backup path /ACCESS-MSS-1.txt
+backup time-period 1440
+backup write-memory
+backup auto
+!
+interface TenGigabitEthernet1/0/1
+ speed 1000
+ description "=== ESXI-1 eth0/5 ===="
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ switchport mode trunk
+ switchport trunk native vlan 300
+ switchport trunk allowed vlan all
+ load-average 30
+exit
+!
+interface TenGigabitEthernet1/0/2
+ speed 1000
+ description "=== ESXI-2 eth1 ===="
+ spanning-tree bpduguard enable
+ switchport mode trunk
+ switchport trunk native vlan 300
+ switchport trunk allowed vlan all
+exit
+!
+interface TenGigabitEthernet1/0/4
+ speed 1000
+ description DST-SW-1
+ no spanning-tree portfast
+ switchport mode trunk
+ switchport trunk allowed vlan add 201,204,300
+ switchport trunk native vlan 99
+ lldp optional-tlv port-desc sys-name sys-desc sys-cap
+ load-average 30
+exit
+!
+interface TenGigabitEthernet1/0/5
+ speed 1000
+ description DST-SW-2
+ channel-group 11 mode auto
+ switchport mode trunk
+ lldp optional-tlv port-desc sys-name sys-desc sys-cap
+ load-average 30
+exit
+!
+interface TenGigabitEthernet1/0/6
+ speed 1000
+ description DST-SW-2
+ channel-group 11 mode auto
+ switchport mode trunk
+ lldp optional-tlv port-desc sys-name sys-desc sys-cap
+ load-average 30
+exit
+!
+interface TenGigabitEthernet1/0/8
+ speed 1000
+ description ESXI-0/7-VMs-MSS
+ mtu 9000
+ switchport mode trunk
+ switchport trunk allowed vlan add 222,701-703,801
+ lldp optional-tlv port-desc sys-name sys-desc sys-cap
+ load-average 30
+exit
+!
+interface TenGigabitEthernet1/0/10
+ speed 1000
+exit
+!
+interface TenGigabitEthernet1/0/21
+ description ESI-LAG-LEAF-3
+ mtu 9000
+ channel-group 22 mode auto
+ switchport mode trunk
+ lldp optional-tlv port-desc sys-name sys-desc sys-cap
+ load-average 30
+exit
+!
+interface TenGigabitEthernet1/0/22
+ description ESI-LAG-LEAF-4
+ mtu 9000
+ channel-group 22 mode auto
+ switchport mode trunk
+ lldp optional-tlv port-desc sys-name sys-desc sys-cap
+ load-average 30
+exit
+!
+interface TenGigabitEthernet1/0/29
+ speed 1000
+ description STAND-NB
+ spanning-tree portfast
+ switchport access vlan 300
+exit
+!
+interface TenGigabitEthernet1/0/30
+ speed 1000
+ description SPAN
+exit
+!
+interface TenGigabitEthernet1/0/31
+ speed 1000
+exit
+!
+interface Port-Channel11
+ description DST-SW-2
+ spanning-tree cost 100
+ spanning-tree mst 1 cost 100
+ spanning-tree mst 2 cost 100
+ switchport mode trunk
+ switchport trunk allowed vlan add 201,204,300
+ switchport trunk native vlan 99
+ load-average 30
+ spanning-tree vlan 201,300 cost 100
+exit
+!
+interface Port-Channel22
+ description ESI-LAG-LEAF-3-4
+ switchport mode trunk
+ switchport trunk allowed vlan add 222,701-703,801
+ switchport trunk native vlan 99
+ load-average 30
+exit
+!
+interface vlan 1
+ no ip address dhcp
+ shutdown
+exit
+!
+interface vlan 99
+ name NATIVE
+exit
+!
+interface vlan 204
+ name Test_Interconnect_Eltex_RT
+ ip address 10.204.0.113 255.255.255.0
+ mtu 1500
+exit
+!
+interface vlan 222
+ name EVPN-222
+exit
+!
+interface vlan 300
+ name MSS
+ ip address 172.16.0.113 255.255.255.0
+exit
+!
+interface vlan 701
+ name EVPN-701
+exit
+!
+interface vlan 702
+ name EVPN-702
+exit
+!
+interface vlan 703
+ name EVPN-703
+exit
+!
+interface vlan 801
+ name EVPN-801
+exit
+!
+interface loopback1
+ ip address 172.25.204.1 255.255.255.255
+exit
+!
+!
+monitor session 1 destination interface TenGigabitEthernet1/0/30
+monitor session 1 source interface TenGigabitEthernet1/0/21 both
+monitor session 1 source interface TenGigabitEthernet1/0/22 both
+!
+mac address-table static 10:10:10:00:00:00 vlan 201 interface TenGigabitEthernet1/0/10
+!
+ip default-gateway 172.16.0.1
+!
+router ospf 1
+ network 10.204.0.113 area 0.0.0.0
+ network 172.25.204.1 area 0.0.0.0
+ router-id 172.25.204.1
+ passive-interface
+exit
+!
+interface ip 10.204.0.113
+ no ip ospf passive-interface
+exit
+!
+!
+end

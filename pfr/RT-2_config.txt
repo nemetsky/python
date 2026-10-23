@@ -1,0 +1,533 @@
+Building configuration...
+
+Current configuration : 13024 bytes
+!
+! Last configuration change at 18:40:03 MSK Fri Oct 16 2026 by admin
+!
+version 16.3
+service timestamps debug datetime msec localtime show-timezone
+service timestamps log datetime msec localtime show-timezone year
+service internal
+service sequence-numbers
+service counters max age 5
+service unsupported-transceiver
+no platform punt-keepalive disable-kernel-core
+!
+hostname RT-2
+!
+boot-start-marker
+boot system bootflash:asr1001x-universalk9_npe.16.03.06.SPA.bin
+boot-end-marker
+!
+!
+vrf definition Mgmt-intf
+ !
+ address-family ipv4
+ exit-address-family
+ !
+ address-family ipv6
+ exit-address-family
+!
+vrf definition VRF
+ rd 1:1
+ !
+ address-family ipv4
+ exit-address-family
+!
+logging userinfo
+logging buffered 512000 informational
+logging persistent url flash:/syslog size 4048000 filesize 512000
+!
+aaa new-model
+!
+!
+aaa authentication login default group tacacs+ local
+aaa authentication enable default group tacacs+ none
+aaa authorization exec default group tacacs+ local if-authenticated 
+aaa authorization commands 15 default group tacacs+ local if-authenticated 
+aaa accounting exec default stop-only group tacacs+
+aaa accounting commands 15 default stop-only group tacacs+
+!
+!
+!
+!
+!
+!
+aaa session-id common
+clock timezone MSK 3 0
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ip domain name cdu.so
+ip multicast-routing distributed
+ip cef load-sharing algorithm original
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+subscriber templating
+!
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+license udi pid ASR1001-X sn JAE24370K9W
+license boot level adventerprise
+archive
+ path tftp://192.168.1.202/$h-$t
+ write-memory
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+diagnostic bootup level minimal
+!
+username cisco privilege 15 password 7 0055
+username admin privilege 15 password 0 1
+username eccm privilege 15 secret 5 $1$uaUN$yk8w.7SNPPqPC4OV5CQVK0
+!
+redundancy
+ mode sso
+ main-cpu
+  standby initialization delay 30
+bfd-template single-hop SH
+ interval min-tx 150 min-rx 150 multiplier 3
+!
+!
+!
+!
+track 30 ip sla 55
+!
+track 55 ip sla 55 reachability
+!
+lldp run
+!
+class-map match-any CLASS_CRITICAL
+ match dscp af31  af41 
+class-map match-any CLASS_REALTIME
+ match dscp ef 
+!
+policy-map QOS_OUT
+ class CLASS_REALTIME
+  priority percent 24
+ class CLASS_CRITICAL
+  bandwidth percent 30 
+ class class-default
+  bandwidth percent 46 
+  random-detect dscp-based
+  random-detect dscp 8 10 20 7
+  set dscp default
+policy-map QOS_OUT_SHAPE_160M
+ class class-default
+  shape average 160000000   
+   service-policy QOS_OUT
+!
+!
+!
+!
+!
+! 
+! 
+! 
+! 
+! 
+! 
+!
+!
+interface Null0
+ no ip unreachables
+!
+interface Loopback0
+ description === Main Loopback  ===
+ ip address 172.25.0.12 255.255.255.255
+  no clns route-cache
+!
+interface Loopback1
+ description === TEST for BGP  ===
+ ip address 172.17.100.5 255.255.255.252
+!
+interface Loopback2
+ description === TEST for BGP  ===
+ ip address 172.18.100.5 255.255.255.252
+!
+interface Port-channel1
+ dampening
+ no ip address
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ load-interval 30
+ carrier-delay msec 0
+ no negotiation auto
+!
+interface Port-channel1.200
+ description === VLAN 200 INSIDE ===
+ encapsulation dot1Q 200
+ ip address 10.200.0.12 255.255.255.0
+ no ip redirects
+ no ip proxy-arp
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 stand
+ ip ospf network broadcast
+ ip ospf cost 10
+ bfd interval 750 min_rx 750 multiplier 3
+!
+interface Port-channel1.202
+ description === VLAN 202 MSS ===
+ encapsulation dot1Q 202
+ ip address 172.202.0.1 255.255.255.0 secondary
+ ip address 172.202.0.12 255.255.255.0
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+!
+interface Port-channel1.300
+ description === VLAN 300 MSS MAIN ===
+ encapsulation dot1Q 300
+ ip address 172.16.0.12 255.255.255.0
+ no ip redirects
+ ip nat outside
+ standby 30 ip 172.16.0.1
+ standby 30 ip 172.16.0.2 secondary
+ standby 30 priority 250
+ standby 30 preempt
+ ip ospf network broadcast
+ ip ospf cost 10
+ bfd interval 750 min_rx 750 multiplier 3
+!
+interface TenGigabitEthernet0/0/0
+ no ip address
+ load-interval 30
+!
+interface TenGigabitEthernet0/0/0.50
+!
+interface TenGigabitEthernet0/0/0.70
+ encapsulation dot1Q 700
+ ip address 70.3.0.12 255.255.255.0
+ bfd interval 150 min_rx 150 multiplier 3
+!
+interface TenGigabitEthernet0/0/0.80
+ encapsulation dot1Q 800
+ ip address 80.3.0.12 255.255.255.0
+ bfd interval 150 min_rx 150 multiplier 3
+!
+interface TenGigabitEthernet0/0/1
+ no ip address
+ load-interval 30
+!
+interface TenGigabitEthernet0/0/1.50
+!
+interface TenGigabitEthernet0/0/1.70
+ encapsulation dot1Q 700
+ ip address 70.4.0.12 255.255.255.0
+ bfd interval 150 min_rx 150 multiplier 3
+!
+interface TenGigabitEthernet0/0/1.80
+ encapsulation dot1Q 800
+ ip address 80.4.0.12 255.255.255.0
+ bfd interval 150 min_rx 150 multiplier 3
+!
+interface GigabitEthernet0/0/0
+ no ip address
+ negotiation auto
+ channel-group 1 mode active
+!
+interface GigabitEthernet0/0/1
+ no ip address
+ negotiation auto
+ channel-group 1 mode active
+!
+interface GigabitEthernet0/0/2
+ no ip address
+ negotiation auto
+!
+interface GigabitEthernet0/0/3
+ description EBGP-INTERCONNECT
+ ip address 1.0.0.12 255.255.255.0
+ load-interval 30
+ negotiation auto
+!
+interface GigabitEthernet0/0/4
+ description -- RT-4 [Gi1/0/1] --
+ ip address 10.232.0.1 255.255.255.252
+ negotiation auto
+!
+interface GigabitEthernet0/0/5
+ description -- to STerra-2 --
+ ip address 10.223.0.1 255.255.255.252
+ ip nat inside
+ negotiation auto
+!
+interface GigabitEthernet0
+ vrf forwarding Mgmt-intf
+ ip address 192.168.1.22 255.255.255.0
+ negotiation auto
+!
+router ospf 1
+ router-id 172.25.0.12
+ nsf ietf
+ area 1 stub
+ timers throttle spf 10 100 5000
+ timers throttle lsa 10 100 5000
+ timers lsa arrival 80
+ redistribute bgp 65001 subnets
+ passive-interface default
+ no passive-interface Port-channel1.200
+ no passive-interface Port-channel1.300
+ network 10.200.0.0 0.0.0.255 area 1
+ network 172.0.0.0 0.31.255.255 area 0
+ network 172.0.0.0 0.255.255.255 area 0
+ default-information originate always
+!
+router bgp 65001
+ bgp router-id 172.25.0.12
+ bgp log-neighbor-changes
+ bgp scan-time 5
+ network 10.17.0.0 mask 255.255.255.0 route-map OffPrefix_BGP_Attr
+ network 10.18.0.0 mask 255.255.255.0 route-map OffPrefix_BGP_Attr
+ network 172.17.0.0 mask 255.255.255.0 route-map CorpPrefix_BGP_Attr
+ network 172.17.100.4 mask 255.255.255.252
+ network 172.18.0.0 mask 255.255.255.0 route-map CorpPrefix_BGP_Attr
+ network 172.18.100.4 mask 255.255.255.252
+ timers bgp 1 3
+ neighbor 10.232.0.2 remote-as 65002
+ neighbor 10.232.0.2 description RT-3
+ neighbor 10.232.0.2 timers 7 21
+ neighbor 10.232.0.2 send-community both
+ neighbor 10.232.0.2 route-map IMPORT-EBGP in
+ neighbor 10.232.0.2 route-map EXPORT-EBGP out
+ neighbor 10.232.0.2 advertise-map ADVERTISE-MAP exist-map CONDITION-MAP
+ neighbor 172.25.0.11 remote-as 65001
+ neighbor 172.25.0.11 description RT-2
+ neighbor 172.25.0.11 update-source Loopback0
+ neighbor 172.25.0.11 next-hop-self all
+ neighbor 172.25.0.11 send-community both
+!
+ip forward-protocol nd
+!
+ip bgp-community new-format
+ip community-list standard CorpPrefix permit 65000:3
+ip community-list standard OffPrefix permit 65000:4
+no ip http server
+no ip http secure-server
+ip tftp source-interface GigabitEthernet0
+ip route 0.0.0.0 0.0.0.0 Null0
+ip route 10.222.0.0 255.255.255.252 172.16.0.11 name S-Terra-1
+ip route 172.30.1.0 255.255.255.255 172.16.0.11 name S-Terra-1
+ip ssh logging events
+ip ssh version 2
+!
+!
+!
+ip prefix-list CONDITION-RDU_1 seq 5 permit 172.17.100.4/30
+!
+ip prefix-list CONDITION-RDU_2 seq 5 permit 172.18.100.4/30
+!
+ip prefix-list PREFIX-TO-EBGP-RDU_1 seq 10 permit 172.17.0.0/24
+ip prefix-list PREFIX-TO-EBGP-RDU_1 seq 20 permit 10.17.0.0/24
+!
+ip prefix-list PREFIX-TO-EBGP-RDU_2 seq 10 permit 172.18.0.0/24
+ip prefix-list PREFIX-TO-EBGP-RDU_2 seq 20 permit 10.18.0.0/24
+!
+ip prefix-list PREFIX-TO-EBGP-RDU_TRANSPORT seq 10 permit 172.17.100.4/30
+ip prefix-list PREFIX-TO-EBGP-RDU_TRANSPORT seq 20 permit 172.18.100.4/30
+ip sla responder
+ip sla responder udp-echo ipaddress 10.200.0.12 port 1809
+ip sla 10
+ icmp-echo 3.3.3.3
+ frequency 40
+ip sla 55
+ icmp-echo 10.223.0.2 source-ip 10.223.0.1
+ frequency 30
+ip sla schedule 55 life forever start-time now
+ip sla 111
+ icmp-echo 1.1.1.1
+ip sla 112
+ udp-jitter 2.2.2.2 1001 codec g729a
+ip sla 113
+ udp-jitter 1.1.1.1 22 codec g729a codec-numpackets 250 codec-size 20
+ip sla reaction-configuration 55 react timeout threshold-type xOfy 3 5 action-type trapOnly
+ip sla reaction-configuration 112 react jitterAvg
+ip sla reaction-configuration 112 react timeout threshold-type xOfy 3 5 action-type trapOnly
+ip sla group schedule 1 10 schedule-period 20 frequency 40 start-time pending
+logging history errors
+logging trap debugging
+logging origin-id hostname
+logging facility local4
+logging source-interface Loopback0
+logging host 172.16.0.202
+logging host 172.16.0.212
+logging host 172.16.0.222
+arp 172.202.0.100 000c.295c.b59f ARPA
+!
+!
+route-map OffPrefix_BGP_Attr permit 10
+ set community 65000:4
+!
+route-map IMPORT-EBGP permit 10
+ match community CorpPrefix
+ set local-preference 350
+!
+route-map IMPORT-EBGP permit 20
+ match community OffPrefix
+ set local-preference 450
+!
+route-map IMPORT-EBGP permit 100
+ set local-preference 50
+!
+route-map CONDITION-MAP permit 10
+ match ip address prefix-list CONDITION-RDU_1
+!
+route-map EXPORT-EBGP permit 10
+ match ip address prefix-list PREFIX-TO-EBGP-RDU_1
+ set as-path prepend 65017
+!
+route-map EXPORT-EBGP permit 20
+ match ip address prefix-list PREFIX-TO-EBGP-RDU_2
+ set as-path prepend 65018
+!
+route-map EXPORT-EBGP permit 30
+ match ip address prefix-list PREFIX-TO-EBGP-RDU_TRANSPORT
+!
+route-map EXPORT-EBGP deny 100
+!
+route-map ADVERTISE-MAP permit 10
+ match ip address prefix-list PREFIX-TO-EBGP-RDU_1
+ set as-path prepend 65017
+!
+route-map BGP-TO-OSPF1 deny 10
+ match route-type local
+!
+route-map BGP-TO-OSPF1 deny 20
+ match route-type internal
+!
+route-map BGP-TO-OSPF1 permit 30
+ match community OffPrefix
+!
+route-map BGP-TO-OSPF1 permit 40
+ match community CorpPrefix
+!
+route-map CorpPrefix_BGP_Attr permit 10
+ set community 65000:3
+!
+snmp-server community public RO
+snmp-server community private RW
+snmp-server community ECCMro RO 61
+snmp-server trap-source Loopback0
+snmp-server enable traps snmp authentication linkdown linkup coldstart warmstart
+snmp-server enable traps ds1
+snmp-server enable traps call-home message-send-fail server-fail
+snmp-server enable traps tty
+snmp-server enable traps eigrp
+snmp-server enable traps ospf state-change
+snmp-server enable traps ospf errors
+snmp-server enable traps ospf cisco-specific state-change nssa-trans-change
+snmp-server enable traps ospf cisco-specific state-change shamlink interface-old
+snmp-server enable traps ospf cisco-specific state-change shamlink neighbor
+snmp-server enable traps ospf cisco-specific errors
+snmp-server enable traps casa
+snmp-server enable traps atm subif
+snmp-server enable traps bgp
+snmp-server enable traps memory bufferpeak
+snmp-server enable traps config-copy
+snmp-server enable traps config
+snmp-server enable traps config-ctid
+snmp-server enable traps dhcp
+snmp-server enable traps fru-ctrl
+snmp-server enable traps entity
+snmp-server enable traps event-manager
+snmp-server enable traps frame-relay multilink bundle-mismatch
+snmp-server enable traps frame-relay
+snmp-server enable traps frame-relay subif
+snmp-server enable traps hsrp
+snmp-server enable traps ipmulticast
+snmp-server enable traps msdp
+snmp-server enable traps pim neighbor-change rp-mapping-change invalid-pim-message
+snmp-server enable traps pppoe
+snmp-server enable traps cpu threshold
+snmp-server enable traps rsvp
+snmp-server enable traps ipsla
+snmp-server enable traps syslog
+snmp-server enable traps ethernet cfm cc mep-up mep-down cross-connect loop config
+snmp-server enable traps ethernet cfm crosscheck mep-missing mep-unknown service-up
+snmp-server enable traps flash insertion removal
+snmp-server enable traps cef resource-failure peer-state-change peer-fib-state-change inconsistency
+snmp-server enable traps sonet
+snmp-server enable traps resource-policy
+snmp-server enable traps isis
+snmp-server enable traps bulkstat collection transfer
+snmp-server enable traps alarms informational
+snmp-server enable traps rf
+snmp-server enable traps transceiver all
+snmp-server host 172.16.0.210 version 2c ECCMro 
+snmp-server host 172.16.0.202 version 2c public 
+snmp ifmib ifindex persist
+!
+tacacs-server timeout 1
+tacacs-server administration
+tacacs server TACACS
+ address ipv4 172.16.0.204
+ key 1
+ timeout 1
+!
+!
+!
+control-plane
+!
+ !
+ !
+ !
+ !
+!
+!
+!
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ privilege level 15
+!
+ntp server 172.16.0.202
+wsma agent exec
+!
+wsma agent config
+!
+wsma agent filesys
+!
+wsma agent notify
+!
+event manager applet BGP-RTK-RDU1-UP
+ event syslog pattern "Line protocol on Interface Loopback1, changed state to up"
+ action 1.0 syslog msg "RDU-1 rtk good"
+event manager applet BGP-RTK-RDU1-DOWN
+ event syslog pattern "Line protocol on Interface Loopback1, changed state to down"
+ action 1.0 syslog msg "RDU-1 rtk bad"
+!
+end
