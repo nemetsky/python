@@ -68,8 +68,8 @@ def main_cisco(session):
                 parent_index = parent_dict[current_index]
                 current_index = parent_index
                 if parent_index in sw_index_unit_dict:                                              # если родительский индекс есть в нашем вспомогательном словаре 1, мы нашли родительское шасси и выходим из цикла
-                     unit = sw_index_unit_dict[current_index]                                       # определяем номер юнита шасси
-                     break
+                    unit = sw_index_unit_dict[current_index]                                        # определяем номер юнита шасси
+                    break
             result_dict[unit].append([type_options[type[1]], pid[1].strip(), sn[1].strip()])        # добавляем в основной словарь к нашему шасси опцию (БП, модуль, трансивер и т.п.)
     return result_dict
 
@@ -81,6 +81,7 @@ def main_sw_eltex(session):
     number_unit_object = session.walk('1.3.6.1.2.1.47.1.1.1.1.6')
     sn_module_object = session.walk('1.3.6.1.2.1.47.1.1.1.1.11')
     pid_module_object = session.walk('1.3.6.1.2.1.47.1.1.1.1.13')
+    fru_tag_object = session.walk('1.3.6.1.2.1.47.1.1.1.1.16')
     sfp_pid_object = session.walk('1.3.6.1.4.1.35265.1.23.53.1.1.1.10')
     sfp_sn_object = session.walk('1.3.6.1.4.1.35265.1.23.53.1.1.1.6')
     ports_unit_object = session.walk('1.3.6.1.4.1.89.53.3.1.5')
@@ -90,6 +91,7 @@ def main_sw_eltex(session):
     list_number_unit = get_list(number_unit_object)
     list_sn_module = get_list(sn_module_object)
     list_pid_module = get_list(pid_module_object)
+    list_fru_tag = get_list(fru_tag_object)
     list_sfp_pid = get_list(sfp_pid_object)
     list_sfp_sn = get_list(sfp_sn_object)
     list_ports_unit = get_list(ports_unit_object)
@@ -102,8 +104,8 @@ def main_sw_eltex(session):
             result_dict[unit[1]] = [[type_options[type[1]], pid[1].strip(), sn[1].strip()]]     # добавялем в итоговый словарь шасси
             parent_dict[type[0]] = unit[1]                                      # сразу формируем вспомогательный словарь
 
-    for type, pid, sn, parent in zip(list_type_module, list_pid_module, list_sn_module, list_index_parent):
-        if type[1] == '6' and pid[1] != '':
+    for type, pid, sn, parent, fru in zip(list_type_module, list_pid_module, list_sn_module, list_index_parent, list_fru_tag):
+        if type[1] == '6' and pid[1] != '' and fru[1] == '1':
             parent_index = parent[1]
             unit = parent_dict[parent_index]
             result_dict[unit].append([type_options[type[1]], pid[1].strip(), sn[1].strip()])    # добавляем в итоговый словарь БП
@@ -150,18 +152,18 @@ def main_rt_eltex(session):
 
     for type, unit, pid, sn in zip(list_type_module, list_number_unit, list_pid_module, list_sn_module):
         if type[1] == '3' and pid[1] != '':
-            result_dict[unit[1]] = [type_options[type[1]], [pid[1].strip(), sn[1].strip()]]     # добавялем в итоговый словарь шасси
-            parent_dict[type[0]] = unit[1]               # сразу формируем вспомогательный словарь
+            result_dict[unit[1]] = [[type_options[type[1]], pid[1].strip(), sn[1].strip()]]     # добавялем в итоговый словарь шасси
+            parent_dict[type[0]] = unit[1]                                                    # сразу формируем вспомогательный словарь
 
     for type, pid, sn, parent in zip(list_type_module, list_pid_module, list_sn_module, list_index_parent):
         if type[1] != '3' and pid[1] != '':
             parent_index = parent[1]
             unit = parent_dict[parent_index]
-            result_dict[unit].append(type_options[type[1]], [pid[1].strip(), sn[1].strip()])    # добавляем в итоговый словарь модуль
+            result_dict[unit].append([type_options[type[1]], pid[1].strip(), sn[1].strip()])  # добавляем в итоговый словарь модуль
 
     for pid, sn in zip(list_sfp_pid, list_sfp_sn):
         if 'OID' not in pid[1]:
-            result_dict['1'].append(type_options['10'], [pid[1].strip(), sn[1].strip()])     # !!! НОДО ДОПИЛИТЬ СКРИПТ, чтобы номер юнита похорошему вычислялся, вдруг это кластер маршрутизаторов будет
+            result_dict['1'].append([type_options['10'], pid[1].strip(), sn[1].strip()])     # !!! НОДО ДОПИЛИТЬ СКРИПТ, чтобы номер юнита похорошему вычислялся, вдруг это кластер маршрутизаторов будет
                                                                                              # т.е. как с коммутаторами надо найти ветку где номер порта сопоставляется с номером юнита
     return result_dict
 
@@ -176,18 +178,18 @@ def verify_sn_and_select(result_dict, serial):
 
 def check_dns(ip, fqdn):
     try:
-        record_a = subprocess.run(['dig', fqdn, '+short'], stdout=subprocess.PIPE, encoding="utf=8")
-        #record_a = subprocess.run(['dig', fqdn, '+short'], capture_output=True, text=True, check=True)       # Можно так, тоже самое
+        record_a = subprocess.run(['dig', fqdn, '+short'], stdout=subprocess.PIPE, encoding="utf=8", check=True) # check=True -> если dig выполнился с ошибкой, то сработает исключение
+        #record_a = subprocess.run(['dig', fqdn, '+short'], capture_output=True, text=True, check=True)           # Можно так, тоже самое
         ip_in_dns = record_a.stdout.rstrip('\n')
-        record_rtp = subprocess.run(['dig', '-x', ip, '+short'], stdout=subprocess.PIPE, encoding="utf=8")
+        record_rtp = subprocess.run(['dig', '-x', ip, '+short'], stdout=subprocess.PIPE, encoding="utf=8", check=True)
         fqdn_in_dns = record_rtp.stdout.rstrip('.\n')
-        #check_a = True if ip = ip_in_dns else False:                                                         # Можно так
+        #check_a = True if ip = ip_in_dns else False:                                                                # Можно так
         #check_a = (ip == ip_in_dns)
         error1 = error2 = ''
         if ip_in_dns == '':
             logger.error(error1 := 'Отсутствует запись DNS для %s в прямой зоне. ' %fqdn)
             check_a = True
-        elif check_a := (ip != ip_in_dns):                                                                   # используем маржовый оператор
+        elif check_a := (ip != ip_in_dns):                                               #  используем маржовый оператор :=, полюбому присвоит переменной check_a значение исходя из проверки условий
             logger.error(error1 := 'Запись DNS для %s не совпадает в прямой зоне (%s != %s). ' %(fqdn, ip, ip_in_dns))
         if fqdn_in_dns == '':
             logger.error(error2 := 'Отсутствует запись DNS для %s в обратной зоне.'  %ip)
@@ -198,9 +200,13 @@ def check_dns(ip, fqdn):
             return True
         else:
             return error1 + error2
+    # except FileNotFoundError:
+    #    logger.error('Утилита dig не найдена')
+    # except subprocess.CalledProcessError as e:
+    #    logger.error(f'Ошибка выполнения команды dig: {e}. Детали ошибки: {e.stderr}')
     except Exception as e:
         logger.error(f"Произошла ошибка при проверке DNS-записи: {e}")
-        return f"Произошла ошибка DNS"
+        return f"Произошла ошибка пр проверки DNS"
 
 def main(ip):
     vendors = {
@@ -226,6 +232,7 @@ def main(ip):
         logger.error(error := "Устройство %s недоступно по SNMP" %ip)
         return error
     except Exception as Error:
+        #traceback.print_exc()
         line_num = sys.exc_info()[2].tb_lineno
         logger.error("Устройство %s не поддерживается. Ошибка скрипта в строке %s: %s: %s", ip, line_num, Error.__class__.__name__, Error)
         return f"Произошла ошибка. Устройство не поддерживается."
@@ -239,8 +246,8 @@ if __name__ == '__main__':
         datefmt='%Y-%m-%d %H:%M:%S',
     )
     ip = '10.11.10.210'    # Cisco
-    #ip = '10.11.10.211'    # MES 2348P
-    #ip = '10.20.11.32'     # ia-mdc-lan-accs-csw-a09-1
+    ip = '10.11.10.211'    # MES 2348P
+    ip = '10.20.11.32'     # ia-mdc-lan-accs-csw-a09-1
     #ip = '172.16.50.173'   # ia-mdc-aux-uc-csw-1
     #ip = '10.20.11.43'     # MES 2308P
     #ip = '10.11.10.15'     # ia-rdc-lan-aggr-csw-137-1
@@ -250,15 +257,24 @@ if __name__ == '__main__':
     #ip = '172.25.0.2'      # Cisco ASR 1001X
     #ip = '10.12.4.254'     # Cisco 6500
     #ip = '172.16.145.2'    # Cisco 6800
-    serial = 'FDO1524X2BG'
+    #ip = '10.11.10.107'    # Eltex 2300B-48
+    ip = '172.16.50.131'   # Cisco 4451
+    ip = '172.25.0.15'     # Cisco 4431
+    ip = '172.25.0.1'      # Cisco ASR 1006X
+    ip = '172.25.0.31'      # Cisco  3850
+    ip = '172.25.0.8'      # Cisco 3850 Stack
+    #ip = '172.25.0.6'      # Cisco 7206
+    #ip = '10.5.19.4'      # Cisco 2960-XR
+    
+    serial = 'FXS2526Q22T'
 
-    #result = main(ip)
-    #pprint(result)
-    #print('#'*50)
+    result = main(ip)
+    pprint(result)
+    print('#'*50)
     #pprint(verify_sn_and_select(result, serial))
 
-    ip = '10.20.11.32'
+    #ip = '10.20.11.32'
     #ip = '178.74.128.173'
-    name = 'ia-mdc-lan-accs-csw-a09-1.cd.so'
+    #name = 'ia-mdc-lan-accs-csw-a09-1.cd.so'
     #name = 'br.so-ups.ru'
-    print(type(check_dns(ip, name)))
+    #print(type(check_dns(ip, name)))
